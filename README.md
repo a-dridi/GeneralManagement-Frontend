@@ -4,7 +4,7 @@ In development.
 An application to manage expenses, books and other information.
 This is the Frontend part of the application "General Management". It connects to the REST API of the backend of "General Management".
 
-![Screenshot of Web App General Management](https://raw.githubusercontent.com/a-dridi/CRM_Unique-Frontend-Angular/main/screenshot.PNG)
+![Screenshot of Web App General Management](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot.PNG)
 
 Uses JWT authentication token to establish a session with the backend. Realized through an HTTP interceptor.
 
