@@ -1,0 +1,18 @@
+<angular-editor [(ngModel)]="noteContent" [config]="editorConfig"></angular-editor>
+<div class="noteBottomDisplay">
+  <div>
+    <button pButton type="button" class="p-button-success p-button-raised" label=" " icon="" iconPos="left">
+      <fa-icon [icon]="faCheck"></fa-icon>
+      <span class="button-label">{{'noteEditor.noteSaveButton' | translate}}</span>
+    </button>
+  </div>
+  <div>
+    <button pButton type="button" class="p-button-danger p-button-raised" label=" " icon="" iconPos="left">
+      <fa-icon [icon]="faTimes"></fa-icon>
+      <span class="button-label">{{'noteEditor.noteDeleteButton' | translate}}</span>
+    </button>
+  </div>
+  <div class="last-update-display">
+    <p>{{'noteEditor.updatedTextInfo' | translate}} <br> {{noteLastUpdateDate}}</p>
+  </div>
+</div>

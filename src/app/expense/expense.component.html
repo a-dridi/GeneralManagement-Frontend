@@ -1,0 +1,53 @@
+<div class="content-container">
+  <h2 class="site-title">{{'expense.title' | translate}}</h2>
+  <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
+  <br>
+  <br>
+  <p-tabView styleClass="tabview-submenu">
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faTable"></fa-icon>
+        <span class="tab-header">{{'expense.submenuTitleTable' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-expense-table></app-expense-table>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faClipboardList"></fa-icon>
+        <span class="tab-header">{{'expense.submenuTitleCategory' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-expense-category></app-expense-category>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faDollarSign"></fa-icon>
+        <span class="tab-header">{{'expense.submenuTitleBudget' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-expense-budget></app-expense-budget>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faChartPie"></fa-icon>
+        <span class="tab-header">{{'expense.submenuTitleGraph' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-expense-graph></app-expense-graph>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel>
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faCalendarPlus"></fa-icon>
+        <span class="tab-header">{{'expense.submenuTitleCalendar' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-expense-calendar></app-expense-calendar>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>

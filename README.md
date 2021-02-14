@@ -1,6 +1,14 @@
-# Generalmanagement
+# General Management - Frontend Angular
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 9.0.2.
+In development. 
+An application to manage expenses, books and other information.
+This is the Frontend part of the application "General Management". It connects to the REST API of the backend of "General Management".
+
+![Screenshot of Web App General Management](https://raw.githubusercontent.com/a-dridi/CRM_Unique-Frontend-Angular/main/screenshot.PNG)
+
+Uses JWT authentication token to establish a session with the backend. Realized through an HTTP interceptor.
+
+Use the Angular CLI to build this project. 
 
 ## Development server
 

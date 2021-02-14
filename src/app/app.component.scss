@@ -1,0 +1,218 @@
+.top-section {
+    display: flex;
+    flex: auto;
+}
+
+.top-centered-section {
+    flex-basis: 100% !important;
+    padding-top: 10px !important;
+
+    iframe {
+        width: 99%;
+        height: 30px;
+        margin: 0px 0.5%;
+        border: none;
+        overflow: hidden;
+    }
+}
+
+.menu-toggle-icon {
+    font-size: 38px !important;
+}
+
+.menu-toggle-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+.menu-toggle {
+    flex-grow: 0;
+    justify-content: left;
+    align-self: center;
+    background-color: transparent;
+}
+
+.appLogo {
+    display: flex;
+    padding-top: 10px;
+    justify-content: left;
+    flex-grow: 7;
+    margin: auto;
+    width: 150px;
+    color: white;
+    flex: auto;
+}
+
+.languageChooser {
+    flex-grow: 0;
+    margin-right: 25px;
+}
+
+.language-chooser-dialog {
+    width: 50vw;
+}
+
+.language-chooser-button {
+    margin-top: 7px !important;
+    height: 35px !important;
+}
+
+@media screen and (max-width: 40em) {
+    .language-chooser-dialog {
+        width: 75vw;
+    }
+}
+
+#iconAppLogo {
+    margin: auto;
+}
+
+#titleAppLogo {
+    margin: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+#titleAppLogo > a {
+    color: white;
+    text-decoration: none;
+}
+
+#app-header {
+    flex-wrap: wrap !important;
+    background: rgb(10, 161, 60);
+    background: linear-gradient(90deg, rgb(14, 134, 54) 0%, rgb(22, 136, 47) 69%);
+    height: fit-content;
+    padding-top: 5px;
+    padding-bottom: 1px;
+}
+
+#adminsectionLink {
+    font-size: 12px;
+    color: white;
+    text-align: right;
+    justify-content: right;
+}
+
+#headerToolbar {
+    flex-wrap: wrap;
+}
+
+.footer-links {
+    color: white;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: white;
+}
+
+.footer-link-element {
+    padding-right: 20px;
+}
+
+#app-skeleton {
+    position: relative;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#app-content {
+    margin: 15px 20px;
+}
+
+#app-footer {
+    font-size: 10px;
+    color: white;
+    background: rgb(10, 161, 60);
+    background: linear-gradient(90deg, rgb(14, 134, 54) 0%, rgb(22, 136, 47) 69%);
+}
+
+.app-page {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.heart-icon {
+    margin: 0px 6px !important;
+    font-size: 14px !important;
+}
+
+.app-is-mobile #app-header {
+    /* position: fixed; */
+    z-index: 2;
+}
+
+.app-sidenav-container {
+    flex: 4;
+}
+
+.app-is-mobile .app-sidenav-container {
+    flex: 1 0 auto;
+}
+
+.menu-item-title {
+    margin-left: 8px;
+}
+
+@media screen and (max-width: 600px) {
+    .nav-menu-item {
+        top: 20px !important;
+    }
+
+    .app-is-mobile .app-sidenav-container {
+        flex: none !important;
+    }
+
+    .mat-drawer-content {
+        overflow: hidden !important;
+    }
+
+    #app-header {
+        min-height: 60px;
+    }
+
+    a.nav-menu-item.mat-list-item.mat-focus-indicator {
+        margin-bottom: 50px !important;
+    }
+
+    .mat-sidenav-container.mat-drawer-container.mat-sidenav-container.app-sidenav-container {
+        margin-top: 5px !important;
+    }
+
+    .top-centered-section {
+        display: none;
+    }
+
+    .top-section {
+        padding-bottom: 10px;
+    }
+
+    .languageChooser {
+        margin-right: 5px !important;
+    }
+
+    .mat-toolbar {
+        margin-bottom: -5px;
+    }
+
+    .mat-list-item-content {
+        margin-top: -30px;
+    }
+}
+
+@media screen and (max-width: 489px) {
+    .select-language-button{
+        display: none;
+    }
+}

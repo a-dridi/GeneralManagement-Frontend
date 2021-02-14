@@ -6,6 +6,7 @@
 #   npx browserslist
 
 > 0.5%
+iOS > 9
 last 2 versions
 Firefox ESR
 not dead

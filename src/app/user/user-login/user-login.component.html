@@ -1,0 +1,30 @@
+<div class="login-form">
+  <h2 class="site-title">{{'userLogin.siteTitle' | translate}}</h2>
+  <div class="login-subtext">
+    <p style="font-weight: bold;">{{'userLogin.loginInfo' | translate}}</p>
+    <p></p>
+    <p>{{'userLogin.registrationInfo' | translate}} <br> <a
+        routerLink="/expense">{{'userLogin.registrationLink' | translate}}</a></p>
+  </div>
+  <form>
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <fa-icon [icon]="faAt"></fa-icon>
+      </span>
+      <input name="loginUsername" id="loginUsername" type="text" pInputText [(ngModel)]="email" placeholder="{{'userLogin.emailDesc' | translate}}">
+    </div>
+    <div class="p-inputgroup">
+      <span class="p-inputgroup-addon">
+        <fa-icon [icon]="faKey"></fa-icon>
+      </span>
+      <input name="loginPassword" id="loginPassword" type="password" pInputText [(ngModel)]="password" placeholder="{{'userLogin.passwordDesc' | translate}}">
+    </div>
+    <div class="submit-line">
+      <button name="loginSubmit" id="loginSubmit" class="confirm-button" pButton type="button" class="p-button-success p-button-raised" label=" " icon=""
+        iconPos="left" (click)="doLogin()">
+        <fa-icon [icon]="faSignInAlt"></fa-icon>
+        <span class="button-label">{{loginButtonText}}</span>
+      </button>
+    </div>
+  </form>
+</div>
