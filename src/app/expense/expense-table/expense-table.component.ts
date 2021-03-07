@@ -4,9 +4,12 @@ import { faBookmark } from '@fortawesome/free-regular-svg-icons';
 import { faArrowRight, faCalendarCheck, faCheckSquare, faEuroSign, faFolderPlus, faFont, faHistory, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faTable, faTags } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { ColumnFilter } from 'primeng/table';
 import { ExpenseCategory } from 'src/app/model/expense-category.model';
 import { ExpenseTimerange } from 'src/app/model/expense-timerange.model';
+import { ExpenseExport } from 'src/app/model/expense.export.model';
 import { Expense } from 'src/app/model/expense.model';
+import { ExpenseTable } from 'src/app/model/expense.table.model';
 import { UserService } from 'src/app/user/user.service';
 import { ApiConfig } from 'src/app/util/api.config';
 import { ExpenseBudgetService } from '../expense-budget.service';
@@ -28,16 +31,21 @@ export class ExpenseTableComponent implements OnInit {
   loading: boolean;
 
   tableColumns: any[];
-  expenses: Expense[];
+  expenses: ExpenseTable[];
+
   expensesAmountInfo: string = "";
   expensesSum: number;
 
   expenseCategories: ExpenseCategory[];
   expenseTimeranges: ExpenseTimerange[];
 
-  expensesMonthlySum: string;
-  expensesYearlySum: string;
-  expensesAverageSum: string;
+  earningsMonthlySum: string = "0";
+  expensesMonthlySum: string = "0";
+  surplusMonthlySum: string = "0";
+  earningsYearlySum: string = "0";
+  expensesYearlySum: string = "0";
+  surplusYearlySum: string = "0";
+  expensesAverageSum: string = "0";
 
   displayedDate: Date;
   displayedDateString: string;
@@ -78,10 +86,13 @@ export class ExpenseTableComponent implements OnInit {
   faArrowRight = faArrowRight;
   faRetweet = faRetweet;
   faPaperclip = faPaperclip;
+  exportColumns: any[];
+  exportedColumns: any[];
 
   @ViewChild('categoryselector') categoryselector: ElementRef;
   @ViewChild('timerangeselector') timerangeselector: ElementRef;
   @ViewChild('calendarInput') calendarinput: ElementRef;
+  @ViewChild('csvExportButton') csvExportButton: ElementRef;
 
   constructor(private userService: UserService, private messageService: MessageService, private apiConfig: ApiConfig, private expenseService: ExpenseService, private expenseCategoryService: ExpenseCategoryService, private expenseTimerangeService: ExpenseTimerangeService, private translateService: TranslateService, private expenseBudgetService: ExpenseBudgetService) {
     this.displayedDate = new Date();
@@ -93,22 +104,34 @@ export class ExpenseTableComponent implements OnInit {
    */
   ngOnInit(): void {
     this.translateService.get(['messages.loginLoginFailedError1', 'messages.expenseDeleteOk1', 'messages.expenseDeleteOk1', 'expense.expenseTableHeaderTitle', 'expense.expenseTableHeaderCategory', 'expense.expenseTableHeaderValue', 'expense.expenseTableHeaderTimerange', 'expense.expenseTableHeaderPaymentdate', 'expense.expenseTableHeaderInformation']).subscribe(translations => {
-      this.tableColumns = [{ field: 'id', header: 'ID' },
-      { field: 'title', header: translations['expense.expenseTableHeaderTitle'] },
-      { field: 'category', header: translations['expense.expenseTableHeaderCategory'] },
-      { field: 'value', header: translations['expense.expenseTableHeaderValue'] },
-      { field: 'timerange', header: translations['expense.expenseTableHeaderTimerange'] },
-      { field: 'paymentdate', header: translations['expense.expenseTableHeaderPaymentdate'] },
-      { field: 'information', header: translations['expense.expenseTableHeaderInformation'] }
-      ]
-    });
+      this.tableColumns = [
+        { field: 'expenseId', header: 'ID' },
+        { field: 'title', header: translations['expense.expenseTableHeaderTitle'] },
+        { field: 'expenseCategory', header: translations['expense.expenseTableHeaderCategory'] },
+        { field: 'centValue', header: translations['expense.expenseTableHeaderValue'] },
+        { field: 'expenseTimerange', header: translations['expense.expenseTableHeaderTimerange'] },
+        { field: 'paymentDate', header: translations['expense.expenseTableHeaderPaymentdate'] },
+        { field: 'information', header: translations['expense.expenseTableHeaderInformation'] },
+        { field: 'download', header: 'D' }
+      ];
+      this.exportColumns = [
+        { field: 'expenseId', header: 'ID' },
+        { field: 'title', header: translations['expense.expenseTableHeaderTitle'] },
+        { field: 'expenseCategory', header: translations['expense.expenseTableHeaderCategory'] },
+        { field: 'centValue', header: translations['expense.expenseTableHeaderValue'] },
+        { field: 'expenseTimerange', header: translations['expense.expenseTableHeaderTimerange'] },
+        { field: 'paymentDate', header: translations['expense.expenseTableHeaderPaymentdate'] },
+        { field: 'information', header: translations['expense.expenseTableHeaderInformation'] }
+      ];
+      this.exportedColumns = this.exportColumns.map(column => ({ title: column.header, dataKey: column.field }));
+    }
+    );
     this.loadExpenseCategories();
     this.loadExpenseTimeranges();
     this.loadExpenses();
     this.calculateMonthlyYearlyExpenses();
     this.loadSingleCustomSumsOfMonth();
-    this.calculateExpensesPersonParts(this.person1Ratio, this.person2Ratio);
-
+    this.calculateExpensesPersonParts(this.person1Ratio, this.person2Ratio, this.expensesSum);
   }
 
   ngAfterViewInit() {
@@ -124,7 +147,7 @@ export class ExpenseTableComponent implements OnInit {
       this.timerangeselector.nativeElement.querySelector(".p-dropdown-label").style.fontSize = "20px";
       this.timerangeselector.nativeElement.querySelector(".p-dropdown-label").style.margin = "auto";
     }
-    if(this.calendarinput) {
+    if (this.calendarinput) {
       this.calendarinput.nativeElement.querySelector(".p-dropdown-label").style.fontSize = "20px";
       this.calendarinput.nativeElement.querySelector(".p-dropdown-label").style.margin = "auto";
     }
@@ -135,14 +158,22 @@ export class ExpenseTableComponent implements OnInit {
     this.loadDropdownStyle();
   }
 
-  calculateExpensesPersonParts(person1Ratio, person2Ratio) {
+  /**
+   * Calculate the expenses split to 2 people
+   * @param person1Ratio 
+   * @param person2Ratio 
+   * @param expensesSum 
+   */
+  calculateExpensesPersonParts(person1Ratio, person2Ratio, expensesSum): number[] {
     if ((person1Ratio + person2Ratio) === 100) {
-      this.person1SumPart = this.expensesSum * (person1Ratio / 100);
-      this.person2SumPart = this.expensesSum * (person2Ratio / 100);
+      this.person1SumPart = expensesSum * (person1Ratio / 100);
+      this.person2SumPart = expensesSum * (person2Ratio / 100);
+      return [this.person1SumPart, this.person2SumPart];
     } else {
       this.translateService.get(['messages.expensePersonPartError1']).subscribe(translations => {
         this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensePersonPartError1'] });
       });
+      return [0];
     }
   }
 
@@ -153,7 +184,10 @@ export class ExpenseTableComponent implements OnInit {
     if (this.displayExpensesSettings === 0) {
       this.displayedDateString = "";
       this.expenseService.getAllExpenseTable().subscribe((data: Expense[]) => {
-        this.expenses = data;
+        data.forEach(
+          (expenseItem: Expense) => {
+            this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: expenseItem.expenseTimerange.timerangeTitle, paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
+          });
         this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
           this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
         });
@@ -161,7 +195,10 @@ export class ExpenseTableComponent implements OnInit {
     } else if (this.displayExpensesSettings === 1) {
       this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
       this.expenseService.getExpensesOfCertainYearTable(this.displayedDate.getFullYear()).subscribe((data: Expense[]) => {
-        this.expenses = data;
+        data.forEach(
+          (expenseItem: Expense) => {
+            this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: expenseItem.expenseTimerange.timerangeTitle, paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
+          });
         this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
           this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
         });
@@ -169,7 +206,10 @@ export class ExpenseTableComponent implements OnInit {
     } else if (this.displayExpensesSettings === 2) {
       this.displayedDateString = "(" + (this.displayedDate.getMonth() + 1) + "/" + this.displayedDate.getFullYear() + ")";
       this.expenseService.getExpensesOfCertainMonthYearTable(this.displayedDate.getMonth() + 1, this.displayedDate.getFullYear()).subscribe((data: Expense[]) => {
-        this.expenses = data;
+        data.forEach(
+          (expenseItem: Expense) => {
+            this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: expenseItem.expenseTimerange.timerangeTitle, paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
+          });
         this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
           this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
         });
@@ -205,7 +245,9 @@ export class ExpenseTableComponent implements OnInit {
    */
   loadSingleCustomSumsOfMonth() {
     this.expenseService.getOfCertainMonthSingleAndCustomExpensesSum(this.displayedDate.getMonth() + 1).subscribe((data: Number) => {
-      this.expensesAverageSum = (data.toFixed(2));
+      return this.expensesAverageSum = (data.toFixed(2));
+    }, (err) => {
+      return -1;
     });
   }
 
@@ -287,6 +329,7 @@ export class ExpenseTableComponent implements OnInit {
         }
       });
   }
+
   restoreDeletedExpenses() {
     let deletedIdsString = localStorage.getItem("app32xExpensesDeleted");
     if (deletedIdsString !== null && deletedIdsString !== "") {
@@ -321,45 +364,79 @@ export class ExpenseTableComponent implements OnInit {
    * @param columnName The column / attribute of the expense item that will be updated
    */
   updateExpenseValue(newValue, expenseItem, columnName) {
-    console.log("NEW!!!");
-
-    console.log(newValue);
-    console.log(expenseItem);
-    console.log(expenseItem.Id);
-    
     if (columnName === "title") {
-      this.expenseService.updateExpenseTable(expenseItem.Id, newValue, expenseItem.expenseCategory, expenseItem.centValue, expenseItem.expenseTimerange, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
-        this.translateService.get(['messages.expensesTableUpdatedOk1']).subscribe(translations => {
-          this.messageService.add({ severity: 'success', summary: 'OK', detail: translations['messages.expensesTableUpdatedOk1'] });
-        });
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, newValue, expenseItem.expenseCategory, expenseItem.centValue, expenseItem.expenseTimerange, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
+        this.translateService.get(['messages.expensesTableUpdatedError1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableUpdatedError1'] });
+        });
+      })
+    }
+    else if (columnName === "category") {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, newValue, expenseItem.centValue, expenseItem.expenseTimerange, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      }, err => {
+        console.log("UPDATE FAILED!");
+        console.log(err);
+        this.translateService.get(['messages.expensesTableUpdatedError1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableUpdatedError1'] });
+        });
+      })
+    }
+    else if (columnName === "value") {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseItem.expenseCategory, newValue, expenseItem.expenseTimerange, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      }, err => {
+        console.log("UPDATE FAILED!");
+        console.log(err);
+        this.translateService.get(['messages.expensesTableUpdatedError1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableUpdatedError1'] });
+        });
+      })
+    }
+    else if (columnName === "timerange") {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseItem.expenseCategory, expenseItem.centValue, newValue, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      }, err => {
+        console.log("UPDATE FAILED!");
+        console.log(err);
+        this.translateService.get(['messages.expensesTableUpdatedError1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableUpdatedError1'] });
+        });
+      })
+    }
+    else if (columnName === "paymentDate") {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseItem.expenseCategory, expenseItem.centValue, expenseItem.expenseTimerange, newValue, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      }, err => {
+        console.log("UPDATE FAILED!");
+        console.log(err);
+        this.translateService.get(['messages.expensesTableUpdatedError1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableUpdatedError1'] });
+        });
+      })
+    }
+    else if (columnName === "information") {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseItem.expenseCategory, expenseItem.centValue, expenseItem.expenseTimerange, expenseItem.paymentDate, newValue, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      }, err => {
+        console.log("UPDATE FAILED!");
+        console.log(err);
+        this.translateService.get(['messages.expensesTableUpdatedError1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableUpdatedError1'] });
+        });
       })
     }
   }
+
 
   saveExpense() {
     if (this.value.trim() === "") {
       this.value = "0";
     }
-    console.log("VALUE");
-    console.log(this.value);
 
     let valueParsed;
     let centValue;
+    valueParsed = parseFloat(((this.value).replace(",", ".")));
 
-    if (this.value.includes(".") || this.value.includes(",")) {
-      valueParsed = parseFloat(((this.value).replace(",", ".")));
-      centValue = valueParsed * 100;
-    } else {
-      centValue = valueParsed * 100;
-    }
-
-    console.log("PARSEDVALUE");
-    console.log(valueParsed);
-    console.log("CENTVALUE");
-    console.log(centValue);
+    centValue = valueParsed * 100;
 
     if (valueParsed === Number.NaN) {
       this.translateService.get(['messages.expenseAddExpenseError1']).subscribe(translations => {
@@ -368,36 +445,36 @@ export class ExpenseTableComponent implements OnInit {
       return;
     }
 
-    if (this.expenseCategory === null || this.expenseCategory === undefined) {
+    if (this.expenseCategory === null || typeof this.expenseCategory === undefined) {
       this.translateService.get(['messages.expenseAddExpenseError3']).subscribe(translations => {
         this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseAddExpenseError3'] });
       });
       return;
     }
 
-    if (this.title === null || this.title === undefined || this.title.trim() === "") {
+    if (this.title === null || typeof this.title === undefined || this.title.trim() === "") {
       this.translateService.get(['messages.expenseAddExpenseError4']).subscribe(translations => {
         this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseAddExpenseError4'] });
       });
       return;
     }
 
-    if (this.paymentDate === undefined || this.paymentDate === null) {
+    if (typeof this.paymentDate === undefined || this.paymentDate === null) {
       this.paymentDate = new Date();
     }
+
+    if (typeof this.information === undefined || this.information === null) {
+      this.information = "";
+    }
+
     this.expenseService.saveExpense(this.title, this.expenseCategory, centValue, this.expenseTimerange, this.paymentDate, this.information, false, "", "", "").subscribe((savedExpense: Expense) => {
-      console.log("Check attachment file");
-      console.log(this.attachmentFile);
-      console.log(savedExpense);
-      if (this.attachmentFile != undefined && this.attachmentFile != null) {
+      if (typeof this.attachmentFile != undefined && this.attachmentFile != null) {
         if (this.attachmentFile.name != null) {
           this.attachmentName = "" + savedExpense.expenseId;
           this.attachmentPath = this.attachmentName + "." + this.attachmentType;
           this.expenseService.addExpenseAttachment(savedExpense.expenseId, this.attachmentType, this.attachmentFile).subscribe(
             () => {
-              console.log("OK attachment");
               this.expenseService.updateExpense(savedExpense.expenseId, savedExpense.title, savedExpense.expenseCategory, savedExpense.centValue, savedExpense.expenseTimerange, savedExpense.paymentDate, savedExpense.information, true, this.attachmentPath, this.attachmentName, this.attachmentType).subscribe(() => {
-                console.log("OK UPDATE ATTACHMENT!!!");
               });
             },
             (err) => {
@@ -421,20 +498,16 @@ export class ExpenseTableComponent implements OnInit {
   }
 
   addExpenseCategory() {
-    console.log("SHOW EXPEsaveExpenseCategory 1 !!!");
-
     if (this.newCategoryName.trim() !== "") {
-      console.log("SHOW EXPEsaveExpenseCategory 2 !!!");
       this.expenseCategoryService.saveExpenseCategory(this.newCategoryName).subscribe(
         (savedExpenseCategory: ExpenseCategory) => {
-          console.log("EXPEsaveExpenseCategory OK !!!");
           this.translateService.get(['messages.expensesTableAddCategoryOK1']).subscribe(translations => {
             this.messageService.add({ severity: 'success', summary: 'OK', detail: translations['messages.expensesTableAddCategoryOK1'] });
           });
           this.expenseBudgetService.saveExpenseBudget(savedExpenseCategory, 0, 0, 0, "", "");
           this.loadExpenseCategories();
         }, err => {
-          console.log("EXPEsaveExpenseCategory ERROR !!!");
+          console.log(err);
           this.translateService.get(['messages.expensesTableAddCategoryError1']).subscribe(translations => {
             this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expensesTableAddCategoryError1'] });
           });
@@ -451,8 +524,6 @@ export class ExpenseTableComponent implements OnInit {
     const attachmentFiles: FileList = event.target.files;
 
     if (attachmentFiles != null && attachmentFiles.length > 0) {
-      console.log("attach ");
-      console.log(attachmentFiles[0]);
       this.attachmentFile = attachmentFiles[0];
       const filenameArray = this.attachmentFile.name.split(".");
       this.attachment = true;
@@ -488,7 +559,7 @@ export class ExpenseTableComponent implements OnInit {
       return;
     }
 
-    if (this.attachmentFile != undefined && this.attachmentFile != null) {
+    if (typeof this.attachmentFile != undefined && this.attachmentFile != null) {
       if (this.attachmentFile.name != null) {
         this.attachmentName = "" + parsedUpdatedAttachmentId;
         this.attachmentPath = this.attachmentName + "." + this.attachmentType;
@@ -515,8 +586,8 @@ export class ExpenseTableComponent implements OnInit {
     import("jspdf").then(jsPDF => {
       import("jspdf-autotable").then(x => {
         const doc = new jsPDF.default(0, 0);
-        doc.autoTable(this.tableColumns, this.expenses);
-        doc.save('products.pdf');
+        doc.autoTable(this.exportedColumns, this.expenses);
+        doc.save('expenses.pdf');
       })
     })
   }
@@ -526,7 +597,7 @@ export class ExpenseTableComponent implements OnInit {
       const worksheet = xlsx.utils.json_to_sheet(this.expenses);
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, "products");
+      this.saveAsExcelFile(excelBuffer, "expenses");
     });
   }
 
@@ -539,6 +610,16 @@ export class ExpenseTableComponent implements OnInit {
       });
       FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
     });
+  }
+
+
+
+
+  /**
+   * Recreate original table object
+   */
+  resetExportTableData() {
+    this.loadExpenses();
   }
 
   /**

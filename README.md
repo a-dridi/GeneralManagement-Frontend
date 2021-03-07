@@ -8,6 +8,11 @@ This is the Frontend part of the application "General Management". It connects t
 
 Uses JWT authentication token to establish a session with the backend. Realized through an HTTP interceptor.
 
+## Testing 
+There are test cases in the component file of the component "[ExpenseTableComponent](https://github.com/a-dridi/GeneralManagement-Frontend/blob/main/src/app/expense/expense-table/expense-table.component.spec.ts)".
+
+
+
 Use the Angular CLI to build this project. 
 
 ## Development server

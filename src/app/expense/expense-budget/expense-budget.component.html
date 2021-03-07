@@ -12,10 +12,10 @@
     </div>
   </div>
   <div class="elementContent">
-    <p-table #dataTable [columns]="tableColumns" [value]="expenseBudgetList" dataKey="expensesbudgetId" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading" [globalFilterFields]="[]"
-      styleClass="p-datatable-responsive-table p-datatable-striped">
+    <p-table #dataTable [columns]="tableColumns" [value]="expenseBudgetList" dataKey="expensesbudgetId"
+      [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="loading" [globalFilterFields]="[]" styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
         <div class="p-d-flex">
@@ -29,8 +29,6 @@
 
       <ng-template pTemplate="header" let-columns>
         <tr>
-
-
           <th pSortableColumn="{{tableColumns[0].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon>
@@ -69,7 +67,7 @@
                 type="text" field="name" display="menu"></p-columnFilter>
             </div>
           </th>
-          
+
           <th pSortableColumn="{{tableColumns[3].field}}" class="small-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}} <p-columnFilter
@@ -103,25 +101,43 @@
 
       <ng-template pTemplate="body" let-expensebudgetItem>
         <tr>
-          <td pEditableColumn>
-            <p-cellEditor>
-              <ng-template pTemplate="input">
-                <p-dropdown [options]="expenseCategories" [(ngModel)]="expensebudgetItem.expenseCategory"
-                  [style]="{'width':'100%'}" placeholder="expensebudgetItem.expenseCategory" optionLabel="categoryTitle"
-                  [filter]="true"></p-dropdown>
-              </ng-template>
-              <ng-template pTemplate="output">
+          <td>
                 {{expensebudgetItem.expenseCategory.categoryTitle}}
-              </ng-template>
-            </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-inputNumber pInputText type="text" [(ngModel)]="expensebudgetItem.centBudgetValue" (ngModelChange)="updateTable($event, expensebudgetItem, 'centBudgetValue')"></p-inputNumber>
+                <p-inputNumber pInputText type="text" [(ngModel)]="expensebudgetItem.centBudgetValue"
+                  (ngModelChange)="updateTable($event, expensebudgetItem, 'centBudgetValue')"></p-inputNumber>
               </ng-template>
               <ng-template pTemplate="output">
                 {{(expensebudgetItem.centBudgetValue)/100}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <ng-template>
+              {{(expensebudgetItem.centActualExpenses)/100}}
+            </ng-template>
+          </td>
+          <td>
+            <ng-template>
+              {{(expensebudgetItem.centDifference)/100}}
+            </ng-template>
+          </td>
+          <td>
+            <ng-template>
+              {{(expensebudgetItem.s}}
+            </ng-template>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-inputNumber pInputText type="text" [(ngModel)]="expensebudgetItem.notice"
+                  (ngModelChange)="updateTable($event, expensebudgetItem, 'notice')"></p-inputNumber>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{(expensebudgetItem.notice}}
               </ng-template>
             </p-cellEditor>
           </td>

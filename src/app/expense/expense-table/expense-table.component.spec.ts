@@ -8,9 +8,9 @@ describe('ExpenseTableComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ExpenseTableComponent ]
+      declarations: [ExpenseTableComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -22,4 +22,15 @@ describe('ExpenseTableComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('Person 1 should be equal to 300', () => {
+    const result = component.calculateExpensesPersonParts(30, 70, 1000);
+    expect(result[0]).toBe(300);
+  });
+
+  it('Person 2 should be equal to ', () => {
+    const result = component.calculateExpensesPersonParts(30, 70, 1000);
+    expect(result[1]).toBe(700);
+  });
+ 
 });

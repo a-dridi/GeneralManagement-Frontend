@@ -1,4 +1,4 @@
 export interface ExpenseTimerange {
-    timerangeId: number,
-    timerangeTitle: string,
+    timerangeId: number;
+    timerangeTitle: string;
 }

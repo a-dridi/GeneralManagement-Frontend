@@ -204,7 +204,7 @@ input {
     font-size: 20px;
 }
 
-#paymentdate{
+#paymentdate {
     font-size: 20px;
 }
 
@@ -227,6 +227,36 @@ category-add-button {
     margin-top: 10px;
 }
 
+.monthly-earnings,
+.yearly-earnings {
+    background-color: #689f38;
+    color: white;
+}
+
+.monthly-expenses,
+.yearly-expenses {
+    background-color: #d32f2f;
+    color: white;
+}
+
+.monthly-surplus,
+.yearly-surplus {
+    background-color: #2196f3;
+    color: white;
+}
+
+.expenses-earnings-overview > div {
+    display: flex;
+    flex-wrap: wrap;
+    div {
+        margin: 0px 10px;
+    }
+}
+
+.seperator-overview {
+    border-top: 2px solid #bbb;
+}
+
 @media screen and (max-width: 600px) {
     .edit-category-new-info,
     .input-side-button {
@@ -235,8 +265,12 @@ category-add-button {
 }
 
 @media screen and (min-width: 600px) {
+    .delete-table-column {
+        width: 50px !important;
+    }
+
     .id-table-column {
-        width: 130px !important;
+        width: 100px !important;
     }
 
     .small-table-column {

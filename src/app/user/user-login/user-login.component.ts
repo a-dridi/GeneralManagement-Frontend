@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { Message } from 'primeng/api/message';
 import { UserAuthentication } from 'src/app/util/user-authentication';
-import { User } from '../user.model';
+import { User } from '../../model/user.model';
 import { UserService } from '../user.service';
 
 @Component({

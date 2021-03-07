@@ -16,9 +16,52 @@
     </div>
   </div>
   <div class="elementContent">
-    <p-table #dataTable [columns]="tableColumns" [value]="expenses" dataKey="id" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading" [globalFilterFields]="[]"
+    <div class="expenses-earnings-overview">
+      <div class="overview-monthly">
+        <div class="monthly-earnings">
+          {{'expense.expensesTableOverviewMonthlyEarnings' | translate}} {{earningsMonthlySum}}
+        </div>
+        <div class="operator">
+          -
+        </div>
+        <div class="monthly-expenses">
+          {{'expense.expensesTableOverviewMonthlyExpenses' | translate}} {{expensesMonthlySum}}
+        </div>
+        <div class="equals">
+          =
+        </div>
+        <div class="monthly-surplus">
+          <span>-</span> {{surplusMonthlySum}}
+        </div>
+      </div>
+      <div class="seperator-overview"></div>
+      <div class="overview-yearly">
+        <div class="yearly-earnings">
+          {{'expense.expensesTableOverviewYearlyEarnings' | translate}} {{earningsYearlySum}}
+        </div>
+        <div class="operator">
+          -
+        </div>
+        <div class="yearly-expenses">
+          {{'expense.expensesTableOverviewYearlyExpenses' | translate}} {{expensesYearlySum}}
+        </div>
+        <div class="equals">
+          =
+        </div>
+        <div class="yearly-surplus">
+          <span>-</span> {{surplusYearlySum}}
+        </div>
+      </div>
+      <div class="overview-average">
+        <div class="monthly-average">
+          {{'expense.expensesTableHeaderAvgExpenses' | translate}}: ~ {{expensesAverageSum}}
+        </div>
+      </div>
+    </div>
+    <p-table #dataTable [columns]="tableColumns" [value]="expenses" dataKey="expenseId" [paginator]="true"
+      [rows]="10" [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading"
+      [globalFilterFields]="['title','expenseCategory.categoryTitle','centValue','expenseTimerange.timerangeTitle','paymentDate','information']"
       styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
@@ -31,8 +74,12 @@
         </div>
       </ng-template>
 
-      <ng-template pTemplate="header" let-columns>
+      <ng-template pTemplate="header">
         <tr>
+          <th class="delete-table-column">
+            <div>
+            </div>
+          </th>
 
           <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
             <div>
@@ -43,7 +90,7 @@
           <th pSortableColumn="{{tableColumns[1].field}}" class="big-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
-                type="text" field="name" display="menu"></p-columnFilter>
+                type="text" field="title" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
@@ -51,22 +98,23 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon>
               {{tableColumns[2].header}}
-              <p-columnFilter field="{{tableColumns[2].field}}" matchMode="in" display="menu" [showMatchModes]="false"
-                [showOperator]="false" [showAddButton]="false">
+              <p-columnFilter field="expenseCategory" matchMode="equals" display="menu" [showAddButton]="false"
+                [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
-                    <span class="p-text-bold">{{'expense.expensesTableCategorySelectHeader' | translate}}</span>
+                    <span class="p-text-bold">{{'messages.expensesTableCategorySelectHeader' | translate}}</span>
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-multiSelect [ngModel]="value" [options]="expenseCategories" placeholder="Any"
-                    (onChange)="filter($event.value)" optionLabel="categoryTitle">
+                  <p-dropdown [ngModel]="value" [options]="expenseCategories"
+                    placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
+                    (onChange)="filter($event.value.categoryTitle)" optionLabel="categoryTitle">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
                         <span class="p-ml-1">{{option.categoryTitle}}</span>
                       </div>
                     </ng-template>
-                  </p-multiSelect>
+                  </p-dropdown>
                 </ng-template>
               </p-columnFilter>
             </div>
@@ -75,7 +123,7 @@
           <th pSortableColumn="{{tableColumns[3].field}}" class="medium-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}} <p-columnFilter
-                type="text" field="name" display="menu"></p-columnFilter>
+                type="text" field="value" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
@@ -83,22 +131,23 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon>
               {{tableColumns[4].header}}
-              <p-columnFilter field="{{tableColumns[4].field}}" matchMode="in" display="menu" [showMatchModes]="false"
-                [showOperator]="false" [showAddButton]="false">
+              <p-columnFilter field="expenseTimerange" matchMode="equals" display="menu" [showAddButton]="false"
+                [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
-                    <span class="p-text-bold">{{'expense.expensesTableTimerangeSelectHeader' | translate}}</span>
+                    <span class="p-text-bold">{{'messages.expensesTableTimerangeSelectHeader' | translate}}</span>
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-multiSelect [ngModel]="value" [options]="expenseTimeranges" placeholder="   "
-                    (onChange)="filter($event.value)" optionLabel="timerangeTitle">
+                  <p-dropdown [ngModel]="value" [options]="expenseTimeranges"
+                    placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
+                    (onChange)="filter($event.value.timerangeTitle)" optionLabel="timerangeTitle">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
                         <span class="p-ml-1">{{option.timerangeTitle}}</span>
                       </div>
                     </ng-template>
-                  </p-multiSelect>
+                  </p-dropdown>
                 </ng-template>
               </p-columnFilter>
             </div>
@@ -107,14 +156,14 @@
           <th pSortableColumn="{{tableColumns[5].field}}" class="medium-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[5].field}}"></p-sortIcon> {{tableColumns[5].header}} <p-columnFilter
-                type="text" field="name" display="menu"></p-columnFilter>
+                type="text" field="paymentDate" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
           <th pSortableColumn="{{tableColumns[6].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[6].field}}"></p-sortIcon> {{tableColumns[6].header}} <p-columnFilter
-                type="text" field="name" display="menu"></p-columnFilter>
+                type="text" field="information" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
@@ -131,11 +180,13 @@
         <tr>
           <td><button pButton type="button" icon="pi pi-times"
               class="p-button-rounded p-button-danger table-delete-button"
-              (click)="deleteExpense(expenseItem.expenseId)"></button> {{expenseItem.expenseId}}</td>
+              (click)="deleteExpense(expenseItem.expenseId)"></button></td>
+          <td>{{expenseItem.expenseId}}</td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <input pInputText type="text" [(ngModel)]="expenseItem.title" (ngModelChange)="updateExpenseValue($event, expenseItem, 'title')">
+                <input pInputText type="text" [(ngModel)]="expenseItem.title"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'title')">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.title}}
@@ -147,7 +198,7 @@
               <ng-template pTemplate="input">
                 <p-dropdown [options]="expenseCategories" [(ngModel)]="expenseItem.expenseCategory"
                   [style]="{'width':'100%'}" placeholder="expenseItem.expenseCategory" optionLabel="categoryTitle"
-                  [filter]="true"></p-dropdown>
+                  [filter]="true" (ngModelChange)="updateExpenseValue($event, expenseItem, 'category')"></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.expenseCategory.categoryTitle}}
@@ -157,7 +208,8 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-inputNumber pInputText type="text" [(ngModel)]="expenseItem.centValue"></p-inputNumber>
+                <p-inputNumber [(ngModel)]="expenseItem.centValue" mode="decimal" [useGrouping]="false"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'value')"></p-inputNumber>
               </ng-template>
               <ng-template pTemplate="output">
                 {{(expenseItem.centValue)/100}}
@@ -169,7 +221,7 @@
               <ng-template pTemplate="input">
                 <p-dropdown [options]="expenseTimeranges" [(ngModel)]="expenseItem.expenseTimerange"
                   [style]="{'width':'100%'}" placeholder="expenseItem.expenseTimerange" optionLabel="timerangeTitle"
-                  [filter]="true"></p-dropdown>
+                  [filter]="true" (ngModelChange)="updateExpenseValue($event, expenseItem, 'timerange')"></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.expenseTimerange.timerangeTitle}}
@@ -179,7 +231,8 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-calendar [(ngModel)]="expenseItem.paymentDate" firstDayOfWeek="1" dateFormat="dd.mm.yy">
+                <p-calendar [(ngModel)]="expenseItem.paymentDate" firstDayOfWeek="1" dateFormat="dd.mm.yy"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'paymentDate')">
                 </p-calendar>
               </ng-template>
               <ng-template pTemplate="output">
@@ -190,7 +243,8 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <input pInputText type="text" [(ngModel)]="expenseItem.information">
+                <input pInputText type="text" [(ngModel)]="expenseItem.information"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'information')">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.information}}
@@ -206,7 +260,7 @@
 
       <ng-template pTemplate="paginatorleft">
         <div class="p-d-flex">
-          <button type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()" class="p-mr-2"
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()" class="p-mr-2"
             pTooltip="CSV" tooltipPosition="bottom"></button>
           <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
             class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>

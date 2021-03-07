@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
@@ -20,13 +21,9 @@ export class ExpenseService {
 
   loadUserId() {
     this.userId = this.userAuthentication.getUserAuthenticationUserId();
-    console.log("USER ID: ");
-    console.log(this.userId);
     if (this.userId == 0) {
       // this.router.navigate([`/login`]);
     }
-    console.log("Authentication token: ");
-    console.log(this.userAuthentication.getUserAuthenticationJwtToken());
   }
 
   getAllExpenseTable() {
@@ -134,10 +131,10 @@ export class ExpenseService {
   }
 
   addExpenseAttachment(id, extension, file) {
-    return this.httpClient.put(`${this.apiConfig.baseAttachmentUrl}${this.uriAttachment}/${id}.${extension}`, file, { headers: new HttpHeaders({ 'Access-Control-Allow-Origin': '*', "Authorization": "Basic " + btoa(this.apiConfig.webDavUsername+":"+this.apiConfig.webDavPassword) }) });
+    return this.httpClient.put(`${this.apiConfig.baseAttachmentUrl}${this.uriAttachment}/${id}.${extension}`, file, { headers: new HttpHeaders({ 'Access-Control-Allow-Origin': '*', "Authorization": "Basic " + btoa(this.apiConfig.webDavUsername + ":" + this.apiConfig.webDavPassword) }) });
   }
 
-  updateExpenseCategoriesOfExpenses(oldExpenseCategoryId, newExpenseCategoryId){
+  updateExpenseCategoriesOfExpenses(oldExpenseCategoryId, newExpenseCategoryId) {
     return this.httpClient.get(`${this.fullApiurlTable}/updateExpenseCategories/${oldExpenseCategoryId}/${newExpenseCategoryId}/${this.userId}`);
   }
 

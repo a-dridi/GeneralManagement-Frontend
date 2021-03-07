@@ -45,7 +45,7 @@ export class ExpenseBudgetComponent implements OnInit {
       this.translateService.get(['messages.expenseBudgetLoadError1']).subscribe(translations => {
         this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseBudgetLoadError1'] });
       });
-    })
+    });
   }
 
   loadExpenseCategories() {
@@ -56,8 +56,8 @@ export class ExpenseBudgetComponent implements OnInit {
   }
 
     /**
-   * Update row value for a Expense row item. 
-   * @param newValue new Value that will be add to the updated expense row item 
+   * Update row value for a ExpenseBudget row item. 
+   * @param newValue new Value that will be add to the updated ExpenseBudget row item 
    * @param expenseBudgetRowItem 
    * @param columnName The column / attribute of the expense budget that will be updated
    */
@@ -69,6 +69,14 @@ export class ExpenseBudgetComponent implements OnInit {
         });  
       });
     }
+    if(columnName === "notice") {
+      this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseBudgetRowItem.expenseCategory, expenseBudgetRowItem.centBudgetValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, newValue).subscribe(() => {
+        this.translateService.get(['messages.expenseBudgetTableUpdatedOK1']).subscribe(translations => {
+          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseBudgetTableUpdatedOK1'] });
+        });  
+      });
+    }
+
   }
 
   

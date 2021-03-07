@@ -26,8 +26,6 @@ export class UserAuthentication {
      */
     public getUserAuthenticationUserId(): number {
         let userIdString = sessionStorage.getItem(this.USERID_SESSION_STORAGE_ID);
-        console.log("userId string:  ");
-        console.log(userIdString);
         if (userIdString !== null) {
             return parseInt(userIdString);
         }
@@ -39,7 +37,6 @@ export class UserAuthentication {
     */
     public getUserAuthenticationJwtToken(): string {
         if(this.jwttoken_app_variable !==""){
-            console.log("show jwttoken variable: " + this.jwttoken_app_variable);
             return this.jwttoken_app_variable;
         }
         return sessionStorage.getItem(this.JWTTOKEN_SESSION_STORAGE_ID);

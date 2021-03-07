@@ -29,7 +29,9 @@
         "expensesupdatedAttachmentError3": "Attachment could not be updated!",
         "expensesupdatedAttachmentOk1": "Attachment updated.",
         "expenseBudgetLoadError1": "Expense Budget list could not be loaded!",
-        "expenseBudgetTableUpdatedOK1": "Expense Budget updated."
+        "expenseBudgetTableUpdatedOK1": "Expense Budget updated.",
+        "expensesTableUpdatedError1": "Expense could not be updated!",
+        "filterSelectCategoryPlaceholder": "Select"
     },
     "siteMenu":{
         "menuPointFrontPage": "Front Page",
@@ -56,7 +58,10 @@
         "numberOfAvailableDatasets": "#? Data sets saved",
         "expensesTableTitle": "Expenses ",
         "expensesTableAllExpensesButton": "All Expenses",
-        "expensesTableHeaderExpenses": "Expenses (monthly & yearly):",
+        "expensesTableOverviewMonthlyEarnings": "Monthly Earnings",
+        "expensesTableOverviewMonthlyExpenses": "Monthly Expenses",
+        "expensesTableOverviewYearlyEarnings": "Yearly Earnings",
+        "expensesTableOverviewYearlyExpenses": "Yearly Expenses",
         "expensesTableHeaderAvgExpenses": "Average Monthly Expenses:",
         "expenseTableHeaderTitle": "Title",
         "expenseTableHeaderCategory": "Category",

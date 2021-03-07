@@ -27,15 +27,15 @@ import { DialogModule } from 'primeng/dialog';
 import { ListboxModule } from 'primeng/listbox';
 import { DatabaseNoteService } from '../database-note/database-note.service';
 import { ExpenseService } from './expense.service';
-import {InputTextModule} from 'primeng/inputtext';
-import {CalendarModule} from 'primeng/calendar';
-import {FileUploadModule} from 'primeng/fileupload';
-import {TableModule} from 'primeng/table';
-import {MultiSelectModule} from 'primeng/multiselect';
-import {ToastModule} from 'primeng/toast';
+import { InputTextModule } from 'primeng/inputtext';
+import { CalendarModule } from 'primeng/calendar';
+import { FileUploadModule } from 'primeng/fileupload';
+import { TableModule } from 'primeng/table';
+import { MultiSelectModule } from 'primeng/multiselect';
+import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
-import {InputNumberModule} from 'primeng/inputnumber';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [
