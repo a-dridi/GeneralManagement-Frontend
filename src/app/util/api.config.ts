@@ -11,7 +11,7 @@ export class ApiConfig {
 
     //CHANGE THIS
     public webDavUsername = "YOUR_USERNAME";
-    public webDavPassword = "YOUR_PASSWORD";
+    public webDavPassword = "YOURÜAS";
 
     get apiUrl(): string {
         return this.server + "/" + this.baseApiUri;
