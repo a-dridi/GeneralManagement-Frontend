@@ -6,6 +6,8 @@ This application is PWA.
 
 ![Screenshot of Web App General Management](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot.PNG)
 
+### Please check screenshots below for more pictures of this application.
+
 Uses JWT authentication token to establish a session with the backend. Realized through an HTTP interceptor.
 
 ## Testing 
@@ -42,8 +44,9 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ![Decision Matrix](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot2.PNG)
 
+![Screenshot 5](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot5.PNG)
+
 ![Screenshot 3](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot3.PNG)
 
 ![Screenshot 4](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot4.PNG)
 
-![Screenshot 5](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot5.PNG)
