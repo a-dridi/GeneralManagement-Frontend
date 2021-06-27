@@ -4,8 +4,9 @@ import { faAt, faKey, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { Message } from 'primeng/api/message';
+import { RefererCache } from 'src/app/util/refererCache';
 import { UserAuthentication } from 'src/app/util/user-authentication';
-import { User } from '../../model/user.model';
+import { User } from '../model/user.model';
 import { UserService } from '../user.service';
 
 @Component({
@@ -26,7 +27,7 @@ export class UserLoginComponent implements OnInit {
 
   loginButtonText: string;
 
-  constructor(private messageService: MessageService, private userService: UserService, public userAuthentication: UserAuthentication, private translateService: TranslateService, private router: Router) { }
+  constructor(private messageService: MessageService, private userService: UserService, public userAuthentication: UserAuthentication, private translateService: TranslateService, private router: Router, private refererCache: RefererCache) { }
 
   ngOnInit(): void {
     let passWordInput = document.getElementById("loginPassword");
@@ -41,9 +42,8 @@ export class UserLoginComponent implements OnInit {
 
   loadUiText() {
     this.translateService.get(['userLogin.loginButton']).subscribe(translations => {
-     this.loginButtonText = translations['userLogin.loginButton'];
+      this.loginButtonText = translations['userLogin.loginButton'];
     });
-
   }
 
   /**
@@ -51,25 +51,23 @@ export class UserLoginComponent implements OnInit {
    */
   doLogin() {
     this.userService.doLogin(this.email, this.password).subscribe(resp => {
-      console.log("IN DO LOG !!!!");
       if (resp.status !== 200) {
         this.showLoginFailedMessage();
       }
-
       this.jwtAuthenticationHeaderValue = resp.headers.get("Authorization");
       this.userService.getAuthenticatedUser(this.email, this.password).subscribe((authenticatedUserId: Number) => {
         this.userAuthentication.saveUserAuthentication(authenticatedUserId, this.jwtAuthenticationHeaderValue);
-        this.router.navigate(['/']);
-        console.log("Logged in.");
-        window.location.assign(window.location.origin + "/");
+        this.router.routeReuseStrategy.shouldReuseRoute = () => {
+          return false;
+        }
+        this.router.onSameUrlNavigation = 'reload';
+        this.refererCache.redirectToSavedUri();
       }, (err) => {
         this.showLoginFailedMessage();
         console.log(err);
       });
     }, err => {
-      console.log("FAIL IN DO LOG !!!!");
       this.showLoginFailedMessage();
-
       console.log(err);
     });
   }

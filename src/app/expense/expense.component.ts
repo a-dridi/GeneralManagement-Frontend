@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { faCalendarPlus } from '@fortawesome/free-regular-svg-icons';
-import { faChartPie, faClipboardList, faDollarSign, faTable } from '@fortawesome/free-solid-svg-icons';
+import { faChartLine, faChartPie, faClipboardList, faDollarSign, faTable } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-expense',
@@ -14,7 +14,8 @@ export class ExpenseComponent implements OnInit {
   faDollarSign = faDollarSign;
   faChartPie= faChartPie;
   faCalendarPlus=faCalendarPlus;
-
+  faChartLine = faChartLine;
+  
   noteTableName = "Expense";
   noteHeight="170px";
 

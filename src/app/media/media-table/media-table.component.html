@@ -1,0 +1,54 @@
+<div class="content-container">
+    <h2 class="site-title">{{'mediaModule.title' | translate}}</h2>
+    <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
+    <br>
+    <br>
+    <p-tabView styleClass="tabview-submenu">
+      <p-tabPanel header="SoftwareTable" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faUncharted"></fa-icon>
+          <span class="tab-header">{{'mediaModule.submenuTitleSoftware' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-software></app-software>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="MusicTable" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faMusic"></fa-icon>
+          <span class="tab-header">{{'mediaModule.submenuTitleMusic' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-music></app-music>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="VideoTable" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faFilm"></fa-icon>
+          <span class="tab-header">{{'mediaModule.submenuTitleVideo' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-video></app-video>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="VideoclipTable" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faVideo"></fa-icon>
+          <span class="tab-header">{{'mediaModule.submenuTitleVideoclip' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-videoclip></app-videoclip>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="VideoGraph" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faChartPie"></fa-icon>
+          <span class="tab-header">{{'mediaModule.submenuTitleGraph' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-video-graph></app-video-graph>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+  

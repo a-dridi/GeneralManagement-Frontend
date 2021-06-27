@@ -7,19 +7,30 @@ import { AuthenticationInterceptor } from '../authentication.interceptor';
 import { AppLanguageLoaderHelper, AppLanguages } from '../util/languages.config';
 import { DatabaseNoteService } from '../database-note/database-note.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { NoteeditorComponent } from '../component-parts/noteeditor/noteeditor.component';
+import { AngularEditorModule } from '@kolkov/angular-editor';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
 
 
 
 @NgModule({
-  declarations: [],
+  declarations: [NoteeditorComponent],
   imports: [
     CommonModule,
-    TranslateModule
+    FormsModule,
+    TranslateModule,
+    ButtonModule,
+    FontAwesomeModule,
+    AngularEditorModule
   ],
-  exports: [     
+  exports: [
     HttpClientModule,
-    TranslateModule
-    ],
+    TranslateModule,
+    AngularEditorModule,
+    NoteeditorComponent
+  ],
   providers: [ApiConfig,
     [
       {

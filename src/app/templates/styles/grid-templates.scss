@@ -1,0 +1,44 @@
+.subsiteTitle {
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 20px !important;
+}
+
+.elementGrid {
+    margin: 5px 5px 20px 5px;
+    border: 1px solid #d8d8d8;
+    -webkit-box-shadow: 10px 10px 17px -8px rgba(186, 184, 186, 0.79);
+    -moz-box-shadow: 10px 10px 17px -8px rgba(186, 184, 186, 0.79);
+    box-shadow: 10px 10px 17px -8px rgba(186, 184, 186, 0.79);
+}
+
+.elementHeader {
+    padding: 10px;
+}
+
+.tableHeader {
+    background-color: rgba(0, 132, 209, 0.993);
+    color: white;
+}
+
+.addHeader {
+    background-color: rgb(44 169 48 / 99%);
+    color: white;
+}
+
+.addcategoryHeader {
+    background-color: #e66f00;
+    color: white;
+}
+
+.editcategoryHeader {
+    background-color: #ffe945;
+    color: black;
+    margin-bottom: 20px;
+}
+
+.updateAttachmentHeader {
+    background-color: #972ded;
+    color: white;
+    margin-bottom: 8px;
+}

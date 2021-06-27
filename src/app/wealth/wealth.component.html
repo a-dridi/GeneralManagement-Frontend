@@ -1,0 +1,26 @@
+<div class="content-container">
+  <h2 class="site-title">{{'wealthModule.title' | translate}}</h2>
+  <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
+  <br>
+  <br>
+  <p-tabView styleClass="tabview-submenu">
+    <p-tabPanel header="WealthMonthlyTable" cache="false">
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faTable"></fa-icon>
+        <span class="tab-header">{{'wealthModule.monthlyTableTitle' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-wealth-monthly></app-wealth-monthly>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="WealthYearlyTable" cache="false">
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faBorderAlt"></fa-icon>
+        <span class="tab-header">{{'wealthModule.yearlyTableTitle' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-wealth-yearly></app-wealth-yearly>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>

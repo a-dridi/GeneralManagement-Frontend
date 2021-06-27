@@ -1,1 +1,142 @@
-<p>frontpage works!</p>
+<div class="content-container">
+  <h2 class="site-title">{{'frontpage.title' | translate}}, {{loggedInUser}}</h2>
+  <h4>{{'frontpage.welcometext' | translate}}</h4>
+  <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
+  <br>
+  <br>
+  <p-accordion>
+    <p-accordionTab header="{{expensesTabHeader}}">
+      <app-expense></app-expense>
+    </p-accordionTab>
+  </p-accordion>
+  <br>
+  <p-accordion>
+    <p-accordionTab header="{{organizationsTabHeader}}">
+      <app-organization></app-organization>
+    </p-accordionTab>
+  </p-accordion>
+  <div class="frontpage-modules">
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency1}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue1}} {{targetCurrency1}}
+        </p>
+      </div>
+    </div>
+
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency2}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue2}} {{targetCurrency2}}
+        </p>
+      </div>
+    </div>
+
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency3}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue3}} {{targetCurrency3}}
+        </p>
+      </div>
+    </div>
+
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency4}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue4}} {{targetCurrency4}}
+        </p>
+      </div>
+    </div>
+
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency5}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue5}} {{targetCurrency5}}
+        </p>
+      </div>
+    </div>
+
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency6}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue6}} {{targetCurrency6}}
+        </p>
+      </div>
+    </div>
+
+    <div class="frontpage-module-gadget">
+      <div class="module-gadget-title">
+        <p><span>{{baseCurrency}} </span>
+          <span class="icon-seperator">
+            <fa-icon [icon]="faAngleDoubleRight"></fa-icon>
+          </span>
+          <span>{{targetCurrency7}}</span>
+        </p>
+      </div>
+      <hr>
+      <div class="module-gadget-content">
+        <p>
+          {{targetValue7}} {{targetCurrency7}}
+        </p>
+      </div>
+    </div>
+
+  </div>
+  <p class="date">{{'frontpage.moduleGadgetText1' | translate}} {{currentDate}}</p>
+  <p class="italic">{{'frontpage.moduleGadgetText2' | translate}}</p>
+
+</div>

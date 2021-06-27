@@ -1,0 +1,285 @@
+<h3 class="subsiteTitle">{{'cryptocurrency.siteTitle' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader tableHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTable"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'cryptocurrency.tableTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-table #dataTable [columns]="tableColumns" [value]="cryptocurrencies" dataKey="cryptocurrencyId"
+      [paginator]="true" [rows]="10" [showCurrentPageReport]="true" 
+      totalRecords="{{cryptocurrencies.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading"
+      [globalFilterFields]="['amount','currency','storageLocation','notice']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
+
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <span class="p-input-icon-left p-ml-auto">
+            <button pButton label=" " class="p-button-warning p-button-rounded"
+              (click)="restoreDeletedCryptoCurrencies()">
+              <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
+              <span>{{'cryptocurrency.cryptocurrencyTableRestoreButton' | translate}}</span>
+            </button>
+          </span>
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="delete-table-column">
+            <div>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
+            <div>
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> ID
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[1].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
+                type="text" field="{{tableColumns[1].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[2].field}}" class="big-table-column">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon> {{tableColumns[2].header}} <p-columnFilter
+                type="text" field="{{tableColumns[2].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[3].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}} <p-columnFilter
+                type="text" field="{{tableColumns[3].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[4].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon> {{tableColumns[4].header}} <p-columnFilter
+                type="text" field="{{tableColumns[4].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              D
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-cryptocurrencyItem>
+        <tr>
+          <td><button pButton type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger table-delete-button"
+              (click)="deleteCryptoCurrency(cryptocurrencyItem.cryptocurrencyId)"></button></td>
+          <td>{{cryptocurrencyItem.cryptocurrencyId}}</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.amount"
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'amount')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{cryptocurrencyItem.amount}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.currency"
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'currency')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{cryptocurrencyItem.currency}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.storageLocation"
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'storageLocation')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{cryptocurrencyItem.storageLocation}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.notice"
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'notice')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{cryptocurrencyItem.notice}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td *ngIf="cryptocurrencyItem.attachment"><button pButton class="p-button-raised p-button-rounded"
+              (click)="openAttachment(cryptocurrencyItem.attachmentPath)" label=" " type="button"
+              icon="pi pi-arrow-circle-down" iconPos="left" pTooltip="{{'messages.tableDownloadButtonTootlip' | translate}}" tooltipPosition="top"></button></td>
+          <td *ngIf="cryptocurrencyItem.attachment==false"></td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()"
+            class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+            class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">{{'messages.cryptocurrencyTableNoValues' | translate}}.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPlusCircle"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'cryptocurrency.cryptocurrencyAddHeader' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faFont"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="currency" class="required-input large-text" type="text" [(ngModel)]="currency" pInputText>
+          <label for="currency">{{'cryptocurrency.cryptocurrencyAddCurrencyHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faBitcoin"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="amount" type="text" class="large-text" [(ngModel)]="amount" pInputText>
+          <label for="amount">{{'cryptocurrency.cryptocurrencyAddAmountHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faSearchLocation"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="storageLocation" type="text" class="required-input large-text" [(ngModel)]="storageLocation"
+            pInputText>
+          <label for="storageLocation">{{'cryptocurrency.cryptocurrencyAddStorageLocationHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faInfo"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="notice" type="text" class="large-text" [(ngModel)]="notice" pInputText class="wide-input-field">
+          <label for="notice">{{'cryptocurrency.cryptocurrencyAddNoticeHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <input type="file" (change)="onCryptoCurrencyAttachmentUpload($event)" name="cryptocurrencyAttachment"
+        class="form-fileupload" />
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+        (click)="saveCryptoCurrency()">
+        <div class="button-content">
+          <fa-icon [icon]="faCheckSquare" class="button-icon"></fa-icon>
+          {{'cryptocurrency.cryptocurrencyAddSaveCryptoCurrency' | translate}}
+        </div>
+      </button>
+    </div>
+
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader updateAttachmentHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPaperclip"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'cryptocurrency.attachmentUpdateHeaderTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faTable"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="updateAttachmentId" type="text" [(ngModel)]="updatedAttachmentId" pInputText>
+          <label for="updateAttachmentId">{{'cryptocurrency.attachmentUpdateIdField' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <input type="file" (change)="onCryptoCurrencyAttachmentUpload($event)" name="cryptocurrencyAttachment"
+        class="form-fileupload" />
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+        (click)="updateCryptoCurrencyAttachment()">
+        <div class="button-content">
+          <fa-icon [icon]="faRetweet" class="button-icon"></fa-icon>
+          {{'cryptocurrency.attachmentUpdateButton' | translate}}
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

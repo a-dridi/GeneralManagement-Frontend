@@ -1,5 +1,84 @@
 <h3 class="subsiteTitle">{{'expense.submenuTitleTable' | translate}}</h3>
 <br>
+<p-dialog header="{{'expense.updateValueHeader' | translate}}" [(visible)]="displayUpdateValue"
+  [style]="{width: '50vw'}">
+  <div class="update-value-expense-title">
+    {{currentlyUpdatingExpenseTitle}}
+  </div>
+  <div class="p-inputgroup wide-input-field">
+    <span class="p-inputgroup-addon required-input-addon">
+      <fa-icon [icon]="faEuroSign"></fa-icon>
+    </span>
+    <span class="p-float-label">
+      <input id="updatedPrice" type="text" class="required-input large-text" [(ngModel)]="updatedExpenseValue" (ngModelChange)="onUpdatedPriceChange()" pInputText>
+      <label for="updatedPrice">{{'expense.expenseAddPriceHeader' | translate}}</label>
+    </span>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <button id="updatePriceButton" pButton (click)="saveUpdateValueDialog()" type="button" icon="pi pi-check" label="OK" class="p-button-success"></button>
+  </ng-template>
+</p-dialog>
+<p-accordion>
+  <p-accordionTab header="{{expensePartitionTabHeader}}">
+    <div class="expense-separation">
+      <div class="person-1-group">
+        <div class="person-name">
+          <span class="p-float-label">
+            <input id="person1Name" class="" type="text" [(ngModel)]="selectedPerson1Name"
+              (ngModelChange)="setPerson1Name($event)" pInputText>
+            <label for="person1Name">{{'expense.person1NameTitle' | translate}}</label>
+          </span>
+        </div>
+        <div class="person-ratio">
+          <span class="p-float-label">
+            <input id="person1Ratio" class="" type="text" [(ngModel)]="selectedPerson1Ratio"
+              (ngModelChange)="setPerson1Ratio($event)" pInputText>
+            <label for="person1Ratio">{{'expense.person1RatioTitle' | translate}}</label>
+          </span>
+        </div>
+      </div>
+      <div class="person-2-group">
+        <div class="person-name">
+          <span class="p-float-label">
+            <input id="person2Name" class="" type="text" [(ngModel)]="selectedPerson2Name"
+              (ngModelChange)="setPerson2Name($event)" pInputText>
+            <label for="person2Name">{{'expense.person2NameTitle' | translate}}</label>
+          </span>
+        </div>
+        <div class="person-ratio">
+          <span class="p-float-label">
+            <input id="person2Ratio" class="" type="text" [(ngModel)]="selectedPerson2Ratio"
+              (ngModelChange)="setPerson2Ratio($event)" pInputText>
+            <label for="person2Ratio">{{'expense.person2RatioTitle' | translate}}</label>
+          </span>
+        </div>
+      </div>
+      <div class="person-expense-calculate">
+        <button pButton label=" " class="p-button-raised p-button-help" (click)="displayExpensesPartCalculation()">
+          <fa-icon [icon]="faCalculator" class="button-icon"></fa-icon>
+          <span>{{'expense.personExpenseCalculateButton' | translate}}</span>
+        </button>
+      </div>
+      <div class="person-part-output">
+        <div class="person-1-output">
+          <span class="person-output-title">
+            {{'expense.person1PartTitle' | translate}}
+          </span>
+          <span>{{person1SumPart | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}</span>
+        </div>
+        <div class="person-2-output">
+          <span class="person-output-title">
+            {{'expense.person2PartTitle' | translate}}
+          </span>
+          <span>{{person2SumPart | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}</span>
+        </div>
+      </div>
+    </div>
+  </p-accordionTab>
+</p-accordion>
+<br>
+<br>
 <div class="elementGrid">
   <div class="elementHeader tableHeader">
     <div class="elementTopHeader">
@@ -8,6 +87,18 @@
       </div>
       <div class="element-header-title">
         {{'expense.expensesTableTitle' | translate}} {{displayedDateString}}
+      </div>
+      <div class="element-header-selector">
+        <button pButton pRipple (click)="displayExpensesPreviousMonth()" type="button" icon="pi pi-arrow-left"
+          class="p-button-rounded p-button-secondary"> </button>
+        <p-dropdown [options]="months" (onChange)="selectMonthExpenses($event.value)" placeholder="M" filter="true"
+          [showClear]="true">
+        </p-dropdown>
+        <p-dropdown [options]="years" (onChange)="selectYearExpenses($event.value)" placeholder="YYYY" filter="true"
+          [showClear]="true">
+        </p-dropdown>
+        <button pButton pRipple (click)="displayExpensesNextMonth()" type="button" icon="pi pi-arrow-right"
+          class="p-button-rounded p-button-secondary"> </button>
       </div>
       <div class="element-header-button">
         <button pButton (click)="displayAllExpenses()" type="button" label=" "
@@ -18,54 +109,72 @@
   <div class="elementContent">
     <div class="expenses-earnings-overview">
       <div class="overview-monthly">
-        <div class="monthly-earnings">
-          {{'expense.expensesTableOverviewMonthlyEarnings' | translate}} {{earningsMonthlySum}}
-        </div>
-        <div class="operator">
+        <span class="monthly-earnings">
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{'expense.expensesTableOverviewMonthlyEarnings' | translate}}:
+          {{earningsMonthlySum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+        </span>
+        <span class="operator">
           -
-        </div>
-        <div class="monthly-expenses">
-          {{'expense.expensesTableOverviewMonthlyExpenses' | translate}} {{expensesMonthlySum}}
-        </div>
-        <div class="equals">
+        </span>
+        <span class="monthly-expenses">
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{'expense.expensesTableOverviewMonthlyExpenses' | translate}}:
+          {{expensesMonthlySum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+        </span>
+        <span class="equals">
           =
-        </div>
-        <div class="monthly-surplus">
-          <span>-</span> {{surplusMonthlySum}}
-        </div>
+        </span>
+        <span class="monthly-surplus">
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{surplusMonthlySum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+        </span>
       </div>
-      <div class="seperator-overview"></div>
       <div class="overview-yearly">
-        <div class="yearly-earnings">
-          {{'expense.expensesTableOverviewYearlyEarnings' | translate}} {{earningsYearlySum}}
-        </div>
-        <div class="operator">
+        <span class="yearly-earnings">
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{'expense.expensesTableOverviewYearlyEarnings' | translate}}:
+          {{earningsYearlySum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+        </span>
+        <span class="operator">
           -
-        </div>
-        <div class="yearly-expenses">
-          {{'expense.expensesTableOverviewYearlyExpenses' | translate}} {{expensesYearlySum}}
-        </div>
-        <div class="equals">
+        </span>
+        <span class="yearly-expenses">
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{'expense.expensesTableOverviewYearlyExpenses' | translate}}:
+          {{expensesYearlySum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+        </span>
+        <span class="equals">
           =
-        </div>
-        <div class="yearly-surplus">
-          <span>-</span> {{surplusYearlySum}}
-        </div>
+        </span>
+        <span class="yearly-surplus">
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{surplusYearlySum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+        </span>
       </div>
       <div class="overview-average">
         <div class="monthly-average">
-          {{'expense.expensesTableHeaderAvgExpenses' | translate}}: ~ {{expensesAverageSum}}
+          <fa-icon [icon]="faMoneyBillAlt" class="overview-expenses-icon"></fa-icon>
+          {{'expense.expensesTableHeaderAvgExpenses' | translate}}: ~
+          {{expensesAverageSum | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
         </div>
       </div>
     </div>
-    <p-table #dataTable [columns]="tableColumns" [value]="expenses" dataKey="expenseId" [paginator]="true"
-      [rows]="10" [showCurrentPageReport]="true" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading"
+    <p-table #dataTable [columns]="tableColumns" [value]="expenses" dataKey="expenseId" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" totalRecords="{{expenses.length}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="loading"
       [globalFilterFields]="['title','expenseCategory.categoryTitle','centValue','expenseTimerange.timerangeTitle','paymentDate','information']"
       styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
         <div class="p-d-flex">
+          <span class="p-input-icon-left p-ml-auto">
+            <button pButton label=" " class="p-button-warning p-button-rounded" (click)="restoreDeletedExpenses()">
+              <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
+              <span>{{'expense.expenseTableRestoreButton' | translate}}</span>
+            </button>
+          </span>
           <span class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
             <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
@@ -83,14 +192,14 @@
 
           <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
             <div>
-              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> {{tableColumns[0].header}}
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> ID
             </div>
           </th>
 
           <th pSortableColumn="{{tableColumns[1].field}}" class="big-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
-                type="text" field="title" display="menu" [showOperator]="false"></p-columnFilter>
+                type="text" field="{{tableColumns[1].field}}" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
@@ -98,7 +207,7 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon>
               {{tableColumns[2].header}}
-              <p-columnFilter field="expenseCategory" matchMode="equals" display="menu" [showAddButton]="false"
+              <p-columnFilter field="{{tableColumns[2].field}}" matchMode="equals" display="menu" [showAddButton]="false"
                 [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
@@ -123,7 +232,7 @@
           <th pSortableColumn="{{tableColumns[3].field}}" class="medium-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}} <p-columnFilter
-                type="text" field="value" display="menu" [showOperator]="false"></p-columnFilter>
+                type="text" field="{{tableColumns[3].field}}" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
@@ -131,7 +240,7 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon>
               {{tableColumns[4].header}}
-              <p-columnFilter field="expenseTimerange" matchMode="equals" display="menu" [showAddButton]="false"
+              <p-columnFilter field="{{tableColumns[4].field}}" matchMode="equals" display="menu" [showAddButton]="false"
                 [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
@@ -156,14 +265,14 @@
           <th pSortableColumn="{{tableColumns[5].field}}" class="medium-table-column">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[5].field}}"></p-sortIcon> {{tableColumns[5].header}} <p-columnFilter
-                type="text" field="paymentDate" display="menu" [showOperator]="false"></p-columnFilter>
+                type="text" field="{{tableColumns[5].field}}" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
           <th pSortableColumn="{{tableColumns[6].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[6].field}}"></p-sortIcon> {{tableColumns[6].header}} <p-columnFilter
-                type="text" field="information" display="menu" [showOperator]="false"></p-columnFilter>
+                type="text" field="{{tableColumns[6].field}}" display="menu" [showOperator]="false"></p-columnFilter>
             </div>
           </th>
 
@@ -196,35 +305,34 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-dropdown [options]="expenseCategories" [(ngModel)]="expenseItem.expenseCategory"
-                  [style]="{'width':'100%'}" placeholder="expenseItem.expenseCategory" optionLabel="categoryTitle"
-                  [filter]="true" (ngModelChange)="updateExpenseValue($event, expenseItem, 'category')"></p-dropdown>
+                <p-dropdown [options]="expenseCategoryTitles" [(ngModel)]="expenseItem.expenseCategory"
+                  [style]="{'width':'100%'}" placeholder="expenseItem.expenseCategory" [filter]="true"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'category')"></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{expenseItem.expenseCategory.categoryTitle}}
+                {{expenseItem.expenseCategory}}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-inputNumber [(ngModel)]="expenseItem.centValue" mode="decimal" [useGrouping]="false"
-                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'value')"></p-inputNumber>
+                <button pButton pRipple type="button" icon="pi pi-sliders-v" (click)="showUpdateValueDialog(expenseItem)" onclass="p-button-rounded p-button-warning"></button>
               </ng-template>
               <ng-template pTemplate="output">
-                {{(expenseItem.centValue)/100}}
+                {{(expenseItem.centValue) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
               </ng-template>
             </p-cellEditor>
           </td>
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-dropdown [options]="expenseTimeranges" [(ngModel)]="expenseItem.expenseTimerange"
-                  [style]="{'width':'100%'}" placeholder="expenseItem.expenseTimerange" optionLabel="timerangeTitle"
-                  [filter]="true" (ngModelChange)="updateExpenseValue($event, expenseItem, 'timerange')"></p-dropdown>
+                <p-dropdown [options]="expenseTimerangeTitles" [(ngModel)]="expenseItem.expenseTimerange"
+                  [style]="{'width':'100%'}" placeholder="expenseItem.expenseTimerange" [filter]="true"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'timerange')"></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{expenseItem.expenseTimerange.timerangeTitle}}
+                {{expenseTimerangeTranslations[expenseItem.expenseTimerange]}}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -253,15 +361,16 @@
           </td>
           <td *ngIf="expenseItem.attachment"><button pButton class="p-button-raised p-button-rounded"
               (click)="openAttachment(expenseItem.attachmentPath)" label=" " type="button"
-              icon="pi pi-arrow-circle-down" iconPos="left"></button></td>
+              icon="pi pi-arrow-circle-down" iconPos="left"
+              pTooltip="{{'messages.tableDownloadButtonTootlip' | translate}}" tooltipPosition="top"></button></td>
           <td *ngIf="expenseItem.attachment==false"></td>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="paginatorleft">
         <div class="p-d-flex">
-          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()" class="p-mr-2"
-            pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()"
+            class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
           <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
             class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
           <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
@@ -298,7 +407,7 @@
           <fa-icon [icon]="faFont"></fa-icon>
         </span>
         <span class="p-float-label">
-          <input id="title" class="required-input" type="text" [(ngModel)]="title" pInputText>
+          <input id="title" class="required-input large-text" type="text" [(ngModel)]="title" pInputText>
           <label for="title">{{'expense.expenseAddTitleHeader' | translate}}</label>
         </span>
       </div>
@@ -306,13 +415,13 @@
 
     <div class="p-col-12 p-md-12">
       <div class="p-inputgroup wide-input-field">
-        <span class="p-inputgroup-addon">
+        <span class="p-inputgroup-addon required-input-addon">
           <fa-icon [icon]="faTags"></fa-icon>
         </span>
         <span class="p-float-label" #categoryselector>
-          <p-dropdown inputId="category" [options]="expenseCategories" [(ngModel)]="expenseCategory"
-            (onChange)="reloadDropdown($event)" optionLabel="categoryTitle" [filter]="true"
-            [style]="{'height': '45px', 'width': '100%'}" placeholder="   ">
+          <p-dropdown inputId="selectCategory" class="required-dropdown" [options]="expenseCategories"
+            [(ngModel)]="expenseCategory" (onChange)="reloadDropdown($event)" optionLabel="categoryTitle"
+            [filter]="true" [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
           </p-dropdown>
           <label for="category">{{'expense.expenseAddCategoryHeader' | translate}}</label>
         </span>
@@ -321,11 +430,11 @@
 
     <div class="p-col-12 p-md-12">
       <div class="p-inputgroup wide-input-field">
-        <span class="p-inputgroup-addon">
+        <span class="p-inputgroup-addon required-input-addon">
           <fa-icon [icon]="faEuroSign"></fa-icon>
         </span>
         <span class="p-float-label">
-          <input id="price" type="text" [(ngModel)]="value" pInputText>
+          <input id="price" type="text" class="required-input large-text" [(ngModel)]="value" pInputText>
           <label for="price">{{'expense.expenseAddPriceHeader' | translate}}</label>
         </span>
       </div>
@@ -333,13 +442,13 @@
 
     <div class="p-col-12 p-md-12">
       <div class="p-inputgroup wide-input-field">
-        <span class="p-inputgroup-addon">
+        <span class="p-inputgroup-addon required-input-addon">
           <fa-icon [icon]="faHistory"></fa-icon>
         </span>
         <span class="p-float-label" #timerangeselector>
-          <p-dropdown inputId="timerange" [options]="expenseTimeranges" [(ngModel)]="expenseTimerange"
-            (onChange)="reloadDropdown($event)" optionLabel="timerangeTitle" [filter]="true"
-            [style]="{'height': '45px', 'width': '100%'}" placeholder="   ">
+          <p-dropdown inputId="timerange" class="required-dropdown" [options]="expenseTimeranges"
+            [(ngModel)]="expenseTimerange" (onChange)="reloadDropdown($event)" optionLabel="timerangeTitle"
+            [filter]="true" [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
           </p-dropdown>
           <label for="timerange">{{'expense.expenseAddTimerangeHeader' | translate}}</label>
         </span>
@@ -351,7 +460,7 @@
         <span class="p-inputgroup-addon">
           <fa-icon [icon]="faCalendarCheck"></fa-icon>
         </span>
-        <span class="p-float-label" #calendarInput>
+        <span class="p-float-label">
           <p-calendar inputId="paymentdate" [(ngModel)]="paymentDate" firstDayOfWeek="1" dateFormat="dd.mm.yy"
             class="wide-input-field" [style]="{'height': '45px', 'width': '100%', 'font-size': '20px'}">
           </p-calendar>
@@ -366,7 +475,8 @@
           <fa-icon [icon]="faInfo"></fa-icon>
         </span>
         <span class="p-float-label">
-          <input id="information" type="text" [(ngModel)]="information" pInputText class="wide-input-field">
+          <input id="information" type="text" class="large-text" [(ngModel)]="information" pInputText
+            class="wide-input-field">
           <label for="information">{{'expense.expenseAddInformationHeader' | translate}}</label>
         </span>
       </div>
@@ -408,8 +518,8 @@
           <input id="addCategoryTitle" type="text" [(ngModel)]="newCategoryName" pInputText>
           <label for="addCategoryTitle">{{'expense.categoryAddCategoryField' | translate}}</label>
         </span>
-        <button type="button" pButton pRipple class="category-add-button p-button-success" label=" "
-          (click)="addExpenseCategory()">
+        <button id="addCategoryButton" type="button" pButton pRipple class="category-add-button p-button-success"
+          label=" " (click)="addExpenseCategory()">
           <fa-icon [icon]="faPlus" class="button-icon"></fa-icon>
           <span class="input-side-button">{{'expense.categoryAddButton' | translate}}</span>
         </button>
@@ -450,7 +560,7 @@
           <span class="edit-category-new-info">{{'expense.categoryEditCategoryNewInfo' | translate}}</span>
         </span>
         <span class="p-float-label">
-          <p-dropdown inputId="category" [options]="expenseCategories" [(ngModel)]="updatedExpenseCategory"
+          <p-dropdown inputId="updatedCategory" [options]="expenseCategories" [(ngModel)]="updatedExpenseCategory"
             optionLabel="categoryTitle" [filter]="true" [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
           </p-dropdown>
           <label for="category">{{'expense.categoryEditCategoryNew' | translate}}</label>

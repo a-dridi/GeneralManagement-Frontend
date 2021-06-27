@@ -1,49 +1,58 @@
 <div class="content-container">
-  <h2 class="site-title">{{'expense.title' | translate}}</h2>
+  <h2 class="site-title">{{'expenseModule.title' | translate}}</h2>
   <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
   <br>
   <br>
   <p-tabView styleClass="tabview-submenu">
-    <p-tabPanel>
+    <p-tabPanel header="ExpenseTable" cache="false">
       <ng-template pTemplate="header">
         <fa-icon [icon]="faTable"></fa-icon>
-        <span class="tab-header">{{'expense.submenuTitleTable' | translate}}</span>
+        <span class="tab-header">{{'expenseModule.submenuTitleTable' | translate}}</span>
       </ng-template>
       <ng-template pTemplate="content">
         <app-expense-table></app-expense-table>
       </ng-template>
     </p-tabPanel>
-    <p-tabPanel>
+    <p-tabPanel header="ExpenseCategory" cache="false">
       <ng-template pTemplate="header">
         <fa-icon [icon]="faClipboardList"></fa-icon>
-        <span class="tab-header">{{'expense.submenuTitleCategory' | translate}}</span>
+        <span class="tab-header">{{'expenseModule.submenuTitleCategory' | translate}}</span>
       </ng-template>
       <ng-template pTemplate="content">
         <app-expense-category></app-expense-category>
       </ng-template>
     </p-tabPanel>
-    <p-tabPanel>
+    <p-tabPanel header="ExpenseDevelopment" cache="false">
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faChartLine"></fa-icon>
+        <span class="tab-header">{{'expenseModule.submenuTitleDevelopment' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-expense-development></app-expense-development>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="ExpenseBudget" cache="false">
       <ng-template pTemplate="header">
         <fa-icon [icon]="faDollarSign"></fa-icon>
-        <span class="tab-header">{{'expense.submenuTitleBudget' | translate}}</span>
+        <span class="tab-header">{{'expenseModule.submenuTitleBudget' | translate}}</span>
       </ng-template>
       <ng-template pTemplate="content">
         <app-expense-budget></app-expense-budget>
       </ng-template>
     </p-tabPanel>
-    <p-tabPanel>
+    <p-tabPanel header="ExpenseGraph" cache="false">
       <ng-template pTemplate="header">
         <fa-icon [icon]="faChartPie"></fa-icon>
-        <span class="tab-header">{{'expense.submenuTitleGraph' | translate}}</span>
+        <span class="tab-header">{{'expenseModule.submenuTitleGraph' | translate}}</span>
       </ng-template>
       <ng-template pTemplate="content">
         <app-expense-graph></app-expense-graph>
       </ng-template>
     </p-tabPanel>
-    <p-tabPanel>
+    <p-tabPanel header="ExpenseCalendar" cache="false">
       <ng-template pTemplate="header">
         <fa-icon [icon]="faCalendarPlus"></fa-icon>
-        <span class="tab-header">{{'expense.submenuTitleCalendar' | translate}}</span>
+        <span class="tab-header">{{'expenseModule.submenuTitleCalendar' | translate}}</span>
       </ng-template>
       <ng-template pTemplate="content">
         <app-expense-calendar></app-expense-calendar>

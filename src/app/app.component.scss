@@ -1,3 +1,5 @@
+@use 'templates/styles/grid-templates.scss';
+
 .top-section {
     display: flex;
     flex: auto;
@@ -165,9 +167,19 @@
     margin-left: 8px;
 }
 
+.subsiteTitle {
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 20px !important;
+}
+
+.p-inputgroup .p-float-label:last-child input {
+    min-width: 110px !important;
+}
+
 @media screen and (max-width: 600px) {
     .nav-menu-item {
-        top: 20px !important;
+        top: 30px !important;
     }
 
     .app-is-mobile .app-sidenav-container {
@@ -212,7 +224,8 @@
 }
 
 @media screen and (max-width: 489px) {
-    .select-language-button{
+    .select-language-button {
         display: none;
     }
 }
+

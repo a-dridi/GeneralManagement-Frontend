@@ -1,8 +1,8 @@
 # General Management - Frontend Angular
 
-In development. 
 An application to manage expenses, books and other information.
 This is the Frontend part of the application "General Management". It connects to the REST API of the backend of "General Management".
+This application is PWA. 
 
 ![Screenshot of Web App General Management](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot.PNG)
 
@@ -10,7 +10,6 @@ Uses JWT authentication token to establish a session with the backend. Realized 
 
 ## Testing 
 There are test cases in the component file of the component "[ExpenseTableComponent](https://github.com/a-dridi/GeneralManagement-Frontend/blob/main/src/app/expense/expense-table/expense-table.component.spec.ts)".
-
 
 
 Use the Angular CLI to build this project. 
@@ -38,3 +37,13 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+## Screenshots
+
+![Decision Matrix](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot2.PNG)
+
+![Screenshot 3](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot3.PNG)
+
+![Screenshot 4](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot4.PNG)
+
+![Screenshot 5](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot5.PNG)

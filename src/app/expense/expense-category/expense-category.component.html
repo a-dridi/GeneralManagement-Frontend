@@ -1,1 +1,177 @@
-<p>expense-category works!</p>
+<h3 class="subsiteTitle">{{'expensecategory.submenuTitleTable' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader tableHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTable"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'expensecategory.expensebudgetTableMonthlyTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-table #dataTableMonthly [columns]="tableColumns" [value]="expenseCategoriesMonthly" dataKey="expensecategory"
+      [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+      totalRecords="{{expenseCategoriesMonthly.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="loading" [globalFilterFields]="[]" styleClass="p-datatable-responsive-table p-datatable-striped">
+
+
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th pSortableColumn="{{tableColumns[0].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon>
+              {{tableColumns[0].header}}
+              <p-columnFilter field="{{tableColumns[0].field}}" matchMode="in" display="menu" [showMatchModes]="false"
+                [showOperator]="false" [showAddButton]="false">
+                <ng-template pTemplate="header">
+                  <div class="p-px-3 p-pt-3 p-pb-0">
+                    <span class="p-text-bold">{{'expensecategory.expenseCategoryTableHeaderCategory' | translate}}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-multiSelect [ngModel]="value" [options]="expenseCategories" placeholder="Any"
+                    (onChange)="filter($event.value)" optionLabel="categoryTitle">
+                    <ng-template let-option pTemplate="item">
+                      <div class="p-multiselect-representative-option">
+                        <span class="p-ml-1">{{option.categoryTitle}}</span>
+                      </div>
+                    </ng-template>
+                  </p-multiSelect>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[1].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> 
+              {{tableColumns[1].header}}
+              <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-expenseCategoriesMonthlyItem>
+        <tr>
+          <td>
+            {{expenseCategoriesMonthlyItem.categoryTitle}}
+          </td>
+          <td>
+            {{(expenseCategoriesMonthlyItem.centValue)/100}}
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+          <button type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTableMonthly.exportCSV()"
+            class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcelMonthly()"
+            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdfMonthly()"
+            class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">{{'messages.expensesCategoryNoValues' | translate}}.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+  <br>
+  <br>
+  <div class="elementGrid">
+    <div class="elementHeader tableHeader">
+      <div class="elementTopHeader">
+        <div class="element-header-icon">
+          <fa-icon [icon]="faTable"></fa-icon>
+        </div>
+        <div class="element-header-title">
+          {{'expensecategory.expensebudgetTableYearlyTitle' | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="elementContent">
+      <p-table #dataTableYearly [columns]="tableColumns" [value]="expenseCategoriesYearly" dataKey="expensecategory"
+        [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+        totalRecords="{{expenseCategoriesYearly.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+        [loading]="loading" [globalFilterFields]="[]" styleClass="p-datatable-responsive-table p-datatable-striped">
+
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th pSortableColumn="{{tableColumns[0].field}}">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon>
+                {{tableColumns[0].header}}
+                <p-columnFilter field="{{tableColumns[0].field}}" matchMode="in" display="menu" [showMatchModes]="false"
+                  [showOperator]="false" [showAddButton]="false">
+                  <ng-template pTemplate="header">
+                    <div class="p-px-3 p-pt-3 p-pb-0">
+                      <span class="p-text-bold">{{'expensecategory.expenseCategoryTableHeaderCategory' | translate}}</span>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                    <p-multiSelect [ngModel]="value" [options]="expenseCategories" placeholder="Any"
+                      (onChange)="filter($event.value)" optionLabel="categoryTitle">
+                      <ng-template let-option pTemplate="item">
+                        <div class="p-multiselect-representative-option">
+                          <span class="p-ml-1">{{option.categoryTitle}}</span>
+                        </div>
+                      </ng-template>
+                    </p-multiSelect>
+                  </ng-template>
+                </p-columnFilter>
+              </div>
+            </th>
+
+            <th pSortableColumn="{{tableColumns[1].field}}">
+              <div class="p-d-flex p-jc-between p-ai-center">
+                <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
+                  type="text" field="name" display="menu"></p-columnFilter>
+              </div>
+            </th>
+
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-expenseCategoriesYearlyItem>
+          <tr>
+            <td>
+              {{expenseCategoriesYearlyItem.categoryTitle}}
+            </td>
+            <td>
+              {{(expenseCategoriesYearlyItem.centValue)/100}}
+            </td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="paginatorleft">
+          <div class="p-d-flex">
+            <button type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTableYearly.exportCSV()"
+              class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+            <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcelYearly()"
+              class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+            <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdfYearly()"
+              class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+          </div>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5">{{'messages.expensesCategoryNoValues' | translate}}.</td>
+          </tr>
+        </ng-template>
+
+      </p-table>
+    </div>
+
+  </div>
+  <br>

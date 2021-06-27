@@ -4,7 +4,6 @@ import { ExpenseComponent } from './expense.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TabViewModule } from 'primeng/tabview';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -14,9 +13,7 @@ import { ExpenseBudgetComponent } from './expense-budget/expense-budget.componen
 import { ExpenseGraphComponent } from './expense-graph/expense-graph.component';
 import { ExpenseCalendarComponent } from './expense-calendar/expense-calendar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NoteeditorComponent } from '../component-parts/noteeditor/noteeditor.component';
 import { ButtonModule } from 'primeng/button';
-import { AngularEditorModule } from '@kolkov/angular-editor';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
@@ -36,6 +33,12 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { SharedModuleModule } from '../shared-module/shared-module.module';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ChartModule } from 'primeng/chart';
+import { FullCalendarModule } from 'primeng/fullcalendar';
+import { AccordionModule } from 'primeng/accordion';
+import { ExpenseDevelopmentComponent } from './expense-development/expense-development.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { RippleModule } from 'primeng/ripple';
 
 @NgModule({
   declarations: [
@@ -45,7 +48,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ExpenseBudgetComponent,
     ExpenseGraphComponent,
     ExpenseCalendarComponent,
-    NoteeditorComponent,
+    ExpenseDevelopmentComponent,
   ],
   imports: [
     CommonModule,
@@ -56,7 +59,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FontAwesomeModule,
     TabViewModule,
     ButtonModule,
-    AngularEditorModule,
     MatSidenavModule,
     BrowserAnimationsModule,
     MatToolbarModule,
@@ -70,7 +72,12 @@ import { InputNumberModule } from 'primeng/inputnumber';
     TableModule,
     MultiSelectModule,
     ToastModule,
-    InputNumberModule
+    InputNumberModule,
+    ChartModule,
+    FullCalendarModule,
+    AccordionModule,
+    TooltipModule,
+    RippleModule
   ],
   exports: [
     TranslateModule,
@@ -80,7 +87,6 @@ import { InputNumberModule } from 'primeng/inputnumber';
     ExpenseBudgetComponent,
     ExpenseGraphComponent,
     ExpenseCalendarComponent,
-    NoteeditorComponent
   ],
   providers: [ApiConfig, TranslateService, AppLanguages, AppLanguageLoaderHelper, DatabaseNoteService, ExpenseService, MessageService]
 })

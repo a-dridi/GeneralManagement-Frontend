@@ -1,1 +1,15 @@
-<p>expense-graph works!</p>
+<h3 class="subsiteTitle">{{'expensegraph.monthlyExpensesGraphTitle' | translate}}</h3>
+<br>
+<p-chart type="doughnut" [data]="monthlyExpensesData"></p-chart>
+<br>
+<hr>
+<br>
+<h3 class="subsiteTitle">{{'expensegraph.yearlyExpensesGraphTitle' | translate}}</h3>
+<br>
+<p-chart type="doughnut" [data]="yearlyExpensesData"></p-chart>
+<br>
+<hr>
+<br>
+<h3 class="subsiteTitle">{{'expensegraph.currentYearExpensesGraphTitle' | translate}}</h3>
+<br>
+<p-chart type="doughnut" [data]="currentYearExpensesData"></p-chart>

@@ -1,0 +1,207 @@
+.table-delete-button {
+    margin-right: 5px;
+}
+
+:host ::ng-deep {
+    .p-datatable-responsive-table .p-datatable-tbody > tr > td .p-column-title {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    :host ::ng-deep {
+        .p-datatable {
+            &.p-datatable-responsive-table {
+                .p-datatable-thead > tr > th,
+                .p-datatable-tfoot > tr > td {
+                    display: none !important;
+                }
+
+                .p-datatable-tbody > tr > td {
+                    text-align: left;
+                    display: block;
+                    width: 100%;
+                    float: left;
+                    clear: left;
+                    border: 0 none;
+
+                    .p-column-title {
+                        padding: 0.4rem;
+                        min-width: 30%;
+                        display: inline-block;
+                        margin: -0.4em 1em -0.4em -0.4rem;
+                        font-weight: bold;
+                    }
+
+                    &:last-child {
+                        border-bottom: 1px solid var(--surface-d);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.addHeader {
+    background-color: rgb(44 169 48 / 99%);
+    color: white;
+}
+
+.elementContent {
+    padding: 5px;
+}
+
+.p-inputgroup-addon {
+    color: black;
+    height: 45px !important;
+}
+
+.elementTopHeader {
+    display: flex;
+    flex-wrap: wrap;
+    @media screen and (max-width: 645px) {
+        div {
+            margin-bottom: 7px;
+        }
+    }
+}
+
+.element-header-icon {
+    flex-grow: 0.1;
+    vertical-align: middle !important;
+    line-height: 40px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.element-header-title {
+    flex-grow: 8.9;
+    vertical-align: middle !important;
+    line-height: 40px;
+    font-size: 18px;
+    padding: 0px 5px;
+}
+
+.save-button {
+    font-weight: bold;
+    margin: 15px 10px;
+    .fa-icon {
+        margin-right: 5px !important;
+    }
+}
+
+.button-content {
+    width: 200px;
+    font-size: 22px !important;
+}
+
+.button-icon {
+    margin-right: 10px !important;
+}
+
+label {
+    font-size: 17px !important;
+    font-weight: bold !important;
+}
+
+.p-inputgroup {
+    margin-top: 17px;
+    padding: 0px 10px;
+}
+
+.p-float-label > p-dropdown {
+    width: 100% !important;
+}
+
+.form-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.wide-input-field {
+    width: 100% !important;
+    height: 45px !important;
+}
+
+.normal-input-field {
+    width: 50% !important;
+    height: 45px !important;
+}
+
+.required-input {
+    border: 1px solid red !important;
+}
+
+.required-dropdown {
+    height: 45px !important;
+    border: 1px solid red !important;
+}
+
+.required-input-addon {
+    background-color: red !important;
+    border-top: 1px solid red !important;
+    border-left: 1px solid red !important;
+    border-left: 1px solid red !important;
+    color: white !important;
+    height: 45.6px !important;
+}
+
+input::-webkit-input-placeholder {
+    padding-left: 6px;
+    font-size: 17px !important;
+}
+input:-moz-placeholder {
+    padding-left: 6px !important;
+    font-size: 17px !important;
+}
+input::-moz-placeholder {
+    padding-left: 6px !important;
+    font-size: 17px !important;
+}
+input:-ms-input-placeholder {
+    padding-left: 6px;
+    font-size: 17px !important;
+}
+
+.input-small {
+    width: 100% !important;
+    width: -moz-available !important;
+    width: -webkit-fill-available !important;
+    width: fill-available !important;
+}
+
+.large-text {
+    font-size: 20px !important;
+}
+
+.add-form-collection {
+    margin-left: 10px !important;
+    margin-bottom: 8px;
+}
+
+@media screen and (min-width: 900px) {
+    .delete-table-column {
+        width: 50px !important;
+    }
+
+    .id-table-column {
+        width: 100px !important;
+    }
+
+    .small-table-column {
+        width: 100px !important;
+    }
+
+    .medium-table-column {
+        width: 140px !important;
+    }
+
+    .big-table-column {
+        width: 350px !important;
+    }
+
+    .medium-larger-column {
+        width: 180px !important;
+    }
+}

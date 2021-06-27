@@ -1,0 +1,412 @@
+<h3 class="subsiteTitle">{{'music.subTitle' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader tableHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTable"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'music.tableTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-table #dataTable [columns]="tableColumns" [value]="musicItems" dataKey="musicId" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" totalRecords="{{musicItems.length}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="loading"
+      [globalFilterFields]="['interpreter','songtitle','yearDate','musicGenre.genreTitle','codeValue','linkValue','notice']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
+
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <span class="p-input-icon-left p-ml-auto">
+            <button pButton label=" " class="p-button-warning p-button-rounded" (click)="restoreDeletedMusic()">
+              <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
+              <span>{{'music.musicTableRestoreButton' | translate}}</span>
+            </button>
+          </span>
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="delete-table-column">
+            <div>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
+            <div>
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> ID
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[1].field}}" class="big-table-column">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
+                type="text" field="{{tableColumns[1].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[2].field}}" class="big-table-column">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon> {{tableColumns[2].header}} <p-columnFilter
+                type="text" field="{{tableColumns[2].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[3].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}} <p-columnFilter
+                type="text" field="{{tableColumns[3].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[4].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon>
+              {{tableColumns[4].header}}
+              <p-columnFilter field="{{tableColumns[4].field}}" matchMode="equals" display="menu"
+                [showAddButton]="false" [showMatchModes]="false" [showOperator]="false">
+                <ng-template pTemplate="header">
+                  <div class="p-px-3 p-pt-3 p-pb-0">
+                    <span class="p-text-bold">{{'music.genreEditGenreSelect' | translate}}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-dropdown [ngModel]="value" [options]="musicGenres"
+                    placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
+                    (onChange)="filter($event.value.genreTitle)" optionLabel="genreTitle">
+                    <ng-template let-option pTemplate="item">
+                      <div class="p-multiselect-representative-option">
+                        <span class="p-ml-1">{{option.genreTitle}}</span>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[5].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[5].field}}"></p-sortIcon> {{tableColumns[5].header}} <p-columnFilter
+                type="text" field="{{tableColumns[5].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[6].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[6].field}}"></p-sortIcon> {{tableColumns[6].header}} <p-columnFilter
+                type="text" field="{{tableColumns[6].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[7].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[7].field}}"></p-sortIcon> {{tableColumns[7].header}} <p-columnFilter
+                type="text" field="{{tableColumns[7].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-musicItem>
+        <tr>
+          <td><button pButton type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger table-delete-button"
+              (click)="deleteMusic(musicItem.musicId)"></button></td>
+          <td>{{musicItem.musicId}}</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="musicItem.interpreter"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'interpreter')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.interpreter}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="musicItem.songtitle"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'songtitle')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.songtitle}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="musicItem.yearDate"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'yearDate')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.yearDate}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown [options]="musicGenresTitles" [(ngModel)]="musicItem.musicGenre" [style]="{'width':'100%'}"
+                  placeholder="musicItem.musicGenre" [filter]="true"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'musicGenre')"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.musicGenre}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="musicItem.codeValue"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'codeValue')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.codeValue}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="musicItem.linkValue"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'linkValue')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.linkValue}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="musicItem.notice"
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'notice')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{musicItem.notice}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()"
+            class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+            class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">{{'messages.musicTableNoValues' | translate}}.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPlusCircle"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'music.musicAddHeader' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faUserAlt"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="interpreter" class="large-text" type="text" [(ngModel)]="interpreter" pInputText>
+          <label for="interpreter">{{'music.musicAddInterpreterHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faFont"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="songtitle" class="required-input large-text" type="text" [(ngModel)]="songTitle" pInputText>
+          <label for="songtitle">{{'music.musicAddSongTitleHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faCalendarAlt"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="yeardate" class="large-text" type="text" [(ngModel)]="yearDate" pInputText>
+          <label for="yeardate">{{'music.musicAddYearHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faTags"></fa-icon>
+        </span>
+        <span class="p-float-label" #genreselector>
+          <p-dropdown inputId="category" class="" [options]="musicGenres" [(ngModel)]="musicGenre"
+            (onChange)="reloadDropdown($event)" optionLabel="genreTitle" [filter]="true"
+            [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
+          </p-dropdown>
+          <label for="category">{{'music.musicAddGenreHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faBarcode"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="codevalue" class="large-text" type="text" [(ngModel)]="codeValue" pInputText>
+          <label for="codevalue">{{'music.musicAddCodeHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faLink"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="linkvalue" class="large-text" type="text" [(ngModel)]="linkValue" pInputText>
+          <label for="linkvalue">{{'music.musicAddLinkHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faInfo"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="notice" type="text" class="large-text" [(ngModel)]="notice" pInputText class="wide-input-field">
+          <label for="notice">{{'music.musicAddNoticeHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button" (click)="saveMusic()">
+        <div class="button-content">
+          <fa-icon [icon]="faCheckSquare" class="button-icon"></fa-icon>
+          {{'music.musicAddSaveMusic' | translate}}
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addcategoryHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faFolderPlus"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'music.genreAddTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input id="addCategoryTitle" type="text" [(ngModel)]="newMusicGenreName" pInputText>
+          <label for="addCategoryTitle">{{'music.genreAddGenreField' | translate}}</label>
+        </span>
+        <button id="addCategoryButton" type="button" pButton pRipple class="category-add-button p-button-success"
+          label=" " (click)="addMusicGenre()">
+          <fa-icon [icon]="faPlus" class="button-icon"></fa-icon>
+          <span class="input-side-button">{{'music.genreAddButton' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader editcategoryHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTags"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'music.genreEditTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+
+    <div class="p-col-12 p-md-12">
+      <div class="wide-input-field">
+        <span class="p-float-label">
+          <p-dropdown inputId="editCategorySelector" [options]="musicGenres" [(ngModel)]="editSelectedMusicGenre"
+            optionLabel="genreTitle" [filter]="true" [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
+          </p-dropdown>
+          <label for="editCategorySelector">{{'music.genreEditGenreSelect' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faArrowRight"></fa-icon>
+          <span class="edit-category-new-info">{{'music.genreEditGenreNewInfo' | translate}}</span>
+        </span>
+        <span class="p-float-label">
+          <p-dropdown inputId="selectCategory" [options]="musicGenres" [(ngModel)]="updatedMusicGenre"
+            optionLabel="genreTitle" [filter]="true" [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
+          </p-dropdown>
+          <label for="selectCategory">{{'music.genreEditGenreNew' | translate}}</label>
+        </span>
+        <button type="button" pButton pRipple class="category-update-button p-button-success" label=" "
+          (click)="updateMusicGenres()">
+          <fa-icon [icon]="faRetweet" class="button-icon"></fa-icon>
+          <span class="input-side-button">{{'music.genreEditGenreNewChangeButton' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

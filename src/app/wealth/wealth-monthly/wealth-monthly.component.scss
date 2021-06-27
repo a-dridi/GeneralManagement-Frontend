@@ -1,0 +1,150 @@
+.siteTitle {
+    font-size: 22px;
+    letter-spacing: 1.5px;
+    font-family: sans-serif;
+}
+
+.subTitle {
+    font-size: 14px;
+    font-family: sans-serif;
+}
+
+.button-content {
+    width: 200px;
+    font-size: 22px !important;
+}
+
+.button-icon {
+    margin-right: 10px !important;
+}
+
+.elementTopHeader {
+    display: flex;
+    flex-wrap: wrap;
+    @media screen and (max-width: 645px) {
+        div {
+            margin-bottom: 7px;
+        }
+    }
+}
+
+.element-header-icon {
+    flex-grow: 0.1;
+    vertical-align: middle !important;
+    line-height: 40px;
+    font-size: 22px;
+    text-align: center;
+}
+
+.element-header-title {
+    flex-grow: 8.9;
+    vertical-align: middle !important;
+    line-height: 40px;
+    font-size: 18px;
+    padding: 0px 5px;
+}
+
+.save-button {
+    font-weight: bold;
+    margin: 15px 10px;
+    .fa-icon {
+        margin-right: 5px !important;
+    }
+}
+
+.button-content {
+    width: 200px;
+    font-size: 22px !important;
+}
+
+.button-icon {
+    margin-right: 10px !important;
+}
+
+label {
+    font-size: 17px !important;
+    font-weight: bold !important;
+}
+
+.large-text {
+    font-size: 20px !important;
+}
+
+.attachment-file-upload {
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.p-datatable-wrapper {
+    overflow-y: scroll;
+}
+
+:host ::ng-deep {
+    .p-datatable-responsive-table .p-datatable-tbody > tr > td .p-column-title {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    :host ::ng-deep {
+        .p-datatable {
+            &.p-datatable-responsive-table {
+                .p-datatable-thead > tr > th,
+                .p-datatable-tfoot > tr > td {
+                    display: none !important;
+                }
+
+                .p-datatable-tbody > tr > td {
+                    text-align: left;
+                    display: block;
+                    width: 100%;
+                    float: left;
+                    clear: left;
+                    border: 0 none;
+
+                    .p-column-title {
+                        padding: 0.4rem;
+                        min-width: 30%;
+                        display: inline-block;
+                        margin: -0.4em 1em -0.4em -0.4rem;
+                        font-weight: bold;
+                    }
+
+                    &:last-child {
+                        border-bottom: 1px solid var(--surface-d);
+                    }
+                }
+            }
+        }
+    }
+}
+
+.elementContent {
+    padding: 5px;
+}
+
+@media screen and (min-width: 600px) {
+    .delete-table-column {
+        width: 50px !important;
+    }
+
+    .id-table-column {
+        width: 100px !important;
+    }
+
+    .small-table-column {
+        width: 100px !important;
+    }
+
+    .medium-table-column {
+        width: 140px !important;
+    }
+
+    .big-table-column {
+        width: 350px !important;
+    }
+
+    .medium-larger-column {
+        width: 180px !important;
+    }
+}

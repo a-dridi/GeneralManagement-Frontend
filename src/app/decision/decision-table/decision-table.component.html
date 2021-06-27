@@ -1,0 +1,236 @@
+<h3 class="subsiteTitle">{{'decision.submenuTitleTable' | translate}}</h3>
+<br>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader tableHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTable"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'decision.decisionTableTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-table #dataTable [columns]="tableColumns" [value]="decisions" dataKey="decisionId" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" totalRecords="{{decisions.length}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="loading" [globalFilterFields]="['title']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
+
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="delete-table-column">
+            <div>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
+            <div>
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> ID
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[1].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
+                type="text" field="{{tableColumns[1].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[2].field}}">
+            <div class="">
+              <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon> {{tableColumns[2].header}}
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[3].field}}">
+            <div class="">
+              <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}}
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[4].field}}">
+            <div class="">
+              <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon> {{tableColumns[4].header}}
+            </div>
+          </th>
+
+          <th>
+            <div>
+             
+            </div>
+          </th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-decisionItem>
+        <tr>
+          <td><button pButton type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger table-delete-button"
+              (click)="deleteDecision(decisionItem.decisionId)"></button></td>
+          <td>{{decisionItem.decisionId}}</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="decisionItem.title"
+                  (ngModelChange)="updateDecisionValue($event, decisionItem, 'title')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{decisionItem.title}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                {{decisionItem.chosenOption}}
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{decisionItem.chosenOption}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="decisionItem.information"
+                  (ngModelChange)="updateDecisionValue($event, decisionItem, 'information')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{decisionItem.information}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                {{decisionItem.addedDate | date: 'dd.MM.yyyy'}}
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{decisionItem.addedDate | date: 'dd.MM.yyyy'}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <button pButton type="button" label=" " class="p-button-raised p-button-success open-button"
+              (click)="openDecision(decisionItem.decisionId)">
+                <fa-icon [icon]="faFolderOpen" class="button-icon"></fa-icon>
+                {{'decision.openDecisionButton' | translate}}
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">{{'decision.decisionTableNoValues' | translate}}.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPlusCircle"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'decision.decisionAddTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faFont"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="title" class="required-input large-text" type="text" [(ngModel)]="title" pInputText>
+          <label for="title">{{'decision.decisionAddTitleHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12 add-form-collection">
+      <p class="form-title">{{'decision.decisionAddCriteriaHeader' | translate}}</p>
+      <form [formGroup]="newCriteriasForm">
+        <div formArrayName="newCriteriasInput"
+          *ngFor="let newCriteriaItem of newCriteriasForm.get('newCriteriasInput')['controls']; let i = index">
+          <div formGroupName="{{i}}">
+            <mat-form-field>
+              <input matInput id="{{'criteriaTitle'+i}}" formControlName="{{'criteriaTitle'+i}}"
+                placeholder="{{criteriaTitlePlaceholder}}" class="newcriteria-sliderinput large-text">
+            </mat-form-field>
+            <mat-form-field>
+              <input matInput id="{{'criteriaWeighting'+i}}" formControlName="{{'criteriaWeighting'+i}}"
+                placeholder="{{criteriaWeigthingPlaceholder}}" class="newcriteria-sliderinput large-text">
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-help" (click)="addNewCriteriaInput()"></button>
+
+    </div>
+
+    <div class="p-col-12 p-md-12 add-form-collection">
+      <p class="form-title">{{'decision.decisionAddOptionHeader' | translate}}</p>
+      <form [formGroup]="newOptionsForm">
+        <div formArrayName="newOptionsInput"
+          *ngFor="let newOptionItem of newOptionsForm.get('newOptionsInput')['controls']; let i = index">
+          <div formGroupName="{{i}}">
+            <mat-form-field>
+              <input matInput id="{{'optionTitle'+i}}" formControlName="{{'optionTitle'+i}}"
+                placeholder="{{optionTitlePlaceholder}}" class="newoption-sliderinput large-text">
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+      <button pButton pRipple type="button" icon="pi pi-plus" class="p-button-rounded p-button-help" (click)="addNewOptionInput()"></button>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faInfoCircle"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="information" class="large-text" type="text" [(ngModel)]="information" pInputText>
+          <label for="information">{{'decision.decisionAddInformationHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+        (click)="saveDecision()">
+        <div class="button-content">
+          <fa-icon [icon]="faCheckSquare" class="button-icon"></fa-icon>
+          {{'decision.decisionAddSaveDecision' | translate}}
+        </div>
+      </button>
+    </div>
+
+  </div>
+</div>

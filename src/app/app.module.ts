@@ -26,12 +26,38 @@ import { DatabaseNoteService } from './database-note/database-note.service';
 import { ExpenseModule } from './expense/expense.module';
 import { ToastModule } from 'primeng/toast';
 import { AuthenticationInterceptor } from './authentication.interceptor';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { OrganizationModule } from './organization/organization.module';
+import { registerLocaleData } from '@angular/common';
+import localeEn from '@angular/common/locales/en';
+import localeDe from '@angular/common/locales/de';
+import localeFr from '@angular/common/locales/fr';
+import localeEs from '@angular/common/locales/es';
+import localeKo from '@angular/common/locales/ko';
+import localeAr from '@angular/common/locales/ar';
+
+import { EarningModule } from './earning/earning.module';
+import { BookModule } from './book/book.module';
+import { SavingsModule } from './savings/savings.module';
+import { AccordionModule } from 'primeng/accordion';
+import { SharedModuleModule } from './shared-module/shared-module.module';
+import { WealthModule } from './wealth/wealth.module';
+import { ReservesModule } from './reserves/reserves.module';
+import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
+import { DecisionModule } from './decision/decision.module';
+import { MediaModule } from './media/media.module';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
+import { MessageService } from 'primeng/api';
+import {MessagesModule} from 'primeng/messages';
+import {MessageModule} from 'primeng/message';
 
 @NgModule({
   declarations: [
     AppComponent,
     FrontpageComponent,
     UserLoginComponent,
+    UserSettingsComponent,
   ],
   imports: [
     BrowserModule,
@@ -49,6 +75,7 @@ import { AuthenticationInterceptor } from './authentication.interceptor';
     FontAwesomeModule,
     TabViewModule,
     ButtonModule,
+    AccordionModule,
     AngularEditorModule,
     MatSidenavModule,
     BrowserAnimationsModule,
@@ -57,8 +84,21 @@ import { AuthenticationInterceptor } from './authentication.interceptor';
     DropdownModule,
     DialogModule,
     ListboxModule,
+    ToastModule,
+    MessagesModule,
+    MessageModule,
     ExpenseModule,
-    ToastModule
+    EarningModule,
+    OrganizationModule,
+    BookModule,
+    SavingsModule,
+    WealthModule,
+    ReservesModule,
+    CryptoCurrencyModule,
+    SharedModuleModule,
+    DecisionModule,
+    MediaModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   exports: [TranslateModule],
   providers: [ApiConfig,
@@ -69,12 +109,38 @@ import { AuthenticationInterceptor } from './authentication.interceptor';
         multi: true
       }
     ],
-    TranslateService, AppLanguages, AppLanguageLoaderHelper, DatabaseNoteService],
+    TranslateService, AppLanguages, AppLanguageLoaderHelper, DatabaseNoteService, MessageService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+
+  constructor() {
+    this.loadAvailableLocales();
+  }
+
+  loadAvailableLocales() {
+    registerLocaleData(localeEn);
+    registerLocaleData(localeDe);
+    registerLocaleData(localeFr);
+    registerLocaleData(localeEs);
+    registerLocaleData(localeKo);
+    registerLocaleData(localeAr);
+  }
+}
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
   //return new TranslateHttpLoader(http);
 }
+
+function localeUS(localeUS: any) {
+  throw new Error('Function not implemented.');
+}
+function localeDE(localeDE: any) {
+  throw new Error('Function not implemented.');
+}
+
+function localeFR(localeFR: any) {
+  throw new Error('Function not implemented.');
+}
+

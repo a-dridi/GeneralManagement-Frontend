@@ -10,21 +10,25 @@
       </div>
       <div class="appLogo">
         <div id="titleAppLogo">
-           <a href="/"><span>General Management</span></a>
+          <a href="/"><span>General Management</span></a>
         </div>
       </div>
       <div class="languageChooser">
-        <p-dialog [(visible)]="displayLanguageChooser" header="{{'global.selectLanguage' | translate}}" styleClass="language-chooser-dialog" [modal]="true">
-          <p-listbox [options]="availableLanguages" [(ngModel)]="selectedUserLanguageName" (ngModelChange)="changeSelectedLanguage($event)" optionLabel="languageName" optionValue="code"
+        <p-dialog [(visible)]="displayLanguageChooser" header="{{'global.selectLanguage' | translate}}"
+          styleClass="language-chooser-dialog" [modal]="true">
+          <p-listbox [options]="availableLanguages" [(ngModel)]="selectedUserLanguageName"
+            (ngModelChange)="changeSelectedLanguage($event)" optionLabel="languageName" optionValue="code"
             [listStyle]="{'max-height':'250px'}" filter="true" [metaKeySelection]="false">
             <ng-template let-languageitem pTemplate="item">
               <div class="language-item">
-                <div><span class="{{'flag-icon flag-icon-'+languageitem.countryCode}}"></span> {{languageitem.languageName}}</div>
+                <div><span class="{{'flag-icon flag-icon-'+languageitem.countryCode}}"></span>
+                  {{languageitem.languageName}}</div>
               </div>
-            </ng-template>          
+            </ng-template>
           </p-listbox>
           <ng-template pTemplate="footer">
-            <p-button icon="pi pi-check" (click)="displayLanguageChooser=false" label="OK" class="p-button-text"></p-button>
+            <p-button icon="pi pi-check" (click)="displayLanguageChooser=false" label="OK" class="p-button-text">
+            </p-button>
           </ng-template>
         </p-dialog>
 
@@ -38,7 +42,7 @@
     <br>
     <div class="top-centered-section">
       <!-- Newsticker or any announcement information -->
-      <iframe src="https://nlserver.ardmail.net/generalmanagement_newsticker/newsticker.html" scrolling="no"></iframe>
+      <iframe src="https://" scrolling="no"></iframe>
     </div>
   </mat-toolbar>
 
@@ -54,6 +58,48 @@
           <fa-icon [icon]="faReceipt"></fa-icon> <span
             class="menu-item-title">{{'siteMenu.menuPointExpense' | translate}}</span>
         </a>
+        <a mat-list-item routerLink="/earning" class="nav-menu-item">
+          <fa-icon [icon]="faHandHoldingUsd"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointEarning' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/book" class="nav-menu-item">
+          <fa-icon [icon]="faBook"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointBook' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/crypto" class="nav-menu-item">
+          <fa-icon [icon]="faBitcoin"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointCryptoCurrency' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/decision" class="nav-menu-item">
+          <fa-icon [icon]="faPollH"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointDecision' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/media" class="nav-menu-item">
+          <fa-icon [icon]="faPlayCircle"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointMedia' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/organization" class="nav-menu-item">
+          <fa-icon [icon]="faSearchLocation"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menupointOrganization' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/savings" class="nav-menu-item">
+          <fa-icon [icon]="faPiggyBank"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointSavings' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/wealth" class="nav-menu-item">
+          <fa-icon [icon]="faChartLine"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointWealth' | translate}}</span>
+        </a>
+        <a mat-list-item routerLink="/reserves" class="nav-menu-item">
+          <fa-icon [icon]="faLifeRing"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointReserves' | translate}}</span>
+        </a>
+        <hr>
+        <a mat-list-item routerLink="/user-settings" class="nav-menu-item">
+          <fa-icon [icon]="faTools"></fa-icon> <span
+            class="menu-item-title">{{'siteMenu.menuPointSettings' | translate}}</span>
+        </a>
+
       </mat-nav-list>
     </mat-sidenav>
 
@@ -63,17 +109,17 @@
       </div>
       <mat-toolbar id="app-footer">
         <mat-toolbar-row>
-          <span>Made with </span>
+          <span>{{'footerMenu.footerTextMade' | translate}} </span>
           <fa-icon [icon]="faHeart" class="heart-icon"></fa-icon>
-          <span>by a.dridi (github.com/a-dridi)</span>
+          <span>{{'footerMenu.footerTextBy' | translate}} a.dridi (github.com/a-dridi)</span>
         </mat-toolbar-row>
         <mat-toolbar-row>
           <div class="footer-links">
             <div class="footer-link-element">
-              <a href="#">General Notice</a>
+              <a href="#">{{'footerMenu.footerPointGeneralNotice' | translate}}</a>
             </div>
             <div class="footer-link-element">
-              <a href="#">Privacy Policy</a>
+              <a href="#">{{'footerMenu.footerPointPrivacyPolicy' | translate}}</a>
             </div>
           </div>
         </mat-toolbar-row>

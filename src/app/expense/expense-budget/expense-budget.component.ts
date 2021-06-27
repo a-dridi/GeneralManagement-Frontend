@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { faTable } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { ExpenseBudget } from 'src/app/model/expense-budget.model';
-import { ExpenseCategory } from 'src/app/model/expense-category.model';
+import { ExpenseBudget } from 'src/app/expense/model/expense-budget.model';
+import { ExpenseBudgetTable } from 'src/app/expense/model/expense-budget-table.model';
+import { ExpenseCategory } from 'src/app/expense/model/expense-category.model';
 import { ExpenseBudgetService } from '../expense-budget.service';
 import { ExpenseCategoryService } from '../expensecategory.services';
+import { MessageCreator } from 'src/app/util/messageCreator';
+import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
 
 @Component({
   selector: 'app-expense-budget',
@@ -13,16 +16,22 @@ import { ExpenseCategoryService } from '../expensecategory.services';
   styleUrls: ['./expense-budget.component.scss']
 })
 export class ExpenseBudgetComponent implements OnInit {
+  standardTableWidth = 1000;
 
   tableColumns: any[];
-  expenseBudgetList: ExpenseBudget[];
+  expenseBudgetList: ExpenseBudgetTable[];
   expenseCategories: ExpenseCategory[];
   loading: boolean;
   faTable = faTable;
 
-  constructor(private expenseBudgetService: ExpenseBudgetService, private expenseCategoryService: ExpenseCategoryService, private translateService: TranslateService, private messageService: MessageService) { }
+  @Output()
+  initInputValue: EventEmitter<any> = new EventEmitter;
+
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private expenseBudgetService: ExpenseBudgetService, private expenseCategoryService: ExpenseCategoryService, private translateService: TranslateService, private messageService: MessageService, private messageCreator: MessageCreator) { }
 
   ngOnInit(): void {
+    this.loading = true;
+    this.initInputValue.emit();
     this.translateService.get(['expensebudget.tableHeaderCategory', 'expensebudget.tableHeaderCentBudgetValue',
       'expensebudget.tableHeaderCentBudgetCentActualExpenses', 'expensebudget.tableHeaderCentBudgetCentDifference',
       'expensebudget.tableHeaderS', 'expensebudget.tableHeaderNotice']).subscribe(translations => {
@@ -35,16 +44,27 @@ export class ExpenseBudgetComponent implements OnInit {
           { field: 'notice', header: translations['expensebudget.tableHeaderNotice'] }
         ]
       });
+    this.loadExpenseCategories();
     this.getAllExpenseBudget();
   }
 
+  ngAfterViewInit() {
+    this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
+  }
+  
   getAllExpenseBudget() {
+    this.expenseBudgetList = [];
     this.expenseBudgetService.getAllExpenseBudget().subscribe((expenseBudgetArray: ExpenseBudget[]) => {
-      this.expenseBudgetList = expenseBudgetArray;
+      expenseBudgetArray.forEach((expensebudgetItem: ExpenseBudget) => {
+        this.expenseBudgetList.push({ expensesbudgetId: expensebudgetItem.expensesbudgetId, expenseCategory: expensebudgetItem.expenseCategory.categoryTitle, centBudgetValue: expensebudgetItem.centBudgetValue, centActualExpenses: expensebudgetItem.centActualExpenses, centDifference: expensebudgetItem.centDifference, s: expensebudgetItem.s, notice: expensebudgetItem.notice });
+      });
+      this.loading = false;
     }, (err) => {
+      this.loading = false;
       this.translateService.get(['messages.expenseBudgetLoadError1']).subscribe(translations => {
         this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseBudgetLoadError1'] });
       });
+      console.log(err);
     });
   }
 
@@ -55,37 +75,59 @@ export class ExpenseBudgetComponent implements OnInit {
     });
   }
 
-    /**
-   * Update row value for a ExpenseBudget row item. 
-   * @param newValue new Value that will be add to the updated ExpenseBudget row item 
-   * @param expenseBudgetRowItem 
-   * @param columnName The column / attribute of the expense budget that will be updated
-   */
-  updateTable(newValue,  expenseBudgetRowItem, columnName) {
-    if(columnName === "centBudgetValue") {
-      this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseBudgetRowItem.expenseCategory, newValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, expenseBudgetRowItem.notice).subscribe(() => {
-        this.translateService.get(['messages.expenseBudgetTableUpdatedOK1']).subscribe(translations => {
-          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseBudgetTableUpdatedOK1'] });
-        });  
-      });
+  /**
+ * Update row value for a ExpenseBudget row item. 
+ * @param newValue new Value that will be add to the updated ExpenseBudget row item 
+ * @param expenseBudgetRowItem 
+ * @param columnName The column / attribute of the expense budget that will be updated
+ */
+  updateTable(newValue, expenseBudgetRowItem, columnName) {
+    let expenseCategoryObject = this.getExpenseCategoryByCategoryTitle(expenseBudgetRowItem.expenseCategory);
+    if (columnName === "centBudgetValue") {
+      let centValue = newValue * 100;
+      console.log(centValue);
+      this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseCategoryObject, centValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, expenseBudgetRowItem.notice).subscribe(
+        () => {
+          this.getAllExpenseBudget();
+        },
+        err => {
+          console.log(err);
+          this.messageCreator.showErrorMessage("expenseBudgetTableUpdatedError1");
+        });
     }
-    if(columnName === "notice") {
-      this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseBudgetRowItem.expenseCategory, expenseBudgetRowItem.centBudgetValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, newValue).subscribe(() => {
-        this.translateService.get(['messages.expenseBudgetTableUpdatedOK1']).subscribe(translations => {
-          this.messageService.add({ severity: 'error', summary: 'ERROR', detail: translations['messages.expenseBudgetTableUpdatedOK1'] });
-        });  
-      });
+    if (columnName === "notice") {
+      this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseCategoryObject, expenseBudgetRowItem.centBudgetValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, newValue).subscribe(
+        () => {
+          this.getAllExpenseBudget();
+        }, err => {
+          console.log(err);
+          this.messageCreator.showErrorMessage("expenseBudgetTableUpdatedError1");
+        });
     }
-
   }
 
-  
+  /**
+   * Convert cent value to value with integers and comma (cent) values. Used to display currency value in input value
+   * @param centValue 
+   */
+  convertCentValue(centValue): number {
+    return centValue / 100;
+  }
+
+  getExpenseCategoryByCategoryTitle(expenseCategoryTitle) {
+    return this.expenseCategories.map(expenseCategoryItem => {
+      if (expenseCategoryItem.categoryTitle === expenseCategoryTitle) {
+        return expenseCategoryItem;
+      }
+    }).filter(selectedExpenseCategory => { return selectedExpenseCategory })[0];
+  }
+
   exportPdf() {
     import("jspdf").then(jsPDF => {
       import("jspdf-autotable").then(x => {
         const doc = new jsPDF.default(0, 0);
         doc.autoTable(this.tableColumns, this.expenseBudgetList);
-        doc.save('products.pdf');
+        doc.save('expense_budget.pdf');
       })
     })
   }
@@ -95,7 +137,7 @@ export class ExpenseBudgetComponent implements OnInit {
       const worksheet = xlsx.utils.json_to_sheet(this.expenseBudgetList);
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
-      this.saveAsExcelFile(excelBuffer, "products");
+      this.saveAsExcelFile(excelBuffer, "expense_budget");
     });
   }
 

@@ -10,7 +10,7 @@ import { UserAuthentication } from '../util/user-authentication';
 export class ExpenseBudgetService {
 
   fullApiurlTable: string;
-  uriTable: string = "data/expensebudget";
+  uriTable: string = "budgeting/data/expensebudget";
   userId: number;
 
   constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication, private router: Router) {
@@ -36,6 +36,7 @@ export class ExpenseBudgetService {
 
   saveExpenseBudget(expenseCategory, centBudgetValue, centActualExpenses, centDifference, s, notice) {
     this.loadUserId();
+    console.log("expense budget !!!! save");
     const newExpenseBudget = {
       expenseCategory: expenseCategory,
       centBudgetValue: centBudgetValue,
@@ -50,7 +51,7 @@ export class ExpenseBudgetService {
 
   updateExpenseBudget(expensesbudgetId, expenseCategory, centBudgetValue, centActualExpenses, centDifference, s, notice) {
     this.loadUserId();
-    const newExpenseBudget = {
+    const updatedExpenseBudget = {
       expensesbudgetId: expensesbudgetId,
       expenseCategory: expenseCategory,
       centBudgetValue: centBudgetValue,
@@ -60,7 +61,9 @@ export class ExpenseBudgetService {
       notice: notice,
       userId: this.userId
     };
-    return this.httpClient.post(`${this.fullApiurlTable}/update`, newExpenseBudget);
+    console.log("updated !de");
+    console.log(updatedExpenseBudget);
+    return this.httpClient.post(`${this.fullApiurlTable}/update`, updatedExpenseBudget);
   }
 
   deleteExpenseBudget(expenseBudgetId) {

@@ -1,0 +1,33 @@
+<h3 class="subsiteTitle">{{'bookgraph.siteTitle' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faChartPie"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'bookgraph.categoryAmountGraphTitle' | translate}} </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-chart type="doughnut" [data]="categoryAmountData"></p-chart>
+  </div>
+</div>
+<br>
+<hr>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faChartPie"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'bookgraph.languageAmountGraphTitle' | translate}} </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-chart type="doughnut" [data]="languageAmountData"></p-chart>
+  </div>
+</div>

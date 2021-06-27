@@ -1,0 +1,386 @@
+<h3 class="subsiteTitle">{{'savings.subTitle' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader tableHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTable"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'savings.tableTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-table #dataTable [columns]="tableColumns" [value]="savings" dataKey="savingsId" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" totalRecords="{{savings.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading"
+      [globalFilterFields]="['description','targetCent','savedTillNowCent','notice']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
+
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <span class="p-input-icon-left p-ml-auto">
+            <button pButton label=" " class="p-button-warning p-button-rounded" (click)="restoreDeletedSavings()">
+              <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
+              <span>{{'savings.savingsTableRestoreButton' | translate}}</span>
+            </button>
+          </span>
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="delete-table-column">
+            <div>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
+            <div>
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> ID
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[1].field}}" class="big-table-column">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
+                type="text" field="{{tableColumns[1].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[2].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon>
+              {{tableColumns[2].header}}
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[3].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon> {{tableColumns[3].header}} <p-columnFilter
+                type="text" field="{{tableColumns[3].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[4].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon> {{tableColumns[4].header}} <p-columnFilter
+                type="text" field="{{tableColumns[4].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[5].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[5].field}}"></p-sortIcon> {{tableColumns[5].header}} <p-columnFilter
+                type="text" field="{{tableColumns[5].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[6].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[6].field}}"></p-sortIcon> {{tableColumns[6].header}} <p-columnFilter
+                type="text" field="{{tableColumns[6].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[7].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[7].field}}"></p-sortIcon> {{tableColumns[7].header}} <p-columnFilter
+                type="text" field="{{tableColumns[7].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[8].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[8].field}}"></p-sortIcon> {{tableColumns[8].header}} <p-columnFilter
+                type="text" field="{{tableColumns[8].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              D
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-savingsItem>
+        <tr>
+          <td><button pButton type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger table-delete-button"
+              (click)="deleteSavings(savingsItem.savingsId)"></button></td>
+          <td>{{savingsItem.savingsId}}</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="savingsItem.description"
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'description')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsItem.description}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="savingsItem.targetCent"
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'targetCent')" class="input-small">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsItem.targetCent}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="savingsItem.stepAmountCent"
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'stepAmountCent')" class="input-small">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsItem.stepAmountCent}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown [options]="savingsFrequencyArray" [ngModel]="getSavingsFrequencyObject(savingsItem.savingsFrequency)"
+                  [style]="{'width':'100%'}" placeholder="savingsItem.savingsFrequency" [filter]="true" optionLabel="frequencyTitle"
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'savingsFrequency')"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsFrequencyTranslations[savingsItem.savingsFrequency]}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                {{savingsItem.savedTillNowCent}}
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsItem.savedTillNowCent}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                {{savingsItem.startDate | date: 'dd.MM.yyyy'}}
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsItem.startDate | date: 'dd.MM.yyyy'}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td>
+            <span *ngIf="savingsItem.savingsFrequency===1">
+              <span *ngIf="savingsItem.lastSavingsUpdateDate!==null">
+                {{'savings.savingsAccountInfoText1' | translate}}
+                {{(savingsItem.targetCent-savingsItem.savedTillNowCent)}} {{currency}}
+                {{'savings.savingsAccountInfoText2' | translate}}
+                {{savingsItem.targetCalculatedDate | date: 'dd.MM.yyyy'}}
+                {{'savings.savingsAccountInfoText3' | translate}} {{savingsItem.stepAmountCent}})
+              </span>
+              <span *ngIf="savingsItem.lastSavingsUpdateDate===null">
+                {{'savings.savingsAccountInfoText4' | translate}}
+                {{savingsItem.targetCalculatedDate | date: 'dd.MM.yyyy'}}
+              </span>
+            </span>
+            <span *ngIf="savingsItem.savingsFrequency!==1">
+              <span *ngIf="savingsItem.lastSavingsUpdateDate!==null">
+                {{'savings.savingsAccountInfoText1' | translate}}
+                {{(savingsItem.targetCent-savingsItem.savedTillNowCent)}} {{currency}}
+                {{'savings.savingsAccountInfoText2' | translate}}
+                {{savingsItem.targetCalculatedDate | date: 'dd.MM.yyyy'}}
+              </span>
+              <span *ngIf="savingsItem.lastSavingsUpdateDate===null">
+                {{'savings.savingsAccountInfoText4' | translate}}
+                {{savingsItem.targetCalculatedDate | date: 'dd.MM.yyyy'}}
+              </span>
+            </span>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="savingsItem.notice"
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'notice')" class="input-small">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{savingsItem.notice}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td *ngIf="savingsItem.attachment"><button pButton class="p-button-raised p-button-rounded"
+              (click)="openAttachment(savingsItem.attachmentPath)" label=" " type="button"
+              icon="pi pi-arrow-circle-down" iconPos="left" pTooltip="{{'messages.tableDownloadButtonTootlip' | translate}}" tooltipPosition="top"></button></td>
+          <td *ngIf="savingsItem.attachment==false"></td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()"
+            class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+            class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">{{'messages.savingsTableNoValues' | translate}}</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPlusCircle"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'savings.savingsAddHeader' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faFont"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="description" class="required-input large-text" type="text" [(ngModel)]="description" pInputText>
+          <label for="description">{{'savings.savingsAddDescriptionHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faBullseye"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="targetCent" type="text" class="required-input large-text" [(ngModel)]="targetCent" pInputText>
+          <label for="targetCent">{{'savings.savingsAddSavingsTargetHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faAdjust"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="stepAmountCent" type="text" [(ngModel)]="stepAmountCent" pInputText class="required-input large-text">
+          <label for="stepAmountCent">{{'savings.savingsAddStepAmountHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faHistory"></fa-icon>
+        </span>
+        <span class="p-float-label" #frequencyselector>
+          <p-dropdown inputId="frequency" class="required-dropdown" [options]="savingsFrequencyArray"
+            [(ngModel)]="selectedFrequency" (onChange)="reloadDropdown($event)" optionLabel="frequencyTitle"
+            [filter]="true" [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
+          </p-dropdown>
+          <label for="frequency">{{'savings.savingsAddFrequencyHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faInfo"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="notice" type="text" class="large-text" [(ngModel)]="notice" pInputText
+            class="wide-input-field">
+          <label for="notice">{{'savings.savingsAddNoticeHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <input type="file" (change)="onSavingsAttachmentUpload($event)" name="savingsAttachment"
+        class="form-fileupload" />
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+        (click)="saveSavings()">
+        <div class="button-content">
+          <fa-icon [icon]="faCheckSquare" class="button-icon"></fa-icon>
+          {{'savings.savingsAddSaveSaving' | translate}}
+        </div>
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<br>
+<div class="elementGrid">
+  <div class="elementHeader updateAttachmentHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPaperclip"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'savings.attachmentUpdateHeaderTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faTable"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="updateAttachmentId" type="text" [(ngModel)]="updatedAttachmentId" pInputText>
+          <label for="updateAttachmentId">{{'savings.attachmentUpdateIdField' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <input type="file" (change)="onSavingsAttachmentUpload($event)" name="savingsAttachment"
+        class="form-fileupload" />
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+        (click)="updateSavingsAttachment()">
+        <div class="button-content">
+          <fa-icon [icon]="faRetweet" class="button-icon"></fa-icon>
+          {{'savings.attachmentUpdateButton' | translate}}
+        </div>
+      </button>
+    </div>
+  </div>
+</div>

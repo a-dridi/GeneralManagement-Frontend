@@ -10,7 +10,7 @@ import { UserAuthentication } from '../util/user-authentication';
 export class ExpenseTimerangeService {
 
     fullApiurlTable: string;
-    uriTable: string = "data/expensetimerange";
+    uriTable: string = "budgeting/data/expensetimerange";
     userId: number;
 
     constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication, private router: Router) {

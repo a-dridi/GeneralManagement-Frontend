@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiConfig } from '../util/api.config';
+import { UserAuthentication } from '../util/user-authentication';
 
 @Injectable({
   providedIn: 'root'
@@ -8,9 +9,15 @@ import { ApiConfig } from '../util/api.config';
 export class UserService {
 
   fullApiurl: string;
+  userId: number;
 
-  constructor(private httpClient: HttpClient, private apiConfig: ApiConfig) {
-    this.fullApiurl = this.apiConfig.server + "/" + this.apiConfig.baseBackendApplicationUri;
+  constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication) {
+    this.fullApiurl = this.apiConfig.apiUrl;
+  }
+
+
+  loadUserId() {
+    this.userId = this.userAuthentication.getUserAuthenticationUserId();
   }
 
   /**
@@ -42,8 +49,12 @@ export class UserService {
     return this.httpClient.post(`${this.fullApiurl}/getUserId`, loginCredentials);
   }
 
+  getUserEmailByUserId() {
+    this.loadUserId();
+    return this.httpClient.get(`${this.fullApiurl}/getUserEmail/${this.userId}`);
+  }
 
   authenticateWebDav() {
-    return this.httpClient.get(`${this.apiConfig.baseAttachmentUrl}`, { headers: new HttpHeaders({ 'Access-Control-Allow-Origin': '*', "Authorization": "Basic " + btoa(this.apiConfig.webDavUsername+":"+this.apiConfig.webDavPassword) }) });
+    return this.httpClient.get(`${this.apiConfig.baseAttachmentUrl}`, { headers: new HttpHeaders({ 'Access-Control-Allow-Origin': '*', "Authorization": "Basic " + btoa(this.apiConfig.webDavUsername + ":" + this.apiConfig.webDavPassword) }) });
   }
 }

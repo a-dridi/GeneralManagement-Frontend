@@ -1,0 +1,35 @@
+<div class="content-container">
+  <h2 class="site-title">{{'earningModule.title' | translate}}</h2>
+  <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
+  <br>
+  <br>
+  <p-tabView styleClass="tabview-submenu">
+    <p-tabPanel header="EarningTable" cache="false">
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faTable"></fa-icon>
+        <span class="tab-header">{{'earningModule.submenuTitleTable' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-earning-table></app-earning-table>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="EarningCategory" cache="false">
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faClipboardList"></fa-icon>
+        <span class="tab-header">{{'earningModule.submenuTitleCategories' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-earning-categories></app-earning-categories>
+      </ng-template>
+    </p-tabPanel>
+    <p-tabPanel header="EarningDevelopment" cache="false">
+      <ng-template pTemplate="header">
+        <fa-icon [icon]="faChartLine"></fa-icon>
+        <span class="tab-header">{{'earningModule.submenuTitleDevelopment' | translate}}</span>
+      </ng-template>
+      <ng-template pTemplate="content">
+        <app-earning-development></app-earning-development>
+      </ng-template>
+    </p-tabPanel>
+  </p-tabView>
+</div>

@@ -1,0 +1,27 @@
+<div class="content-container">
+    <h2 class="site-title">{{'cryptocurrencyModule.title' | translate}}</h2>
+    <app-noteeditor [noteTable]="noteTableName" [height]="noteHeight"></app-noteeditor>
+    <br>
+    <br>
+    <p-tabView styleClass="tabview-submenu">
+      <p-tabPanel header="CryptoCurrencyTable" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faBitcoin"></fa-icon>
+          <span class="tab-header">{{'cryptocurrencyModule.submenuTitleCrypto' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-crypto-currency></app-crypto-currency>
+        </ng-template>
+      </p-tabPanel>
+      <p-tabPanel header="CryptoCurrencyTransactions" cache="false">
+        <ng-template pTemplate="header">
+          <fa-icon [icon]="faExchangeAlt"></fa-icon>
+          <span class="tab-header">{{'cryptocurrencyModule.submenuTitleTransactions' | translate}}</span>
+        </ng-template>
+        <ng-template pTemplate="content">
+          <app-crypto-currency-transactions></app-crypto-currency-transactions>
+        </ng-template>
+      </p-tabPanel>
+    </p-tabView>
+  </div>
+  

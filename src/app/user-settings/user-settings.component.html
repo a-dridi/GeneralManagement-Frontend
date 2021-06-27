@@ -1,0 +1,21 @@
+<div class="user-settings-form">
+  <h2 class="site-title">{{'userSettings.siteTitle' | translate}}</h2>
+  <div class="user-settings-subtext">
+    <p>{{'userSettings.subText' | translate}}</p>
+    <p></p>
+  </div>
+  <div class="p-inputgroup">
+    <div>
+      <span class="p-inputgroup-addon">
+        <fa-icon [icon]="faDollarSign"></fa-icon> <span
+          class="settings-entry-title">{{'userSettings.currencyTitle' | translate}}</span>
+      </span>
+    </div>
+    <div>
+      <p-dropdown name="currencySetting" inputId="currencySetting" [options]="currencyArray"
+        [(ngModel)]="selectedCurrencyObject" (ngModelChange)="setCurrency($event)" optionLabel="code" [filter]="true"
+        [style]="{'height': '43px', 'width': '200px'}" placeholder="   ">
+      </p-dropdown>
+    </div>
+  </div>
+</div>

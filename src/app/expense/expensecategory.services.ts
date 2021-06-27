@@ -10,7 +10,7 @@ import { UserAuthentication } from '../util/user-authentication';
 export class ExpenseCategoryService {
 
     fullApiurlTable: string;
-    uriTable: string = "data/expensecategory";
+    uriTable: string = "budgeting/data/expensecategory";
     userId: number;
 
     constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication, private router: Router) {
@@ -34,17 +34,16 @@ export class ExpenseCategoryService {
     }
 
     saveExpenseCategory(title) {
-        console.log("EXPENSE CATEGORY SAVE!!!");
         return this.httpClient.post(`${this.fullApiurlTable}/add`, title);
     }
 
-    updateExpenseCategory(expenseId, title) {
+    updateExpenseCategory(earningCategoryId, title) {
         const updatedExpenseCategory = {
-            expenseId: expenseId,
+            earningCategoryId: earningCategoryId,
             title: title
         };
 
-        return this.httpClient.post(`${this.fullApiurlTable}/update/${expenseId}`, updatedExpenseCategory);
+        return this.httpClient.post(`${this.fullApiurlTable}/update`, updatedExpenseCategory);
     }
 
     deleteExpenseCategoryById(expenseCategoryId) {

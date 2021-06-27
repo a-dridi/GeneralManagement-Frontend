@@ -1,1 +1,30 @@
-<p>expense-calendar works!</p>
+<h3 class="subsiteTitle">{{'expensecalendar.submenuTitleTable' | translate}}</h3>
+<br>
+<h4>{{'expensecalendar.subTitle' | translate}}</h4>
+  <br>
+  <p-fullCalendar #expensesCalendar [events]="expenseCalenderItems" [options]="expenseCalenderOptions"></p-fullCalendar>
+  <br>
+  <p-accordion>
+    <p-accordionTab header="{{explanationTabHeader}}">
+      {{'expensecalendar.explanationPanelSubTitle' | translate}}
+      <br><br>
+      {{'expensecalendar.explanationPanelSubTitle2' | translate}}
+      <br>
+      [D] - {{'expensecalendar.explanationPanelDaily' | translate}}
+      <br>
+      [W] - {{'expensecalendar.explanationPanelWeekly' | translate}}
+      <br>
+      [2W] - {{'expensecalendar.explanationPanelBiweekly' | translate}}
+      <br>
+      [M] - {{'expensecalendar.explanationPanelMonthly' | translate}}
+      <br>
+      [2M] - {{'expensecalendar.explanationPanelTwoMonths' | translate}}
+      <br>
+      [3M] - {{'expensecalendar.explanationPanelThreeMonths' | translate}}
+      <br>
+      [6M] - {{'expensecalendar.explanationPanelSixMonths' | translate}}
+      <br>
+      [Y] - {{'expensecalendar.explanationPanelYearly' | translate}}
+      <br>
+    </p-accordionTab>
+  </p-accordion>

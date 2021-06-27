@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiConfig } from '../util/api.config';
+import { UserAuthentication } from '../util/user-authentication';
 
 @Injectable({
   providedIn: 'root'
@@ -8,39 +9,48 @@ import { ApiConfig } from '../util/api.config';
 export class DatabaseNoteService {
 
   fullApiurl: string;
-  uri: string = "/data/databasenote";
+  uri: string = "common/data/databasenote";
+  userId: number;
 
-  constructor(private httpClient: HttpClient, private apiConfig: ApiConfig) {
+  constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication) {
     this.fullApiurl = this.apiConfig.apiUrl + "/" + this.uri;
   }
 
-  getAllNote(userId) {
-    return this.httpClient.get(`${this.fullApiurl}/all/${userId}`);
+  loadUserId() {
+    this.userId = this.userAuthentication.getUserAuthenticationUserId();
   }
 
-  getNoteByTablename(tableName, userId) {
-    return this.httpClient.get(`${this.fullApiurl}/get/byTable/byUserId/${tableName}/${userId}`);
+  getAllNote() {
+    this.loadUserId();
+    return this.httpClient.get(`${this.fullApiurl}/all/${this.userId}`);
   }
 
-  saveNote(table, noteText, date, userId) {
+  getNoteByTablename(tableName) {
+    this.loadUserId();
+    return this.httpClient.get(`${this.fullApiurl}/get/byTable/byUserId/${tableName}/${this.userId}`);
+  }
+
+  saveNote(table, noteText, date) {
+    this.loadUserId();
     const newDatabaseNote = {
-      table: table,
+      appTable: table,
       noteText: noteText,
       date: date,
-      userId: userId
+      userId: this.userId
     };
     return this.httpClient.post(`${this.fullApiurl}/add`, newDatabaseNote);
   }
 
-  updateDatabaseNote(id, table, noteText, date, userId) {
+  updateDatabaseNote(id, table, noteText, date) {
+    this.loadUserId();
     const updatedDatabaseNote = {
       id: id,
-      table: table,
+      appTable: table,
       noteText: noteText,
       date: date,
-      userId: userId
+      userId: this.userId
     };
-    return this.httpClient.put(`${this.fullApiurl}/update`, updatedDatabaseNote);
+    return this.httpClient.post(`${this.fullApiurl}/update`, updatedDatabaseNote);
   }
 
   deleteDatabaseNote(id) {

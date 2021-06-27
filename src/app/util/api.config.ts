@@ -3,17 +3,17 @@ Saves the API access settings
 */
 export class ApiConfig {
 
-    //CHANGE THESE - Add no tailing or leading slashes
-    public server = "SERVER";
-    public baseAttachmentUrl = "SERVER_WEBDAV_ATTACHMENT_URL";
+    //CHANGE THIS - Add no tailing or leading slashes - Also Change dataGroups - urls variable in File: "ngsw-config.json"
+    public server = "https://management";
+    public baseAttachmentUrl = "https://management";
 
-    public baseBackendApplicationUri = "gmbackend";
     public baseApiUri = "api";
 
-    public webDavUsername = "WEBDAV_USERNAME";
-    public webDavPassword = "WEBDAV_PASSWORD";
+    //CHANGE THIS
+    public webDavUsername = "YOUR_USERNAME";
+    public webDavPassword = "YOUR_PASSWORD";
 
     get apiUrl(): string {
-        return this.server + "/" + this.baseBackendApplicationUri + "/" + this.baseApiUri;
+        return this.server + "/" + this.baseApiUri;
     }
 }

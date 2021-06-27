@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { UserAuthentication } from "./util/user-authentication";
 import { Observable, throwError } from "rxjs";
 import { tap, catchError, retry } from "rxjs/operators";
+import { RefererCache } from "./util/refererCache";
 
 /**
  * Send authentication header in every API request. Check if user is logged in. If not redirect to login page. 
@@ -13,7 +14,12 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     jwtAuthenticationToken: string;
 
-    constructor(private userAuthentication: UserAuthentication, private router: Router) {
+    //Restricted API URIs
+    readonly DATABASE_URI: string = "data"
+    readonly SETTINGS_URI: string = "settings"
+    readonly USER_INFO_URI: string = "api/getUserEmail";
+    
+    constructor(private userAuthentication: UserAuthentication, private router: Router, private refererCache: RefererCache) {
     }
 
     /**
@@ -23,15 +29,8 @@ export class AuthenticationInterceptor implements HttpInterceptor {
      */
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         this.jwtAuthenticationToken = this.userAuthentication.getUserAuthenticationJwtToken();
-
-        console.log("intercept auth token: ");
-        console.log(this.jwtAuthenticationToken);
-
-        if (req.url.indexOf("/api/data/") !== -1) {
-            console.log("OK.  API request");
-
+        if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
             if (this.jwtAuthenticationToken === null) {
-                console.log("auth null");
                 this.showLoginPage();
             }
 
@@ -44,17 +43,12 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             retry(0),
             catchError((err: HttpErrorResponse) => {
-                console.log("catch error");
-                console.log(err);
-                if (req.url.indexOf("/api/data/") !== -1) {
-                    console.log("TOKEN: ");
-                    console.log(this.jwtAuthenticationToken);
-
+                if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
                     if (err instanceof HttpErrorResponse) {
-                        
+
                         if (err.status === 403 || err.message.includes("The Token has expired on")) {
                             this.showLoginPage();
-                            console.log("401 error");
+                            console.log("User not logged in!");
                         }
                     }
                 }

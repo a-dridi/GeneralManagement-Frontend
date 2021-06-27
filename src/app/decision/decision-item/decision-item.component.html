@@ -1,0 +1,181 @@
+<div class="content-container">
+  <h2 class="site-title">{{'decision.headerTitle' | translate}}: {{loadedDecisionTitle}}</h2>
+  <br>
+  <div *ngIf="chosenOptionId!=-1">
+    <h3 class="selected-option"><span
+        class="option-selected-header">{{'decision.chosenOptionHeaderText' | translate}}:</span><span
+        class="option-selected-title">{{chosenOptionTitle}}</span></h3>
+  </div>
+  <br>
+  <div class="decisionmatrix-table">
+    <div class="dmt-first-row">
+      <div class="first-row-item criteria-input">
+        {{'decision.tableHeaderCriteria' | translate}}:
+      </div>
+      <div class="first-row-item  weighting-input">
+        {{'decision.tableHeaderWeighting' | translate}}:
+      </div>
+      <div *ngFor="let optionItem of optionItems">
+        <div class="first-row-item option-title">
+          {{optionItem.title}}
+        </div>
+      </div>
+    </div>
+
+    <div class="dmt-points-rows" *ngFor="let criteriaoptionItem of criteriaoptionItems">
+      <div class="points-row-item criteria-item">
+        <input class="criteria-input" type="text" [(ngModel)]="criteriaoptionItem.criteriaTitle" pInputText
+          [readonly]="true">
+      </div>
+      <div class="points-row-item">
+        <input class="weighting-input" type="text" [(ngModel)]="criteriaoptionItem.criteriaWeighting" pInputText
+          [readonly]="true">
+      </div>
+      <div class="points-row-item"
+        *ngFor="let criteriaOptionPointItem of criteriaOptionPointItems[criteriaoptionItem.criteriaoptionId]">
+        <div class="points-row-item">
+          <span class="points-input-field">
+            <p-inputNumber class="points-input" [ngModel]="criteriaOptionPointItem.points"
+              (ngModelChange)="updateOptionPointItem($event, criteriaOptionPointItem, criteriaoptionItem)"
+              mode="decimal" [useGrouping]="false" [inputStyle]="{'max-width': '80px'}"></p-inputNumber>
+          </span>
+        </div>
+        <div class="points-row-item">
+          <input pInputText type="text" class="total-input" [ngModel]="criteriaOptionPointItem.total" [readonly]="true">
+        </div>
+      </div>
+    </div>
+    <div class="seperation-row">
+    </div>
+
+    <div class="dmt-sum-row">
+      <div class="first-row-item criteria-input"> {{'decision.tableTitleTotal' | translate}}:</div>
+      <div class="weighting-input"> </div>
+      <div class="totals-sums" *ngFor="let optionItem of optionItems">
+        <div class="sum-output"> </div>
+        <div class="first-row-item total-input largest-sum"
+          *ngIf="largestTotalSum!=0 && largestTotalSum == optionsTotalSum[optionItem.decisionoptionId]">
+          {{optionsTotalSum[optionItem.decisionoptionId]}}</div>
+        <div class="first-row-item total-input"
+          *ngIf="largestTotalSum==0 || largestTotalSum != optionsTotalSum[optionItem.decisionoptionId]">
+          {{optionsTotalSum[optionItem.decisionoptionId]}}</div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="elementGrid">
+    <div class="elementHeader addHeader">
+      <div class="elementTopHeader">
+        <div class="element-header-icon">
+          <fa-icon [icon]="faClipboardCheck"></fa-icon>
+        </div>
+        <div class="element-header-title">
+          {{'decision.chosenOptionTitle' | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="elementContent">
+      <p class="option-text">{{'decision.chosenOptionText' | translate}}</p>
+      <div class="p-col-12 p-md-12">
+        <div class="p-inputgroup">
+          <span class="p-float-label">
+            <p-dropdown id="selectOptionName" [options]="optionItems" [(ngModel)]="chosenOption" optionLabel="title"
+              [style]="{'height': '45px', 'width': '100%'}" placeholder="{{chosenOptionPlaceholder}}" [filter]="true">
+            </p-dropdown>
+          </span>
+          <button id="chosenOptionButton" type="button" pButton pRipple class="criteria-add-button p-button-success"
+            label=" " (click)="selectChosenDecisionOption()">
+            <fa-icon [icon]="faCheckCircle" class="button-icon"></fa-icon>
+            <span class="input-side-button">{{'decision.chosenOptionSelectButton' | translate}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="elementGrid">
+    <div class="elementHeader addcategoryHeader">
+      <div class="elementTopHeader">
+        <div class="element-header-icon">
+          <fa-icon [icon]="faFolderPlus"></fa-icon>
+        </div>
+        <div class="element-header-title">
+          {{'decision.criteriaAddTitle' | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="elementContent">
+
+      <div class="p-col-12 p-md-12 seperated-input-group">
+        <div class="p-inputgroup wide-input-field">
+          <span class="p-inputgroup-addon">
+            <fa-icon [icon]="faFont"></fa-icon>
+          </span>
+          <span class="p-float-label">
+            <input id="newCriteriaName" class="large-text" type="text" [(ngModel)]="newCriteriaName" pInputText>
+            <label for="newCriteriaName">{{'decision.criteriaAddCriteriaField' | translate}}</label>
+          </span>
+        </div>
+      </div>
+
+      <div class="p-col-12 p-md-12 seperated-input-group">
+        <div class="p-inputgroup wide-input-field">
+          <span class="p-inputgroup-addon">
+            <fa-icon [icon]="faSortNumericUpAlt"></fa-icon>
+          </span>
+          <span class="p-float-label">
+            <p-inputNumber class="large-text" [(ngModel)]="newCriteriaWeighting" mode="decimal" [useGrouping]="false">
+            </p-inputNumber>
+            <label for="newCriteriaWeighting">{{'decision.criteriaAddWeightingField' | translate}}</label>
+          </span>
+        </div>
+      </div>
+
+      <div class="p-col-12 p-md-12">
+        <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+          (click)="addNewCriteria()">
+          <div class="button-content">
+            <fa-icon [icon]="faCheckSquare" class="button-icon"></fa-icon>
+            {{'decision.editCriteriaAddButton' | translate}}
+          </div>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <br>
+
+  <div class="elementGrid">
+    <div class="elementHeader editcategoryHeader">
+      <div class="elementTopHeader">
+        <div class="element-header-icon">
+          <fa-icon [icon]="faPlusSquare"></fa-icon>
+        </div>
+        <div class="element-header-title">
+          {{'decision.optionAddTitle' | translate}}
+        </div>
+      </div>
+    </div>
+    <div class="elementContent">
+      <div class="p-col-12 p-md-12">
+        <div class="p-inputgroup">
+          <span class="p-float-label">
+            <input id="addOptionName" type="text" [(ngModel)]="newOptionName" pInputText>
+            <label for="addOptionName">{{'decision.optionAddOptionField' | translate}}</label>
+          </span>
+          <button id="addOptionButton" type="button" pButton pRipple class="criteria-add-button p-button-success"
+            label=" " (click)="addNewOption()">
+            <fa-icon [icon]="faPlus" class="button-icon"></fa-icon>
+            <span class="input-side-button">{{'decision.editOptionAddButton' | translate}}</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

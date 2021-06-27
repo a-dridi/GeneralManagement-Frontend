@@ -20,7 +20,10 @@ export class AppLanguages {
 
     public get languages(): Language[] {
         let languagesArray: Language[] = [
-            { code: "en", languageName: "English", countryCode: "us" }
+            { code: "en", languageName: "English", countryCode: "us" },
+            { code: "de", languageName: "Deutsch", countryCode: "at" },
+            { code: "ar", languageName: "العربية", countryCode: "tn" }
+
         ];
         return languagesArray;
     }
@@ -117,6 +120,16 @@ export class AppLanguageLoaderHelper {
             }
         }));
         return languageCode;
+    }
+
+    public getLanguageObjectByLanguageCode(languageIsoCode) {
+        let languageObject = this.appLanguages.languages[0];
+        this.appLanguages.languages.forEach(((languageArrayItem) => {
+            if (languageArrayItem.code == languageIsoCode) {
+                languageObject = languageArrayItem;
+            }
+        }));
+        return languageObject;
     }
 
 }

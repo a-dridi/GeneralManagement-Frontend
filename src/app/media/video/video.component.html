@@ -1,0 +1,611 @@
+<h3 class="subsiteTitle">{{'video.subTitle' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader tableHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTable"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'video.tableTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-table #dataTable [columns]="tableColumns" [value]="videos" dataKey="videoId" [paginator]="true" [rows]="10"
+      [showCurrentPageReport]="true" totalRecords="{{videos.length}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="loading"
+      [globalFilterFields]="['title','isOwnProduction','videoLanguage.languageTitle','isHd','videoGenre.genreTitle','durationLength','yearDate','isSeries','nativeTitle','linkValue']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
+
+      <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+          <span class="p-input-icon-left p-ml-auto">
+            <button pButton label=" " class="p-button-warning p-button-rounded" (click)="restoreDeletedVideos()">
+              <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
+              <span>{{'video.videoTableRestoreButton' | translate}}</span>
+            </button>
+          </span>
+          <span class="p-input-icon-left p-ml-auto">
+            <i class="pi pi-search"></i>
+            <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
+          </span>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th class="delete-table-column">
+            <div>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[0].field}}" class="id-table-column">
+            <div>
+              <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon> ID
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[1].field}}" class="big-table-column">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
+                type="text" field="{{tableColumns[1].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[2].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon> {{tableColumns[2].header}}
+              <p-columnFilter type="boolean" field="{{tableColumns[2].field}}" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[3].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[3].field}}"></p-sortIcon>
+              {{tableColumns[3].header}}
+              <p-columnFilter field="{{tableColumns[3].field}}" matchMode="equals" display="menu"
+                [showAddButton]="false" [showMatchModes]="false" [showOperator]="false">
+                <ng-template pTemplate="header">
+                  <div class="p-px-3 p-pt-3 p-pb-0">
+                    <span class="p-text-bold">{{'messages.videoTableLanguageSelectHeader' | translate}}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-dropdown [ngModel]="value" [options]="videoLanguages"
+                    placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
+                    (onChange)="filter($event.value.languageTitle)" optionLabel="languageTitle">
+                    <ng-template let-option pTemplate="item">
+                      <div class="p-multiselect-representative-option">
+                        <span class="p-ml-1">{{option.languageTitle}}</span>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[4].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon> {{tableColumns[4].header}}
+              <p-columnFilter type="boolean" field="{{tableColumns[4].field}}" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[5].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[5].field}}"></p-sortIcon>
+              {{tableColumns[5].header}}
+              <p-columnFilter field="{{tableColumns[5].field}}" matchMode="equals" display="menu"
+                [showAddButton]="false" [showMatchModes]="false" [showOperator]="false">
+                <ng-template pTemplate="header">
+                  <div class="p-px-3 p-pt-3 p-pb-0">
+                    <span class="p-text-bold">{{'messages.videoTableGenreSelectHeader' | translate}}</span>
+                  </div>
+                </ng-template>
+                <ng-template pTemplate="filter" let-value let-filter="filterCallback">
+                  <p-dropdown [ngModel]="value" [options]="videoGenres"
+                    placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
+                    (onChange)="filter($event.value.genreTitle)" optionLabel="genreTitle">
+                    <ng-template let-option pTemplate="item">
+                      <div class="p-multiselect-representative-option">
+                        <span class="p-ml-1">{{option.genreTitle}}</span>
+                      </div>
+                    </ng-template>
+                  </p-dropdown>
+                </ng-template>
+              </p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[6].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[6].field}}"></p-sortIcon> {{tableColumns[6].header}} <p-columnFilter
+                type="text" field="{{tableColumns[6].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[7].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[7].field}}"></p-sortIcon> {{tableColumns[7].header}} <p-columnFilter
+                type="text" field="{{tableColumns[7].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[8].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[8].field}}"></p-sortIcon> {{tableColumns[8].header}}               
+              <p-columnFilter type="boolean" field="{{tableColumns[2].field}}" display="menu"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[9].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[9].field}}"></p-sortIcon> {{tableColumns[9].header}} <p-columnFilter
+                type="text" field="{{tableColumns[9].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+          <th pSortableColumn="{{tableColumns[10].field}}">
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <p-sortIcon field="{{tableColumns[10].field}}"></p-sortIcon> {{tableColumns[10].header}} <p-columnFilter
+                type="text" field="{{tableColumns[10].field}}" display="menu" [showOperator]="false"></p-columnFilter>
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-videoItem>
+        <tr>
+          <td><button pButton type="button" icon="pi pi-times"
+              class="p-button-rounded p-button-danger table-delete-button"
+              (click)="deleteVideo(videoItem.videoId)"></button></td>
+          <td>{{videoItem.videoId}}</td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="videoItem.title"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'title')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.title}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-toggleButton [(ngModel)]="videoItem.isOwnProduction"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'isOwnProduction')" onIcon="pi pi-check"
+                  offIcon="pi pi-times"></p-toggleButton>
+              </ng-template>
+              <ng-template pTemplate="output">
+                <i class="pi"
+                  [ngClass]="{'true-icon pi-check-circle': videoItem.isOwnProduction, 'false-icon pi-times-circle': !videoItem.isOwnProduction}"></i>
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown [options]="videoLanguageTitles" [(ngModel)]="videoItem.videoLanguage"
+                  [style]="{'width':'100%'}" placeholder="videoItem.videoLanguage" [filter]="true"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'videoLanguage')"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.videoLanguage}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-toggleButton [(ngModel)]="videoItem.isHd"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'isHd')" onIcon="pi pi-check"
+                  offIcon="pi pi-times"></p-toggleButton>
+              </ng-template>
+              <ng-template pTemplate="output">
+                <i class="pi"
+                  [ngClass]="{'true-icon pi-check-circle': videoItem.isHd, 'false-icon pi-times-circle': !videoItem.isHd}"></i>
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-dropdown [options]="videoGenreTitles" [(ngModel)]="videoItem.videoGenre" [style]="{'width':'100%'}"
+                  placeholder="videoItem.videoGenre" [filter]="true"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'videoGenre')"></p-dropdown>
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.videoGenre}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="videoItem.durationLength"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'durationLength')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.durationLength}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="videoItem.yearDate"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'yearDate')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.yearDate}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <p-toggleButton [(ngModel)]="videoItem.isSeries"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'isSeries')" onIcon="pi pi-check"
+                  offIcon="pi pi-times"></p-toggleButton>
+              </ng-template>
+              <ng-template pTemplate="output">
+                <i class="pi"
+                  [ngClass]="{'true-icon pi-check-circle': videoItem.isSeries, 'false-icon pi-times-circle': !videoItem.isSeries}"></i>
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="videoItem.nativeTitle"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'nativeTitle')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.nativeTitle}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+          <td pEditableColumn>
+            <p-cellEditor>
+              <ng-template pTemplate="input">
+                <input pInputText type="text" [(ngModel)]="videoItem.linkValue"
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'linkValue')">
+              </ng-template>
+              <ng-template pTemplate="output">
+                {{videoItem.linkValue}}
+              </ng-template>
+            </p-cellEditor>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o" (click)="dataTable.exportCSV()"
+            class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportExcel()"
+            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportPdf()"
+            class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">{{'messages.videoTableNoValues' | translate}}.</td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faPlusCircle"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'video.videoAddHeader' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faFont"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="videotitle" class="required-input large-text" type="text" [(ngModel)]="title" pInputText>
+          <label for="videotitle">{{'video.videoAddTitleHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faHome"></fa-icon>
+        </span>
+        <span class="boolean-group-button">
+          <span class="boolean-field-title">{{'video.videoAddIsOwnProductionHeader' | translate}}</span>
+          <p-toggleButton [(ngModel)]="isOwnProduction" onIcon="pi pi-check" offIcon="pi pi-times" [style]="{'height': '45px'}"></p-toggleButton>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faGlobe"></fa-icon>
+        </span>
+        <span class="p-float-label" #languageselector>
+          <p-dropdown inputId="language" class="" [options]="videoLanguages" [(ngModel)]="videoLanguage"
+            (onChange)="reloadDropdown($event)" optionLabel="languageTitle" [filter]="true"
+            [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
+          </p-dropdown>
+          <label for="language">{{'video.videoAddVideoLanguageHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="fa500px"></fa-icon>
+        </span>
+        <span class="boolean-group-button">
+          <span class="boolean-field-title">{{'video.videoAddIsHdHeader' | translate}}</span>
+          <p-toggleButton [(ngModel)]="isHd" onIcon="pi pi-check" offIcon="pi pi-times" [style]="{'height': '45px'}"></p-toggleButton>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faTags"></fa-icon>
+        </span>
+        <span class="p-float-label" #genreselector>
+          <p-dropdown inputId="genre" class="" [options]="videoGenres" [(ngModel)]="videoGenre"
+            (onChange)="reloadDropdown($event)" optionLabel="genreTitle" [filter]="true"
+            [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
+          </p-dropdown>
+          <label for="genre">{{'video.videoAddVideoGenreHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faRulerVertical"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="durationlength" type="text" class="large-text" [(ngModel)]="durationLength" pInputText
+            class="wide-input-field">
+          <label for="durationlength">{{'video.videoAddDurationLengthHeader2' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faCalendarDay"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="yeardate" type="text" class="large-text" [(ngModel)]="yearDate" pInputText class="wide-input-field">
+          <label for="yeardate">{{'video.videoAddYearHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+        <div class="p-inputgroup wide-input-field">
+          <span class="p-inputgroup-addon">
+            <fa-icon [icon]="faClone"></fa-icon>
+          </span>
+          <span class="boolean-group-button">
+            <span class="boolean-field-title">{{'video.videoAddIsSeriesHeader' | translate}}</span>
+            <p-toggleButton [(ngModel)]="isSeries" onIcon="pi pi-check" offIcon="pi pi-times" [style]="{'height': '45px'}"></p-toggleButton>
+          </span>
+        </div>
+      </div>  
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faAtlas"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="nativetitle" type="text" class="large-text" [(ngModel)]="nativeTitle" pInputText class="wide-input-field">
+          <label for="nativetitle">{{'video.videoAddNativeTitleHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon required-input-addon">
+          <fa-icon [icon]="faLink"></fa-icon>
+        </span>
+        <span class="p-float-label">
+          <input id="linkvalue" type="text" class="required-input large-text" [(ngModel)]="linkValue" pInputText
+            class="wide-input-field">
+          <label for="linkvalue">{{'video.videoAddLinkValueHeader' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <button pButton type="button" label=" " class="p-button-raised p-button-success save-button"
+        (click)="saveVideo()">
+        <div class="button-content">
+          <fa-icon [icon]="faCheckSquare" class="button-icon"></fa-icon>
+          {{'video.videoAddSaveVideo' | translate}}
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addcategoryHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faFolderPlus"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'video.languageAddTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input id="addLanguageTitle" type="text" [(ngModel)]="newLanguageName" pInputText>
+          <label for="addLanguageTitle">{{'video.languageAddLanguageField' | translate}}</label>
+        </span>
+        <button id="addLanguageButton" type="button" pButton pRipple class="category-add-button p-button-success"
+          label=" " (click)="addVideoLanguage()">
+          <fa-icon [icon]="faPlus" class="button-icon"></fa-icon>
+          <span class="input-side-button">{{'video.languageAddButton' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addcategoryHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faFolderPlus"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'video.genreAddTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup">
+        <span class="p-float-label">
+          <input id="addGenreTitle" type="text" [(ngModel)]="newGenreName" pInputText>
+          <label for="addGenreTitle">{{'video.genreAddGenreField' | translate}}</label>
+        </span>
+        <button id="addGenreButton" type="button" pButton pRipple class="category-add-button p-button-success"
+          label=" " (click)="addVideoGenre()">
+          <fa-icon [icon]="faPlus" class="button-icon"></fa-icon>
+          <span class="input-side-button">{{'video.genreAddButton' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader editcategoryHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTags"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'video.languageEditTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+
+    <div class="p-col-12 p-md-12">
+      <div class="wide-input-field">
+        <span class="p-float-label">
+          <p-dropdown inputId="editLanguageSelector" [options]="videoLanguages" [(ngModel)]="editSelectedVideoLanguage"
+            optionLabel="languageTitle" [filter]="true" [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
+          </p-dropdown>
+          <label for="editLanguageSelector">{{'video.languageEditLanguageSelect' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faArrowRight"></fa-icon>
+          <span class="edit-category-new-info">{{'video.languageEditLanguageNewInfo' | translate}}</span>
+        </span>
+        <span class="p-float-label">
+          <p-dropdown inputId="selectLanguage" [options]="videoLanguages" [(ngModel)]="updatedVideoLanguage"
+            optionLabel="languageTitle" [filter]="true" [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
+          </p-dropdown>
+          <label for="selectLanguage">{{'video.languageEditLanguageNew' | translate}}</label>
+        </span>
+        <button type="button" pButton pRipple class="category-update-button p-button-success" label=" "
+          (click)="updateLanguages()">
+          <fa-icon [icon]="faRetweet" class="button-icon"></fa-icon>
+          <span class="input-side-button">{{'video.languageEditLanguageNewChangeButton' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader editcategoryHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faTags"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'video.genreEditTitle' | translate}}
+      </div>
+    </div>
+  </div>
+  <div class="elementContent">
+
+    <div class="p-col-12 p-md-12">
+      <div class="wide-input-field">
+        <span class="p-float-label">
+          <p-dropdown inputId="editGenreSelector" [options]="videoGenres"
+            [(ngModel)]="editSelectedVideoGenre" optionLabel="genreTitle" [filter]="true"
+            [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
+          </p-dropdown>
+          <label for="editGenreSelector">{{'video.genreEditGenreSelect' | translate}}</label>
+        </span>
+      </div>
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <div class="p-inputgroup wide-input-field">
+        <span class="p-inputgroup-addon">
+          <fa-icon [icon]="faArrowRight"></fa-icon>
+          <span class="edit-category-new-info">{{'video.genreEditGenreNewInfo' | translate}}</span>
+        </span>
+        <span class="p-float-label">
+          <p-dropdown inputId="selectGenre" [options]="videoGenres"
+            [(ngModel)]="updatedVideoGenre" optionLabel="genreTitle" [filter]="true"
+            [style]="{'height': '45px', 'width': '100%'}" placeholder="  ">
+          </p-dropdown>
+          <label for="selectGenre">{{'video.genreEditGenreNew' | translate}}</label>
+        </span>
+        <button type="button" pButton pRipple class="category-update-button p-button-success" label=" "
+          (click)="updateGenres()">
+          <fa-icon [icon]="faRetweet" class="button-icon"></fa-icon>
+          <span class="input-side-button">{{'video.genreEditGenreNewChangeButton' | translate}}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

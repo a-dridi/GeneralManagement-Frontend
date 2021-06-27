@@ -11,19 +11,16 @@ import { UserAuthentication } from '../util/user-authentication';
 export class ExpenseService {
 
   fullApiurlTable: string;
-  uriTable: string = "data/expense";
-  public uriAttachment: string = "/Ausgaben";
+  uriTable: string = "budgeting/data/expense";
+  public uriAttachment: string = "/Expense";
   userId: number;
 
-  constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication, private router: Router) {
+  constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication) {
     this.fullApiurlTable = this.apiConfig.apiUrl + "/" + this.uriTable;
   }
 
   loadUserId() {
     this.userId = this.userAuthentication.getUserAuthenticationUserId();
-    if (this.userId == 0) {
-      // this.router.navigate([`/login`]);
-    }
   }
 
   getAllExpenseTable() {
@@ -96,10 +93,10 @@ export class ExpenseService {
       expenseTimerange: expenseTimerange,
       paymentDate: paymentDate,
       information: information,
-      attachment: false,
-      attachmentPath: "",
-      attachmentName: "",
-      attachmentType: "",
+      attachment: attachment,
+      attachmentPath: attachmentPath,
+      attachmentName: attachmentName,
+      attachmentType: attachmentType,
       deleted: false,
       userId: this.userId
     };
@@ -124,6 +121,11 @@ export class ExpenseService {
   getOfCertainMonthSingleAndCustomExpensesSum(month) {
     this.loadUserId();
     return this.httpClient.get(`${this.fullApiurlTable}/get/sum/single/custom/certainMonth/${month}/${this.userId}`);
+  }
+
+  getExpensesSumOfCurrentMonth() {
+    this.loadUserId();
+    return this.httpClient.get(`${this.fullApiurlTable}/get/sum/currentMonth/${this.userId}`);
   }
 
   restoreDeletedExpense(expenseId) {

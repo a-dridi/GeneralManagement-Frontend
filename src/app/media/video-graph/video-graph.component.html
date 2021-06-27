@@ -1,0 +1,50 @@
+<h3 class="subsiteTitle">{{'videograph.siteTitle' | translate}}</h3>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faChartPie"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'videograph.videoGenreAmountGraphTitle' | translate}} </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-chart type="doughnut" [data]="videoGenreAmountData"></p-chart>
+  </div>
+</div>
+<br>
+<hr>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faChartPie"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'videograph.videoLanguageAmountGraphTitle' | translate}} </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-chart type="doughnut" [data]="videoLanguageAmountData"></p-chart>
+  </div>
+</div>
+<br>
+<hr>
+<br>
+<div class="elementGrid">
+  <div class="elementHeader addHeader">
+    <div class="elementTopHeader">
+      <div class="element-header-icon">
+        <fa-icon [icon]="faChartPie"></fa-icon>
+      </div>
+      <div class="element-header-title">
+        {{'videograph.videoclipLanguageAmountGraphTitle' | translate}} </div>
+    </div>
+  </div>
+  <div class="elementContent">
+    <p-chart type="doughnut" [data]="videoclipLanguageAmountData"></p-chart>
+  </div>
+</div>
