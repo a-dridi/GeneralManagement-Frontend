@@ -31,9 +31,19 @@ input:-ms-input-placeholder {
     font-size: 20px !important;
 }
 
-.login-form {
-    display: table;
-    margin: 260px auto !important;
+@media screen and (min-width: 1000px) {
+    .login-form {
+        display: table;
+        margin: 260px auto !important;
+    }
+}
+
+@media screen and (max-width: 999px) {
+    .login-form {
+        margin: auto !important;
+        margin-top: 50px !important;
+        margin-bottom: 50px !important;
+    }
 }
 
 .site-title {

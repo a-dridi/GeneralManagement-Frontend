@@ -22,7 +22,8 @@ export class AppLanguages {
         let languagesArray: Language[] = [
             { code: "en", languageName: "English", countryCode: "us" },
             { code: "de", languageName: "Deutsch", countryCode: "at" },
-            { code: "ar", languageName: "العربية", countryCode: "tn" }
+            { code: "ar", languageName: "العربية", countryCode: "tn" },
+            { code: "fr", languageName: "Français", countryCode: "fr" }
 
         ];
         return languagesArray;

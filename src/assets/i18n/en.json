@@ -686,7 +686,7 @@
   "wealthYearly": {
     "siteTitle": "Wealth - Yearly",
     "subTitle": "Track your wealth (including expenses and earnings) yearly.",
-    "tableTitle": "Wealth Monthly - Table",
+    "tableTitle": "Wealth Yearly - Table",
     "wealthYearlyYearDateHeader": "Year",
     "wealthYearlyExpenseHeader": "Expenses",
     "wealthYearlyEarningHeader": "Earning",
@@ -826,7 +826,7 @@
     "osAddCategoryField": "New OS Title",
     "osAddButton": "Add",
     "osEditTitle": "Edit Operating System",
-    "osEditOsSelect": "Select Operating Systen",
+    "osEditOsSelect": "Select Operating System",
     "osEditOsNew": "New Operating System",
     "osEditOsNewInfo": "Change to:",
     "osEditOsNewChangeButton": "Change",

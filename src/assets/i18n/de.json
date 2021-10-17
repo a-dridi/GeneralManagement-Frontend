@@ -567,7 +567,7 @@
     "currencyTitle": "Währung"
   },
   "organizationModule": {
-    "title": "Währung"
+    "title": "Organisierung"
   },
   "organization": {
     "siteTitle": "Organisierung",
@@ -671,7 +671,7 @@
   "wealthMonthly": {
     "siteTitle": "Vermögen - Monatlich",
     "subTitle": "Verfolgen Sie Ihr Vermögen (einschließlich Ausgaben und Einnahmen) monatlich.",
-    "tableTitle": "Wealth Monthly - Tabelle",
+    "tableTitle": "Monatliches Vermögen - Tabelle",
     "wealthMonthlyMonthDateHeader": "Monat",
     "wealthMonthlyYearDateHeader": "Jahr",
     "wealthMonthlyExpenseHeader": "Ausgaben",
@@ -686,7 +686,7 @@
   "wealthYearly": {
     "siteTitle": "Vermögen - Jährlich",
     "subTitle": "Verfolgen Sie Ihr Vermögen (einschließlich Ausgaben und Einnahmen) jährlich.",
-    "tableTitle": "Wealth Monthly - Tabelle",
+    "tableTitle": "Jährliches Vermögen - Tabelle",
     "wealthYearlyYearDateHeader": "Jahr",
     "wealthYearlyExpenseHeader": "Ausgaben",
     "wealthYearlyEarningHeader": "Einkommen",

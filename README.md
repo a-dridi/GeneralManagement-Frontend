@@ -49,4 +49,3 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 ![Screenshot 3](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot3.PNG)
 
 ![Screenshot 4](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot4.PNG)
-

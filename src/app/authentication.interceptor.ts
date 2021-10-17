@@ -18,7 +18,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     readonly DATABASE_URI: string = "data"
     readonly SETTINGS_URI: string = "settings"
     readonly USER_INFO_URI: string = "api/getUserEmail";
-    
+
     constructor(private userAuthentication: UserAuthentication, private router: Router, private refererCache: RefererCache) {
     }
 
@@ -49,6 +49,10 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                         if (err.status === 403 || err.message.includes("The Token has expired on")) {
                             this.showLoginPage();
                             console.log("User not logged in!");
+                        }
+                        //Gateway time out error fix
+                        else if (err.status === 504) {
+                            location.reload();
                         }
                     }
                 }

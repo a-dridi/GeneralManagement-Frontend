@@ -21,7 +21,7 @@
         styleClass="p-datatable-responsive-table p-datatable-striped">
 
         <ng-template pTemplate="caption">
-          <div class="p-d-flex">
+          <div class="p-d-flex table-top">
             <span class="p-input-icon-left p-ml-auto">
               <i class="pi pi-search"></i>
               <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"

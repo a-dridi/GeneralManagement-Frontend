@@ -302,11 +302,24 @@ category-add-button {
     }
 }
 
-.update-value-earning-title{
+.update-value-earning-title {
     margin-bottom: 35px;
     font-style: italic;
 }
 
-.p-button-success{
+.p-button-success {
     background-color: green !important;
+}
+
+.table-top {
+    flex-wrap: wrap;
+    div {
+        margin-bottom: 10px !important;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .search-input {
+        width: 150px !important;
+    }
 }

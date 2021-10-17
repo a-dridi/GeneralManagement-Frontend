@@ -224,3 +224,16 @@ input:-ms-input-placeholder {
         width: 180px !important;
     }
 }
+
+.table-top {
+    flex-wrap: wrap;
+    div {
+        margin-bottom: 10px !important;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .search-input {
+        width: 150px !important;
+    }
+}

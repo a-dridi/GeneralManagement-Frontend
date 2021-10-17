@@ -161,25 +161,25 @@
       </div>
     </div>
     <p-table #dataTable [columns]="tableColumns" [value]="expenses" dataKey="expenseId" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" totalRecords="{{expenses.length}}"
+      [showCurrentPageReport]="true" totalRecords="{{expensesLength}}"
       currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="loading"
       [globalFilterFields]="['title','expenseCategory.categoryTitle','centValue','expenseTimerange.timerangeTitle','paymentDate','information']"
       styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
-        <div class="p-d-flex">
-          <span class="p-input-icon-left p-ml-auto">
+        <div class="p-d-flex table-top">
+          <div class="p-input-icon-left p-ml-auto">
             <button pButton label=" " class="p-button-warning p-button-rounded" (click)="restoreDeletedExpenses()">
               <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
               <span>{{'expense.expenseTableRestoreButton' | translate}}</span>
             </button>
-          </span>
-          <span class="p-input-icon-left p-ml-auto">
+          </div>
+          <div class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
             <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
-              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
-          </span>
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" class="search-input"/>
+          </div>
         </div>
       </ng-template>
 
@@ -215,12 +215,12 @@
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-dropdown [ngModel]="value" [options]="expenseCategories"
+                  <p-dropdown [ngModel]="value" [options]="expenseCategoryTitles"
                     placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
-                    (onChange)="filter($event.value.categoryTitle)" optionLabel="categoryTitle">
+                    (onChange)="filter($event.value)">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
-                        <span class="p-ml-1">{{option.categoryTitle}}</span>
+                        <span class="p-ml-1">{{option}}</span>
                       </div>
                     </ng-template>
                   </p-dropdown>
@@ -248,12 +248,12 @@
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-dropdown [ngModel]="value" [options]="expenseTimeranges"
+                  <p-dropdown [ngModel]="value" [options]="timerangeTranslationArray"
                     placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
-                    (onChange)="filter($event.value.timerangeTitle)" optionLabel="timerangeTitle">
+                    (onChange)="filter($event.value)">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
-                        <span class="p-ml-1">{{option.timerangeTitle}}</span>
+                        <span class="p-ml-1">{{option}}</span>
                       </div>
                     </ng-template>
                   </p-dropdown>
@@ -327,12 +327,12 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-dropdown [options]="expenseTimerangeTitles" [(ngModel)]="expenseItem.expenseTimerange"
+                <p-dropdown [options]="timerangeTranslationArray" [(ngModel)]="expenseItem.expenseTimerange"
                   [style]="{'width':'100%'}" placeholder="expenseItem.expenseTimerange" [filter]="true"
                   (ngModelChange)="updateExpenseValue($event, expenseItem, 'timerange')"></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{expenseTimerangeTranslations[expenseItem.expenseTimerange]}}
+                {{expenseItem.expenseTimerange}}
               </ng-template>
             </p-cellEditor>
           </td>

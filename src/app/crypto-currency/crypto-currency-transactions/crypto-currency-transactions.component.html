@@ -20,19 +20,19 @@
       styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
-        <div class="p-d-flex">
-          <span class="p-input-icon-left p-ml-auto">
+        <div class="p-d-flex table-top">
+          <div class="p-input-icon-left p-ml-auto">
             <button pButton label=" " class="p-button-warning p-button-rounded"
               (click)="restoreDeletedCryptoCurrencyTransactions()">
               <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
               <span>{{'cryptocurrencytransactions.cryptocurrencytransactionsTableRestoreButton' | translate}}</span>
             </button>
-          </span>
-          <span class="p-input-icon-left p-ml-auto">
+          </div>
+          <div class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
             <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
               placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
-          </span>
+          </div>
         </div>
       </ng-template>
 

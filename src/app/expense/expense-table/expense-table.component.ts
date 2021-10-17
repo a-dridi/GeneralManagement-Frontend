@@ -25,7 +25,7 @@ import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
   templateUrl: './expense-table.component.html',
   styleUrls: ['./expense-table.component.scss']
 })
-export class ExpenseTableComponent implements OnInit  {
+export class ExpenseTableComponent implements OnInit {
 
   standardTableWidth = 1478;
 
@@ -40,6 +40,7 @@ export class ExpenseTableComponent implements OnInit  {
   exportedColumns: any[];
 
   expenses: ExpenseTable[];
+  expensesLength: number = 0;
 
   months: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   years: number[] = [];
@@ -52,6 +53,8 @@ export class ExpenseTableComponent implements OnInit  {
   expenseCategoryTitles: string[];
   expenseTimerangeTitles: string[];
   expenseTimerangeTranslations;
+  expenseTranslationsTimeranges;
+  timerangeTranslationArray: string[];
 
   displayUpdateValue: boolean = false;
   updatedExpenseValue: string;
@@ -172,7 +175,6 @@ export class ExpenseTableComponent implements OnInit  {
     this.loadExpensePartionSetting();
     this.loadExpenseCategories();
     this.loadExpenseTimeranges();
-    this.loadExpenses();
     this.calculateMonthlyYearlyExpenses();
     this.calculateMonthlyYearlyEarnings();
     this.loadSingleCustomSumsOfMonth();
@@ -183,13 +185,12 @@ export class ExpenseTableComponent implements OnInit  {
   ngAfterViewInit() {
     this.loadDropdownStyle();
     this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
-
   }
 
   /**
    * Submit price update by user enter input
    */
-  onUpdatedPriceChange() {   
+  onUpdatedPriceChange() {
     if (this.displayUpdateValue) {
       let updatepriceInput = document.getElementById("updatedPrice");
       if (updatepriceInput != null) {
@@ -255,14 +256,7 @@ export class ExpenseTableComponent implements OnInit  {
     if (this.displayExpensesSettings === 0) {
       this.displayedDateString = "";
       this.expenseService.getAllExpenseTable().subscribe((data: Expense[]) => {
-        data.forEach(
-          (expenseItem: Expense) => {
-            this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue / 100, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: expenseItem.expenseTimerange.timerangeTitle, paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
-          });
-        this.loading = false;
-        this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
-          this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
-        });
+        this.setUpExpenseTable(data);
       }, err => {
         console.log(err);
         this.loading = false;
@@ -270,14 +264,7 @@ export class ExpenseTableComponent implements OnInit  {
     } else if (this.displayExpensesSettings === 1) {
       this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
       this.expenseService.getExpensesOfCertainYearTable(this.displayedDate.getFullYear()).subscribe((data: Expense[]) => {
-        data.forEach(
-          (expenseItem: Expense) => {
-            this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue / 100, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: expenseItem.expenseTimerange.timerangeTitle, paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
-          });
-        this.loading = false;
-        this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
-          this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
-        });
+        this.setUpExpenseTable(data);
       }, err => {
         console.log(err);
         this.loading = false;
@@ -285,19 +272,27 @@ export class ExpenseTableComponent implements OnInit  {
     } else if (this.displayExpensesSettings === 2) {
       this.displayedDateString = "(" + (this.displayedDate.getMonth() + 1) + "/" + this.displayedDate.getFullYear() + ")";
       this.expenseService.getExpensesOfCertainMonthYearTable(this.displayedDate.getMonth() + 1, this.displayedDate.getFullYear()).subscribe((data: Expense[]) => {
-        data.forEach(
-          (expenseItem: Expense) => {
-            this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue / 100, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: expenseItem.expenseTimerange.timerangeTitle, paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
-          });
-        this.loading = false;
-        this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
-          this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
-        });
+        this.setUpExpenseTable(data);
       }, err => {
         console.log(err);
         this.loading = false;
       });
     }
+  }
+
+  /**
+   * Get loaded data and set up table.
+   */
+  setUpExpenseTable(data: Expense[]) {
+    data.forEach(
+      (expenseItem: Expense) => {
+        this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue / 100, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: this.expenseTimerangeTranslations[expenseItem.expenseTimerange.timerangeTitle], paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
+      });
+    this.expensesLength = this.expenses.length;
+    this.loading = false;
+    this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
+      this.expensesAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.expenses.length);
+    });
   }
 
   /**
@@ -323,12 +318,17 @@ export class ExpenseTableComponent implements OnInit  {
       this.expenseTimeranges = data;
       this.expenseTimerangeTitles = [];
       this.expenseTimerangeTranslations = {};
+      this.expenseTranslationsTimeranges = {};
+      this.timerangeTranslationArray = [];
       this.expenseTimeranges.forEach((expenseTimerangesItem) => {
         this.translateService.get(['expenseTimeranges.expensetimerange' + expenseTimerangesItem.timerangeId]).subscribe(translations => {
           this.expenseTimerangeTranslations[expenseTimerangesItem.timerangeTitle] = (translations['expenseTimeranges.expensetimerange' + expenseTimerangesItem.timerangeId]);
+          this.expenseTranslationsTimeranges[translations['expenseTimeranges.expensetimerange' + expenseTimerangesItem.timerangeId]] = (expenseTimerangesItem.timerangeTitle);
+          this.timerangeTranslationArray.push(translations['expenseTimeranges.expensetimerange' + expenseTimerangesItem.timerangeId]);
         });
         this.expenseTimerangeTitles.push(expenseTimerangesItem.timerangeTitle);
       });
+      this.loadExpenses();
     }, err => {
     });
   }
@@ -681,7 +681,7 @@ export class ExpenseTableComponent implements OnInit  {
   updateExpenseValue(newValue, expenseItem, columnName) {
     //Load objects through the title
     let expenseCategoryObject = this.getExpenseCategoryByCategoryTitle(expenseItem.expenseCategory);
-    let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(expenseItem.expenseTimerange);
+    let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[expenseItem.expenseTimerange]);
 
     if (columnName === "title") {
       this.expenseService.updateExpenseTable(expenseItem.expenseId, newValue, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
@@ -701,7 +701,7 @@ export class ExpenseTableComponent implements OnInit  {
       });
     }
     else if (columnName === "timerange") {
-      expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(expenseItem.expenseTimerange);
+      expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[newValue]);
       this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
         this.reloadAllExpensesData();
       }, err => {
@@ -744,8 +744,7 @@ export class ExpenseTableComponent implements OnInit  {
       return;
     }
     let expenseCategoryObject = this.getExpenseCategoryByCategoryTitle(this.currentlyUpdatingExpense.expenseCategory);
-    let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.currentlyUpdatingExpense.expenseTimerange);
-
+    let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[this.currentlyUpdatingExpense.expenseTimerange]);
     this.expenseService.updateExpenseTable(this.currentlyUpdatingExpense.expenseId, this.currentlyUpdatingExpense.title, expenseCategoryObject, parsedValue * 100, expenseTimerangeObject, this.currentlyUpdatingExpense.paymentDate, this.currentlyUpdatingExpense.information, this.currentlyUpdatingExpense.attachment, this.currentlyUpdatingExpense.attachmentPath, this.currentlyUpdatingExpense.attachmentName, this.currentlyUpdatingExpense.attachmentType).subscribe((res: String) => {
       this.reloadAllExpensesData();
     }, err => {

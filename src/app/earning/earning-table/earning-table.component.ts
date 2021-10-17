@@ -38,6 +38,7 @@ export class EarningTableComponent implements OnInit {
   exportedColumns: any[];
 
   earnings: EarningTable[];
+  earningsLength: number = 0;
 
   months: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   years: number[] = [];
@@ -50,6 +51,8 @@ export class EarningTableComponent implements OnInit {
   earningCategoryTitles: string[];
   earningTimerangeTitles: string[];
   earningTimerangeTranslations;
+  earningTranslationsTimeranges;
+  timerangeTranslationArray: string[];
 
   earningsMonthlySum: number = 0;
   expensesMonthlySum: number = 0;
@@ -150,7 +153,6 @@ export class EarningTableComponent implements OnInit {
     this.loadUserSettings();
     this.loadEarningCategories();
     this.loadEarningTimeranges();
-    this.loadEarnings();
     this.calculateMonthlyYearlyExpenses();
     this.calculateMonthlyYearlyEarnings();
     this.loadSingleCustomSumsOfMonth();
@@ -231,14 +233,7 @@ export class EarningTableComponent implements OnInit {
     if (this.displayEarningsSettings === 0) {
       this.displayedDateString = "";
       this.earningService.getAllEarningTable().subscribe((data: Earning[]) => {
-        data.forEach(
-          (earningItem: Earning) => {
-            this.earnings.push({ earningId: earningItem.earningId, title: earningItem.title, centValue: earningItem.centValue / 100, earningCategory: earningItem.earningCategory.categoryTitle, earningTimerange: earningItem.earningTimerange.timerangeTitle, earningDate: earningItem.earningDate, information: earningItem.information, attachment: earningItem.attachment, attachmentPath: earningItem.attachmentPath, attachmentName: earningItem.attachmentName, attachmentType: earningItem.attachmentType });
-          });
-        this.loading = false;
-        this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
-          this.earningsAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.earnings.length);
-        });
+        this.setUpEarningTable(data);
       }, err => {
         console.log(err);
         this.loading = false;
@@ -246,14 +241,7 @@ export class EarningTableComponent implements OnInit {
     } else if (this.displayEarningsSettings === 1) {
       this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
       this.earningService.getEarningsOfCertainYearTable(this.displayedDate.getFullYear()).subscribe((data: Earning[]) => {
-        data.forEach(
-          (earningItem: Earning) => {
-            this.earnings.push({ earningId: earningItem.earningId, title: earningItem.title, centValue: earningItem.centValue / 100, earningCategory: earningItem.earningCategory.categoryTitle, earningTimerange: earningItem.earningTimerange.timerangeTitle, earningDate: earningItem.earningDate, information: earningItem.information, attachment: earningItem.attachment, attachmentPath: earningItem.attachmentPath, attachmentName: earningItem.attachmentName, attachmentType: earningItem.attachmentType });
-          });
-        this.loading = false;
-        this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
-          this.earningsAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.earnings.length);
-        });
+        this.setUpEarningTable(data);
       }, err => {
         console.log(err);
         this.loading = false;
@@ -261,20 +249,29 @@ export class EarningTableComponent implements OnInit {
     } else if (this.displayEarningsSettings === 2) {
       this.displayedDateString = "(" + (this.displayedDate.getMonth() + 1) + "/" + this.displayedDate.getFullYear() + ")";
       this.earningService.getEarningsOfCertainMonthYearTable(this.displayedDate.getMonth() + 1, this.displayedDate.getFullYear()).subscribe((data: Earning[]) => {
-        data.forEach(
-          (earningItem: Earning) => {
-            this.earnings.push({ earningId: earningItem.earningId, title: earningItem.title, centValue: earningItem.centValue / 100, earningCategory: earningItem.earningCategory.categoryTitle, earningTimerange: earningItem.earningTimerange.timerangeTitle, earningDate: earningItem.earningDate, information: earningItem.information, attachment: earningItem.attachment, attachmentPath: earningItem.attachmentPath, attachmentName: earningItem.attachmentName, attachmentType: earningItem.attachmentType });
-          });
-        this.loading = false;
-        this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
-          this.earningsAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.earnings.length);
-        });
+        this.setUpEarningTable(data);
       }, err => {
         console.log(err);
         this.loading = false;
       });
     }
   }
+
+  /**
+ * Get loaded data and set up table.
+ */
+  setUpEarningTable(data: Earning[]) {
+    data.forEach(
+      (earningItem: Earning) => {
+        this.earnings.push({ earningId: earningItem.earningId, title: earningItem.title, centValue: earningItem.centValue / 100, earningCategory: earningItem.earningCategory.categoryTitle, earningTimerange: this.earningTimerangeTranslations[earningItem.earningTimerange.timerangeTitle], earningDate: earningItem.earningDate, information: earningItem.information, attachment: earningItem.attachment, attachmentPath: earningItem.attachmentPath, attachmentName: earningItem.attachmentName, attachmentType: earningItem.attachmentType });
+      });
+    this.earningsLength = this.earnings.length;
+    this.loading = false;
+    this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
+      this.earningsAmountInfo = (translations['messages.numberOfAvailableDatasets']).replace("#?", this.earnings.length);
+    });
+  }
+
 
   /**
    * Create array for categories. Create array of titles of categories, which is needed for the category update of an earning. 
@@ -299,12 +296,17 @@ export class EarningTableComponent implements OnInit {
       this.earningTimeranges = data;
       this.earningTimerangeTitles = [];
       this.earningTimerangeTranslations = {};
+      this.earningTranslationsTimeranges = {};
+      this.timerangeTranslationArray = [];
       this.earningTimeranges.forEach((earningTimerangesItem) => {
         this.translateService.get(['earningTimeranges.earningtimerange' + earningTimerangesItem.timerangeId]).subscribe(translations => {
           this.earningTimerangeTranslations[earningTimerangesItem.timerangeTitle] = (translations['earningTimeranges.earningtimerange' + earningTimerangesItem.timerangeId]);
+          this.earningTranslationsTimeranges[translations['earningTimeranges.earningtimerange' + earningTimerangesItem.timerangeId]] = (earningTimerangesItem.timerangeTitle);
+          this.timerangeTranslationArray.push(translations['earningTimeranges.earningtimerange' + earningTimerangesItem.timerangeId]);
         });
         this.earningTimerangeTitles.push(earningTimerangesItem.timerangeTitle);
       });
+      this.loadEarnings();
     }, err => {
     });
   }
@@ -544,10 +546,10 @@ export class EarningTableComponent implements OnInit {
   updateEarningValue(newValue, earningItem, columnName) {
     //Load objects through the title
     let earningCategoryObject = this.getEarningCategoryByCategoryTitle(earningItem.earningCategory);
-    let earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(earningItem.earningTimerange);
+    let earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[earningItem.earningTimerange]);
 
     if (columnName === "title") {
-      this.earningService.updateEarningTable(earningItem.earningId, newValue, earningCategoryObject, earningItem.centValue, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
+      this.earningService.updateEarningTable(earningItem.earningId, newValue, earningCategoryObject, earningItem.centValue * 100, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -556,7 +558,7 @@ export class EarningTableComponent implements OnInit {
     }
     else if (columnName === "category") {
       earningCategoryObject = this.getEarningCategoryByCategoryTitle(newValue);
-      this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
+      this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue * 100, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -564,8 +566,8 @@ export class EarningTableComponent implements OnInit {
       });
     }
     else if (columnName === "timerange") {
-      earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(earningItem.earningTimerange);
-      this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
+      earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[newValue]);
+      this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue * 100, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
         this.reloadAllEarningsData();
       }, err => {
         console.log("UPDATE FAILED!");
@@ -574,7 +576,7 @@ export class EarningTableComponent implements OnInit {
       });
     }
     else if (columnName === "earningDate") {
-      this.earningService.updateEarningTable(earningItem.expenseId, earningItem.title, earningCategoryObject, earningItem.centValue, earningTimerangeObject, newValue, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
+      this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue * 100, earningTimerangeObject, newValue, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -582,7 +584,7 @@ export class EarningTableComponent implements OnInit {
       })
     }
     else if (columnName === "information") {
-      this.earningService.updateEarningTable(earningItem.expenseId, earningItem.title, earningCategoryObject, earningItem.centValue, earningTimerangeObject, earningItem.earningDate, newValue, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
+      this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue * 100, earningTimerangeObject, earningItem.earningDate, newValue, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -627,7 +629,7 @@ export class EarningTableComponent implements OnInit {
       return;
     }
     let earningCategoryObject = this.getEarningCategoryByCategoryTitle(this.currentlyUpdatingEarning.earningCategory);
-    let earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(this.currentlyUpdatingEarning.earningTimerange);
+    let earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[this.currentlyUpdatingEarning.earningTimerange]);
 
     this.earningService.updateEarningTable(this.currentlyUpdatingEarning.earningId, this.currentlyUpdatingEarning.title, earningCategoryObject, parsedValue * 100, earningTimerangeObject, this.currentlyUpdatingEarning.earningDate, this.currentlyUpdatingEarning.information, this.currentlyUpdatingEarning.attachment, this.currentlyUpdatingEarning.attachmentPath, this.currentlyUpdatingEarning.attachmentName, this.currentlyUpdatingEarning.attachmentType).subscribe((res: String) => {
       this.reloadAllEarningsData();
@@ -645,7 +647,7 @@ export class EarningTableComponent implements OnInit {
   }
 
   saveEarning() {
-    if (this.value.trim() == undefined) {
+    if (this.value === undefined || this.value.trim() == undefined) {
       this.messageCreator.showErrorMessage('earningAddEarningError1');
       return;
     }

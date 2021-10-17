@@ -97,24 +97,24 @@
       </div>
     </div>
     <p-table #dataTable [columns]="tableColumns" [value]="earnings" dataKey="earningId" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" totalRecords="{{earnings.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      [showCurrentPageReport]="true" totalRecords="{{earningsLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
       [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading"
       [globalFilterFields]="['title','earningCategory.categoryTitle','centValue','earningTimerange.timerangeTitle','earningDate','information']"
       styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
-        <div class="p-d-flex">
-          <span class="p-input-icon-left p-ml-auto">
+        <div class="p-d-flex table-top">
+          <div class="p-input-icon-left p-ml-auto">
             <button pButton label=" " class="p-button-warning p-button-rounded" (click)="restoreDeletedEarnings()">
               <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
               <span>{{'earning.earningTableRestoreButton' | translate}}</span>
             </button>
-          </span>
-          <span class="p-input-icon-left p-ml-auto">
+          </div>
+          <div class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
             <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
               placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
-          </span>
+          </div>
         </div>
       </ng-template>
 
@@ -183,12 +183,12 @@
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-dropdown [ngModel]="value" [options]="earningTimeranges"
+                  <p-dropdown [ngModel]="value" [options]="timerangeTranslationArray"
                     placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
-                    (onChange)="filter($event.value.timerangeTitle)" optionLabel="timerangeTitle">
+                    (onChange)="filter($event.value)">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
-                        <span class="p-ml-1">{{option.timerangeTitle}}</span>
+                        <span class="p-ml-1">{{option}}</span>
                       </div>
                     </ng-template>
                   </p-dropdown>
@@ -262,12 +262,12 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <p-dropdown [options]="earningTimerangeTitles" [(ngModel)]="earningItem.earningTimerange"
+                <p-dropdown [options]="timerangeTranslationArray" [(ngModel)]="earningItem.earningTimerange"
                   [style]="{'width':'100%'}" placeholder="earningItem.earningTimerange" [filter]="true"
                   (ngModelChange)="updateEarningValue($event, earningItem, 'timerange')"></p-dropdown>
               </ng-template>
               <ng-template pTemplate="output">
-                {{earningTimerangeTranslations[earningItem.earningTimerange]}}
+                {{earningItem.earningTimerange}}
               </ng-template>
             </p-cellEditor>
           </td>
