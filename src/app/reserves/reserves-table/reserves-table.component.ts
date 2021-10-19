@@ -31,6 +31,7 @@ export class ReservesTableComponent implements OnInit {
   exportedColumns: any[];
 
   reserves: ReservesTable[];
+  reservesLength: number = 0;
 
   reservesCategories: ReservesCategory[];
   reservesCategoryTitles: string[];
@@ -68,7 +69,7 @@ export class ReservesTableComponent implements OnInit {
   faUndo = faUndo;
   faDraft2digital = faDraft2digital;
   faMoneyBillAlt = faMoneyBillAlt;
-  
+
   @ViewChild('categoryselector') categoryselector: ElementRef;
 
   constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private apiConfig: ApiConfig, private reservesTableService: ReservesTableService, private reservesCategoryService: ReservesCategoryService, private translateService: TranslateService) {
@@ -80,7 +81,7 @@ export class ReservesTableComponent implements OnInit {
      */
   ngOnInit(): void {
     this.loading = true;
-    this.translateService.get(['reserves.reservesAddCategoryHeader', 'reserves.reservesAddDescriptionHeader', 'reserves.reservesAddAmountHeader', 'reserves.reservesAddCurrencyHeader', 'reserves.reservesAddStorageLocationHeader','reserves.reservesAddNoticeHeader','reserves.reservesAddCreatedDateHeader']).subscribe(translations => {
+    this.translateService.get(['reserves.reservesAddCategoryHeader', 'reserves.reservesAddDescriptionHeader', 'reserves.reservesAddAmountHeader', 'reserves.reservesAddCurrencyHeader', 'reserves.reservesAddStorageLocationHeader', 'reserves.reservesAddNoticeHeader', 'reserves.reservesAddCreatedDateHeader']).subscribe(translations => {
       this.tableColumns = [
         { field: 'reservesId', header: 'ID' },
         { field: 'category', header: translations['reserves.reservesAddCategoryHeader'] },
@@ -152,6 +153,7 @@ export class ReservesTableComponent implements OnInit {
         (reservesItem: Reserves) => {
           this.reserves.push({ reservesId: reservesItem.reservesId, category: reservesItem.category.categoryTitle, description: reservesItem.description, amount: reservesItem.amount, currency: reservesItem.currency, storageLocation: reservesItem.storageLocation, notice: reservesItem.notice, createdDate: reservesItem.createdDate, attachment: reservesItem.attachment, attachmentPath: reservesItem.attachmentPath, attachmentName: reservesItem.attachmentName, attachmentType: reservesItem.attachmentType });
         });
+      this.reservesLength = this.reserves.length;
       this.loading = false;
     }, err => {
       console.log(err);

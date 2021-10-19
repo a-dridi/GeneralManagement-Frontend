@@ -25,11 +25,13 @@ export class ExpenseDevelopmentComponent implements OnInit {
 
   monthlyChartTitle: string;
   monthlyExpenseDevelopments: ExpenseDevelopment[];
+  monthlyExpenseDevelopmentsLength: number = 0;
   monthlyExpenseDevelopmentGraph: any;
   monthlyGraphOptions: any;
 
   yearlyChartTitle: string;
   yearlyExpenseDevelopments: ExpenseDevelopment[];
+  yearlyExpenseDevelopmentsLength: number = 0;
   yearlyExpenseDevelopmentGraph: any;
   yearlyGraphOptions: any;
 
@@ -128,9 +130,8 @@ export class ExpenseDevelopmentComponent implements OnInit {
 
   loadMonthyExpenseDevelopments() {
     this.expenseDevelopmentService.getLatestMonthlyExpenseDevelopmentList().subscribe((expenseDevelopment: ExpenseDevelopment[]) => {
-      console.log("loadMonthyExpenseDevelopments")
-      console.log(expenseDevelopment)
       this.monthlyExpenseDevelopments = expenseDevelopment;
+      this.monthlyExpenseDevelopmentsLength = this.monthlyExpenseDevelopments.length;
       this.monthlyLoading = false;
       this.createMonthlyGraph(expenseDevelopment);
     }, err => {
@@ -142,6 +143,7 @@ export class ExpenseDevelopmentComponent implements OnInit {
   loadYearlyExpenseDevelopments() {
     this.expenseDevelopmentService.getLatestYearlyExpenseDevelopmentList().subscribe((expenseDevelopment: ExpenseDevelopment[]) => {
       this.yearlyExpenseDevelopments = expenseDevelopment;
+      this.yearlyExpenseDevelopmentsLength = this.yearlyExpenseDevelopments.length;
       this.yearlyLoading = false;
       this.createYearlyGraph(expenseDevelopment);
     }, err => {

@@ -30,6 +30,7 @@ export class OrganizationTableComponent implements OnInit {
   exportedColumns: any[];
 
   organizations: OrganizationTable[];
+  organizationsLength: number = 0;
 
   organizationCategories: OrganizationCategory[];
   organizationCategoryTitles: string[];
@@ -145,6 +146,7 @@ export class OrganizationTableComponent implements OnInit {
         (organizationItem: Organization) => {
           this.organizations.push({ organizationId: organizationItem.organizationId, description: organizationItem.description, organizationCategory: organizationItem.organizationCategory.categoryTitle, location: organizationItem.location, status: organizationItem.status, information: organizationItem.information, attachment: organizationItem.attachment, attachmentPath: organizationItem.attachmentPath, attachmentName: organizationItem.attachmentName, attachmentType: organizationItem.attachmentType });
         });
+      this.organizationsLength = this.organizations.length;
       this.loading = false;
     }, err => {
       console.log(err);

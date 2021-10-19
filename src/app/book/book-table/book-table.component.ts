@@ -32,6 +32,7 @@ export class BookTableComponent implements OnInit {
   exportedColumns: any[];
 
   books: BookTable[];
+  booksLength: number = 0;
 
   bookCategories: BookCategory[];
   bookCategoryTitles: string[];
@@ -176,6 +177,7 @@ export class BookTableComponent implements OnInit {
         (bookItem: Book) => {
           this.books.push({ bookId: bookItem.bookId, title: bookItem.title, bookCategory: bookItem.bookCategory.categoryTitle, location: bookItem.location, bookAvailability: bookItem.bookAvailability.availabilityTitle, bookLanguage: bookItem.bookLanguage, yearDate: bookItem.yearDate, isbn: bookItem.isbn, information: bookItem.information, addedDate: bookItem.addedDate });
         });
+        this.booksLength = this.books.length;
       this.loading = false;
     }, err => {
       console.log(err);

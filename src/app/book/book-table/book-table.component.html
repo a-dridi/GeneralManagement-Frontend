@@ -14,7 +14,7 @@
   <div class="elementContent">
     <p-table #dataTable [columns]="tableColumns" [value]="books" dataKey="bookId" [paginator]="true"
       [rows]="10" [showCurrentPageReport]="true"
-      totalRecords="{{books.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      totalRecords="{{booksLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
       [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading" 
       [globalFilterFields]="['title','bookCategory.categoryTitle','location','bookAvailability.availabilityTitle','language','isbn','information']"
       styleClass="p-datatable-responsive-table p-datatable-striped">

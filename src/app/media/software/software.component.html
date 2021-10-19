@@ -13,7 +13,7 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="tableColumns" [value]="softwares" dataKey="softwareId" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" totalRecords="{{softwares.length}}"
+      [showCurrentPageReport]="true" totalRecords="{{softwaresLength}}"
       currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="loading"
       [globalFilterFields]="['title','softwareOs.osTitle','manufacturer','language','version','notice','linkValue']"

@@ -13,7 +13,7 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="tableColumns" [value]="videos" dataKey="videoId" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" totalRecords="{{videos.length}}"
+      [showCurrentPageReport]="true" totalRecords="{{videosLength}}"
       currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="loading"
       [globalFilterFields]="['title','isOwnProduction','videoLanguage.languageTitle','isHd','videoGenre.genreTitle','durationLength','yearDate','isSeries','nativeTitle','linkValue']"

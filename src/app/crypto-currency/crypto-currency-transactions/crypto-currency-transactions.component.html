@@ -13,9 +13,9 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="tableColumns" [value]="cryptocurrencytransactions" dataKey="cryptocurrencytransactionId"
-      [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-      totalRecords="{{cryptocurrencytransactions.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading" totalRecords="{{cryptocurrencytransactions.length}}"
+      [paginator]="true" [rows]="10" [showCurrentPageReport]="true" totalRecords="{{cryptocurrencytransactionsLength}}"
+     currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="loading" 
       [globalFilterFields]="['senderFrom','currencyFrom','destinationTo','currencyTo','amount','storageLocation','notice']"
       styleClass="p-datatable-responsive-table p-datatable-striped">
 

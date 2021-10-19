@@ -13,7 +13,7 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="monthlyTableColumns" [value]="monthlyExpenseDevelopments" dataKey="dateDisplay"
-      [paginator]="true" [rows]="15" [showCurrentPageReport]="true" totalRecords="{{monthlyExpenseDevelopments.length}}"
+      [paginator]="true" [rows]="15" [showCurrentPageReport]="true" totalRecords="{{monthlyExpenseDevelopmentsLength}}"
       currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="monthlyLoading" [globalFilterFields]="['dateDisplay','centSum']"
       styleClass="p-datatable-responsive-table p-datatable-striped">
@@ -111,7 +111,7 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="yearlyTableColumns" [value]="yearlyExpenseDevelopments" dataKey="dateDisplay"
-      [paginator]="true" [rows]="15" [showCurrentPageReport]="true" totalRecords="{{yearlyExpenseDevelopments.length}}"
+      [paginator]="true" [rows]="15" [showCurrentPageReport]="true" totalRecords="{{yearlyExpenseDevelopmentsLength}}"
       currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="yearlyLoading" [globalFilterFields]="['dateDisplay','centSum']"
       styleClass="p-datatable-responsive-table p-datatable-striped">

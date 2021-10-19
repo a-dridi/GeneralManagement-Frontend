@@ -28,7 +28,7 @@ export class CryptoCurrencyComponent implements OnInit {
   exportedColumns: any[];
 
   cryptocurrencies: CryptoCurrency[];
-
+  cryptocurrenciesLength: number = 0;
 
   //new cryptocurrency data
   amount: string;
@@ -103,6 +103,7 @@ export class CryptoCurrencyComponent implements OnInit {
         (cryptocurrencyItem: CryptoCurrency) => {
           this.cryptocurrencies.push({ cryptocurrencyId: cryptocurrencyItem.cryptocurrencyId, amount: cryptocurrencyItem.amount, currency: cryptocurrencyItem.currency, storageLocation: cryptocurrencyItem.storageLocation, notice: cryptocurrencyItem.notice, attachment: cryptocurrencyItem.attachment, attachmentPath: cryptocurrencyItem.attachmentPath, attachmentName: cryptocurrencyItem.attachmentName, attachmentType: cryptocurrencyItem.attachmentType });
         });
+      this.cryptocurrenciesLength = this.cryptocurrencies.length;
       this.loading = false;
     }, err => {
       console.log(err);

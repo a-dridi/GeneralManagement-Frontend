@@ -31,6 +31,7 @@ export class SoftwareComponent implements OnInit {
   exportedColumns: any[];
 
   softwares: SoftwareTable[];
+  softwaresLength: number = 0;
 
   softwareOsItems: SoftwareOs[];
   softwareOsTitles: string[];
@@ -68,7 +69,7 @@ export class SoftwareComponent implements OnInit {
   faUndo = faUndo;
   faBuilding = faBuilding;
   faGlobe = faGlobe;
-  faCreativeCommonsZero=faCreativeCommonsZero;
+  faCreativeCommonsZero = faCreativeCommonsZero;
   faLink = faLink;
 
   @ViewChild('osselector') osselector: ElementRef;
@@ -154,6 +155,7 @@ export class SoftwareComponent implements OnInit {
         (softwareItem: Software) => {
           this.softwares.push({ softwareId: softwareItem.softwareId, title: softwareItem.title, softwareOs: softwareItem.softwareOs.osTitle, manufacturer: softwareItem.manufacturer, language: softwareItem.language, version: softwareItem.version, notice: softwareItem.notice, linkValue: softwareItem.linkValue, attachment: softwareItem.attachment, attachmentPath: softwareItem.attachmentPath, attachmentName: softwareItem.attachmentName, attachmentType: softwareItem.attachmentType });
         });
+      this.softwaresLength = this.softwares.length;
       this.loading = false;
     }, err => {
       console.log(err);

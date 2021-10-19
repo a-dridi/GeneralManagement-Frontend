@@ -32,6 +32,7 @@ export class VideoComponent implements OnInit {
   exportedColumns: any[];
 
   videos: VideoTable[];
+  videosLength: number = 0;
 
   videoLanguages: VideoLanguage[];
   videoLanguageTitles: string[];
@@ -63,7 +64,7 @@ export class VideoComponent implements OnInit {
   faHome = faHome;
   fa500px = fa500px;
   faRulerVertical = faRulerVertical;
-  faAtlas=faAtlas;
+  faAtlas = faAtlas;
   faLink = faLink;
   faClone = faClone;
   faTable = faTable;
@@ -180,6 +181,7 @@ export class VideoComponent implements OnInit {
         (videoItem: Video) => {
           this.videos.push({ videoId: videoItem.videoId, title: videoItem.title, isOwnProduction: videoItem.isOwnProduction, videoLanguage: videoItem.videoLanguage.languageTitle, isHd: videoItem.isHd, videoGenre: videoItem.videoGenre.genreTitle, durationLength: videoItem.durationLength, yearDate: videoItem.yearDate, isSeries: videoItem.isSeries, nativeTitle: videoItem.nativeTitle, linkValue: videoItem.linkValue });
         });
+      this.videosLength = this.videos.length;
       this.loading = false;
     }, err => {
       console.log(err);
@@ -391,9 +393,9 @@ export class VideoComponent implements OnInit {
 
   saveVideo() {
 
-console.log("save")
-console.log(this.title)
-console.log(this.linkValue)
+    console.log("save")
+    console.log(this.title)
+    console.log(this.linkValue)
 
     if (this.title === null || typeof this.title === undefined || this.title.trim() === "") {
       this.messageCreator.showErrorMessage('videoAddVideoError1');
@@ -410,7 +412,7 @@ console.log(this.linkValue)
       return;
     }
 
-    if (typeof this.linkValue === undefined || this.linkValue.trim() == undefined || this.linkValue.trim() === "" ) {
+    if (typeof this.linkValue === undefined || this.linkValue.trim() == undefined || this.linkValue.trim() === "") {
       this.messageCreator.showErrorMessage('videoAddVideoError5');
       return;
     }

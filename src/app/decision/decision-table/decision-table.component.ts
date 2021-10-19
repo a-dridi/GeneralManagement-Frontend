@@ -32,6 +32,7 @@ export class DecisionTableComponent implements OnInit {
   exportedColumns: any[];
 
   decisions: Decision[] = [];
+  decisionsLength: number = 0;
 
   title: string;
   information: string;
@@ -98,6 +99,7 @@ export class DecisionTableComponent implements OnInit {
   loadDecisions() {
     this.decisionService.getAllDecisionTable().subscribe((decisions: Decision[]) => {
       this.decisions = decisions;
+      this.decisionsLength = this.decisions.length;
       this.loading = false;
     }, err => {
       console.log(err);

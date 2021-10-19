@@ -25,11 +25,13 @@ export class EarningDevelopmentComponent implements OnInit {
 
   monthlyChartTitle: string;
   monthlyEarningDevelopments: EarningDevelopment[];
+  monthlyEarningDevelopmentsLength: number = 0;
   monthlyEarningDevelopmentGraph: any;
   monthlyGraphOptions: any;
 
   yearlyChartTitle: string;
   yearlyEarningDevelopments: EarningDevelopment[];
+  yearlyEarningDevelopmentsLength: number = 0;
   yearlyEarningDevelopmentGraph: any;
   yearlyGraphOptions: any;
 
@@ -129,6 +131,7 @@ export class EarningDevelopmentComponent implements OnInit {
   loadMonthyEarningDevelopments() {
     this.earningDevelopmentService.getLatestMonthlyEarningDevelopmentList().subscribe((earningDevelopment: EarningDevelopment[]) => {
       this.monthlyEarningDevelopments = earningDevelopment;
+      this.monthlyEarningDevelopmentsLength = this.monthlyEarningDevelopments.length;
       this.monthlyLoading = false;
       this.createMonthlyGraph(earningDevelopment);
     }, err => {
@@ -140,6 +143,7 @@ export class EarningDevelopmentComponent implements OnInit {
   loadYearlyEarningDevelopments() {
     this.earningDevelopmentService.getLatestYearlyEarningDevelopmentList().subscribe((earningDevelopment: EarningDevelopment[]) => {
       this.yearlyEarningDevelopments = earningDevelopment;
+      this.yearlyEarningDevelopmentsLength = this.yearlyEarningDevelopments.length;
       this.yearlyLoading = false;
       this.createYearlyGraph(earningDevelopment);
     }, err => {

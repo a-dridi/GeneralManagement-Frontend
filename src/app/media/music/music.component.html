@@ -13,7 +13,7 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="tableColumns" [value]="musicItems" dataKey="musicId" [paginator]="true" [rows]="10"
-      [showCurrentPageReport]="true" totalRecords="{{musicItems.length}}"
+      [showCurrentPageReport]="true" totalRecords="{{musicItemsLength}}"
       currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="loading"
       [globalFilterFields]="['interpreter','songtitle','yearDate','musicGenre.genreTitle','codeValue','linkValue','notice']"

@@ -14,7 +14,7 @@
   <div class="elementContent">
     <p-table #dataTable [columns]="monthlyTableColumns" [value]="monthlyEarningDevelopments" dataKey="dateDisplay"
       [paginator]="true" [rows]="15" [showCurrentPageReport]="true"
-      totalRecords="{{monthlyEarningDevelopments.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      totalRecords="{{monthlyEarningDevelopmentsLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
       [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="monthlyLoading"
       [globalFilterFields]="['dateDisplay','centSum']" styleClass="p-datatable-responsive-table p-datatable-striped">
 
@@ -112,7 +112,7 @@
   <div class="elementContent">
     <p-table #dataTable [columns]="yearlyTableColumns" [value]="yearlyEarningDevelopments" dataKey="dateDisplay"
       [paginator]="true" [rows]="15" [showCurrentPageReport]="true"
-      totalRecords="{{yearlyEarningDevelopments.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      totalRecords="{{yearlyEarningDevelopmentsLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
       [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="yearlyLoading"
       [globalFilterFields]="['dateDisplay','centSum']" styleClass="p-datatable-responsive-table p-datatable-striped">
 

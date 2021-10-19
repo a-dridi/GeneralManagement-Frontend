@@ -31,6 +31,8 @@ export class SavingsTableComponent implements OnInit {
   exportedColumns: any[];
 
   savings: Savings[];
+  savingsLength: number = 0;
+
   savingsFrequencyArray: SavingsFrequency[];
   savingsFrequencyTranslations;
 
@@ -132,6 +134,7 @@ export class SavingsTableComponent implements OnInit {
         (savingsItem: Savings) => {
           this.savings.push({ savingsId: savingsItem.savingsId, description: savingsItem.description, targetCent: savingsItem.targetCent / 100, stepAmountCent: savingsItem.stepAmountCent / 100, savingsFrequency: savingsItem.savingsFrequency, savedTillNowCent: savingsItem.savedTillNowCent / 100, lastSavingsUpdateDate: savingsItem.lastSavingsUpdateDate, startDate: savingsItem.startDate, targetCalculatedDate: savingsItem.targetCalculatedDate, notice: savingsItem.notice, attachment: savingsItem.attachment, attachmentPath: savingsItem.attachmentPath, attachmentName: savingsItem.attachmentName, attachmentType: savingsItem.attachmentType });
         });
+      this.savingsLength = this.savings.length;
       this.loading = false;
     }, err => {
       console.log(err);

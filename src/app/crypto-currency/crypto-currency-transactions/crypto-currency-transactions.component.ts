@@ -28,6 +28,7 @@ export class CryptoCurrencyTransactionsComponent implements OnInit {
   exportedColumns: any[];
 
   cryptocurrencytransactions: CryptoCurrencyTransactions[];
+  cryptocurrencytransactionsLength: number = 0;
 
   //new cryptocurrency data
   senderFrom: string;
@@ -60,7 +61,7 @@ export class CryptoCurrencyTransactionsComponent implements OnInit {
   faLevelUpAlt = faLevelUpAlt;
   faSignInAlt = faSignInAlt;
   faLevelDownAlt = faLevelDownAlt;
-  
+
   constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private apiConfig: ApiConfig, private cryptoCurrencyTransactionsService: CryptoTransactionsService, private translateService: TranslateService) {
 
   }
@@ -115,6 +116,7 @@ export class CryptoCurrencyTransactionsComponent implements OnInit {
         (cryptocurrencytransactionsItem: CryptoCurrencyTransactions) => {
           this.cryptocurrencytransactions.push({ cryptocurrencytransactionId: cryptocurrencytransactionsItem.cryptocurrencytransactionId, senderFrom: cryptocurrencytransactionsItem.senderFrom, currencyFrom: cryptocurrencytransactionsItem.currencyFrom, destinationTo: cryptocurrencytransactionsItem.destinationTo, currencyTo: cryptocurrencytransactionsItem.currencyTo, amount: cryptocurrencytransactionsItem.amount, storageLocation: cryptocurrencytransactionsItem.storageLocation, notice: cryptocurrencytransactionsItem.notice, attachment: cryptocurrencytransactionsItem.attachment, attachmentPath: cryptocurrencytransactionsItem.attachmentPath, attachmentName: cryptocurrencytransactionsItem.attachmentName, attachmentType: cryptocurrencytransactionsItem.attachmentType });
         });
+      this.cryptocurrencytransactionsLength = this.cryptocurrencytransactions.length;
       this.loading = false;
     }, err => {
       console.log(err);

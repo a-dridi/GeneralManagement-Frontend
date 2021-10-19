@@ -30,6 +30,7 @@ export class VideoclipComponent implements OnInit {
   exportedColumns: any[];
 
   videoclips: VideoclipTable[];
+  videoclipsLength: number = 0;
 
   videoclipLanguages: VideoclipLanguage[];
   videoclipLanguageTitles: string[];
@@ -144,6 +145,7 @@ export class VideoclipComponent implements OnInit {
         (videoclipItem: Videoclip) => {
           this.videoclips.push({ videoclipId: videoclipItem.videoclipId, interpreter: videoclipItem.interpreter, videoTitle: videoclipItem.videoTitle, videoclipLanguage: videoclipItem.videoclipLanguage.languageTitle, yearDate: videoclipItem.yearDate, nativeTitle: videoclipItem.nativeTitle, linkValue: videoclipItem.linkValue });
         });
+      this.videoclipsLength = this.videoclips.length;
       this.loading = false;
     }, err => {
       console.log(err);

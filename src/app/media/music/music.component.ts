@@ -29,6 +29,7 @@ export class MusicComponent implements OnInit {
   exportedColumns: any[];
 
   musicItems: MusicTable[];
+  musicItemsLength: number = 0;
 
   musicGenres: MusicGenre[];
   musicGenresTitles: string[];
@@ -60,7 +61,7 @@ export class MusicComponent implements OnInit {
   faUndo = faUndo;
   faUserAlt = faUserAlt;
   faCalendarAlt = faCalendarAlt;
-  faBarcode= faBarcode;
+  faBarcode = faBarcode;
   faLink = faLink;
 
   @ViewChild('genreselector') genreselector: ElementRef;
@@ -145,6 +146,7 @@ export class MusicComponent implements OnInit {
         (musicItem: Music) => {
           this.musicItems.push({ musicId: musicItem.musicId, interpreter: musicItem.interpreter, songtitle: musicItem.songtitle, yearDate: musicItem.yearDate, musicGenre: musicItem.musicGenre.genreTitle, codeValue: musicItem.codeValue, linkValue: musicItem.linkValue, notice: musicItem.notice });
         });
+      this.musicItemsLength = this.musicItems.length;
       this.loading = false;
     }, err => {
       console.log(err);
