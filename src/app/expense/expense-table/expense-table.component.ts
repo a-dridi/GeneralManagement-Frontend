@@ -52,8 +52,12 @@ export class ExpenseTableComponent implements OnInit {
   expenseTimeranges: ExpenseTimerange[];
   expenseCategoryTitles: string[];
   expenseTimerangeTitles: string[];
+
+  //Has the original expense timerange string as key and the translated expense timerange string as value. Used to display the translated expense timerange strings. 
   expenseTimerangeTranslations;
+  //Has the translated expense timerange string as key and the original expense timerange string as value. 
   expenseTranslationsTimeranges;
+
   timerangeTranslationArray: string[];
 
   displayUpdateValue: boolean = false;
@@ -94,7 +98,7 @@ export class ExpenseTableComponent implements OnInit {
   title: string;
   expenseCategory: ExpenseCategory;
   value: string;
-  expenseTimerange: ExpenseTimerange;
+  expenseTimerange: string;
   paymentDate: Date;
   information: string;
   attachment: boolean = false;
@@ -185,6 +189,13 @@ export class ExpenseTableComponent implements OnInit {
   ngAfterViewInit() {
     this.loadDropdownStyle();
     this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
+  }
+
+  /**
+   * Translate the expense timerange string into the language string of the selected language by the user. 
+   */
+  getExpenseTimerangeTranslation(englishTimerangeString: string) {
+
   }
 
   /**
@@ -773,7 +784,7 @@ export class ExpenseTableComponent implements OnInit {
     let selectedExpenseTimerange;
 
     this.expenseTimeranges.forEach(expenseTimerangesItem => {
-      if (expenseTimerangesItem.timerangeTitle == timerangeTitle) {
+      if (expenseTimerangesItem.timerangeTitle === timerangeTitle) {
         selectedExpenseTimerange = expenseTimerangesItem;
       }
     });
@@ -813,7 +824,9 @@ export class ExpenseTableComponent implements OnInit {
       this.information = "";
     }
 
-    this.expenseService.saveExpense(this.title, this.expenseCategory, centValue, this.expenseTimerange, (new Date()).setDate(this.paymentDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedExpense: Expense) => {
+    let expenseTimerangeObject  = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[this.expenseTimerange]);
+
+    this.expenseService.saveExpense(this.title, this.expenseCategory, centValue, expenseTimerangeObject, (new Date()).setDate(this.paymentDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedExpense: Expense) => {
       if (typeof this.attachmentFile != undefined && this.attachmentFile != null) {
         if (this.attachmentFile.name != null) {
           this.attachmentName = "" + savedExpense.expenseId;

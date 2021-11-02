@@ -39,6 +39,7 @@ export class FrontpageComponent implements OnInit {
   targetValue7: string;
   targetCurrency7: string;
 
+
   constructor(private userService: UserService, private translateService: TranslateService, private userSettingsService: UserSettingsService) { }
 
   ngOnInit(): void {
@@ -54,6 +55,7 @@ export class FrontpageComponent implements OnInit {
     this.currentDate = date.toLocaleString("default", { weekday: "long" }) + ", " + date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
     this.loadUserSettingsAndCurrencyRates();
   }
+
 
   loadCurrencyRates() {
     this.baseCurrency = this.setOnlyCertainBaseCurrency(this.selectedCurrency);

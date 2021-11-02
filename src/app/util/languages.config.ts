@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 /**
  * Language Item interface
  */
-export interface Language {
+export interface LanguageInterface {
     code: string;
     languageName: string;
     countryCode: string;
@@ -18,8 +18,8 @@ export interface Language {
 })
 export class AppLanguages {
 
-    public get languages(): Language[] {
-        let languagesArray: Language[] = [
+    public get languages(): LanguageInterface[] {
+        let languagesArray: LanguageInterface[] = [
             { code: "en", languageName: "English", countryCode: "us" },
             { code: "de", languageName: "Deutsch", countryCode: "at" },
             { code: "ar", languageName: "العربية", countryCode: "tn" },

@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } fr
 import { TranslateService } from '@ngx-translate/core';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { faBars, faBook, faChartLine, faGlobe, faHandHoldingUsd, faHeart, faHome, faLifeRing, faPiggyBank, faPlayCircle, faPollH, faReceipt, faSearchLocation, faTools } from '@fortawesome/free-solid-svg-icons';
-import { AppLanguageLoaderHelper, AppLanguages, Language } from './util/languages.config';
+import { AppLanguageLoaderHelper, AppLanguages, LanguageInterface } from './util/languages.config';
 import { faBitcoin } from '@fortawesome/free-brands-svg-icons';
 import { RefererCache } from './util/refererCache';
 import { MessageService } from 'primeng/api';
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit, OnDestroy {
   //Listen for mobile devices
   responsiveMobileQuery: MediaQueryList;
 
-  availableLanguages: Language[];
+  availableLanguages: LanguageInterface[];
   selectedUserLanguageCode: string = "";
   selectedUserLanguageName: string = "";
   displayLanguageChooser: boolean = false;

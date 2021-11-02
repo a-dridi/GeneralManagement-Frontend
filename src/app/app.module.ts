@@ -98,7 +98,7 @@ import {MessageModule} from 'primeng/message';
     SharedModuleModule,
     DecisionModule,
     MediaModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   exports: [TranslateModule],
   providers: [ApiConfig,

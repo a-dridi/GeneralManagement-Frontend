@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { faAt, faKey, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
-import { Message } from 'primeng/api/message';
 import { RefererCache } from 'src/app/util/refererCache';
 import { UserAuthentication } from 'src/app/util/user-authentication';
 import { User } from '../model/user.model';
@@ -22,7 +21,6 @@ export class UserLoginComponent implements OnInit {
 
   email: String;
   password: String;
-  loggedInUser: User;
   jwtAuthenticationHeaderValue: any;
 
   loginButtonText: string;

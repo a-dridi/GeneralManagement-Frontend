@@ -77,7 +77,7 @@ export class EarningTableComponent implements OnInit {
   title: string;
   earningCategory: EarningCategory;
   value: String;
-  earningTimerange: EarningTimerange;
+  earningTimerange: string;
   earningDate: Date;
   information: string;
   attachment: boolean = false;
@@ -678,8 +678,10 @@ export class EarningTableComponent implements OnInit {
     if (typeof this.information === undefined || this.information === null) {
       this.information = "";
     }
+    let earningTimerangeObject  = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[this.earningTimerange]);
 
-    this.earningService.saveEarning(this.title, this.earningCategory, centValue, this.earningTimerange, (new Date()).setDate(this.earningDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedEarning: Earning) => {
+
+    this.earningService.saveEarning(this.title, this.earningCategory, centValue, earningTimerangeObject, (new Date()).setDate(this.earningDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedEarning: Earning) => {
       if (typeof this.attachmentFile != undefined && this.attachmentFile != null) {
         if (this.attachmentFile.name != null) {
           this.attachmentName = "" + savedEarning.earningId;

@@ -380,8 +380,8 @@
           <fa-icon [icon]="faHistory"></fa-icon>
         </span>
         <span class="p-float-label" #timerangeselector>
-          <p-dropdown inputId="timerange" class="required-dropdown" [options]="earningTimeranges"
-            [(ngModel)]="earningTimerange" (onChange)="reloadDropdown($event)" optionLabel="timerangeTitle"
+          <p-dropdown inputId="timerange" class="required-dropdown" [options]="timerangeTranslationArray"
+            [(ngModel)]="earningTimerange" (onChange)="reloadDropdown($event)" 
             [filter]="true" [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
           </p-dropdown>
           <label for="timerange">{{'earning.earningAddTimerangeHeader' | translate}}</label>

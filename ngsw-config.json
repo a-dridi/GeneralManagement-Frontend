@@ -28,7 +28,7 @@
   ],
   "dataGroups": [{
     "name": "gm-backend-api",
-    "urls": ["https://management.ardmail.net/"],
+    "urls": ["https://BACKEND-SERVER/"],
     "cacheConfig": {
       "strategy": "freshness",
       "maxSize": 20,
