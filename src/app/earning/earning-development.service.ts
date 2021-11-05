@@ -18,7 +18,7 @@ export class EarningDevelopmentService {
   }
 
   getLatestMonthlyEarningDevelopmentList() {
-      return this.httpClient.get(`${this.fullApiurlTable}/last/24/months/${this.userId}`);
+      return this.httpClient.get(`${this.fullApiurlTable}/last/24/${this.userId}`);
   }
 
   getLatestYearlyEarningDevelopmentList() {

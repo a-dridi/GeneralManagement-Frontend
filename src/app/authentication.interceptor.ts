@@ -1,9 +1,9 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
-import { ComponentFactoryResolver, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { UserAuthentication } from "./util/user-authentication";
 import { Observable, throwError } from "rxjs";
-import { tap, catchError, retry } from "rxjs/operators";
+import { catchError, retry } from "rxjs/operators";
 import { RefererCache } from "./util/refererCache";
 
 /**
@@ -18,6 +18,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     readonly DATABASE_URI: string = "data"
     readonly SETTINGS_URI: string = "settings"
     readonly USER_INFO_URI: string = "api/getUserEmail";
+    readonly RELOADED_FIX_DONE_TAG: string = "appX19Reload";
 
     constructor(private userAuthentication: UserAuthentication, private router: Router, private refererCache: RefererCache) {
     }
@@ -52,7 +53,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                         }
                         //Gateway time out error fix
                         else if (err.status === 504) {
-                            location.reload();
+                            this.gatewayTimeOutFix();
                         }
                     }
                 }
@@ -65,6 +66,19 @@ export class AuthenticationInterceptor implements HttpInterceptor {
      */
     showLoginPage() {
         this.router.navigate(['/login']);
+    }
+
+    gatewayTimeOutFix() {
+        let reloadedAmount = localStorage.getItem(this.RELOADED_FIX_DONE_TAG);
+        if ((typeof reloadedAmount === undefined) || reloadedAmount == null || reloadedAmount === "1") {
+            if (reloadedAmount === "1") {
+                localStorage.setItem(this.RELOADED_FIX_DONE_TAG, "2");
+                setTimeout(() => location.reload(), 500);
+            } else {
+                localStorage.setItem(this.RELOADED_FIX_DONE_TAG, "1");
+                setTimeout(() => location.reload(), 500);
+            }
+        }
     }
 
 }
