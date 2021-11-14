@@ -47,7 +47,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         }
 
         return next.handle(req).pipe(
-            customDelayedRetry(500, 5),
+            customDelayedRetry(500, 7),
             catchError((err: HttpErrorResponse) => {
                 if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
                     if (err instanceof HttpErrorResponse) {
@@ -55,10 +55,6 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                         if (err.status === 403 || err.message.includes("The Token has expired on")) {
                             this.showLoginPage();
                             console.log("User not logged in!");
-                        }
-                        //Gateway time out error fix
-                        else if (err.status === 504) {
-                            this.gatewayTimeOutFix();
                         }
                     }
                 }
@@ -73,15 +69,10 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         this.router.navigate(['/login']);
     }
 
-    gatewayTimeOutFix() {
-        window.location.reload();
-        setTimeout(() => { window.location.reload() }, 1000);
-    }
-
 }
 
 /**
- * Function used to fix HTTP 504 bug error, which could occur through the backend server.  
+ * Function used to fix HTTP 504 bug  (gateway time out), which could occur through the backend server.  
  * @param delayMs 
  * @param maxRetry 
  * @returns 

@@ -49,8 +49,9 @@ import { MediaModule } from './media/media.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import { MessageService } from 'primeng/api';
-import {MessagesModule} from 'primeng/messages';
-import {MessageModule} from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [
@@ -99,6 +100,7 @@ import {MessageModule} from 'primeng/message';
     DecisionModule,
     MediaModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ProgressSpinnerModule
   ],
   exports: [TranslateModule],
   providers: [ApiConfig,

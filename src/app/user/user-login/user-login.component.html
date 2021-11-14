@@ -19,7 +19,7 @@
       </span>
       <input name="loginPassword" id="loginPassword" type="password" pInputText [(ngModel)]="password" placeholder="{{'userLogin.passwordDesc' | translate}}">
     </div>
-    <div class="submit-line" *ngIf="isLoading">
+    <div class="submit-line" *ngIf="!isLoading">
       <button name="loginSubmit" id="loginSubmit" class="confirm-button" pButton type="button" class="p-button-success p-button-raised" label=" " icon=""
         iconPos="left" (click)="doLogin()">
         <fa-icon [icon]="faSignInAlt"></fa-icon>
