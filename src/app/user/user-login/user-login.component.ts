@@ -25,6 +25,8 @@ export class UserLoginComponent implements OnInit {
 
   loginButtonText: string;
 
+  isLoading: boolean = false;
+
   constructor(private messageService: MessageService, private userService: UserService, public userAuthentication: UserAuthentication, private translateService: TranslateService, private router: Router, private refererCache: RefererCache) { }
 
   ngOnInit(): void {
@@ -48,6 +50,7 @@ export class UserLoginComponent implements OnInit {
    * Get User object for passed username and password. Save User Id from User object. Get response header to save the JWT authentication token.
    */
   doLogin() {
+    this.isLoading = true;
     this.userService.doLogin(this.email, this.password).subscribe(resp => {
       if (resp.status !== 200) {
         this.showLoginFailedMessage();
@@ -75,6 +78,7 @@ export class UserLoginComponent implements OnInit {
       this.messageService.add({ severity: 'error', summary: 'Error', detail: translations['messages.loginLoginFailedError1'] });
     });
     console.log("LOGIN FAILED");
+    this.isLoading = false;
   }
 
 }

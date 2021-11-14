@@ -647,7 +647,7 @@ export class EarningTableComponent implements OnInit {
   }
 
   saveEarning() {
-    if (this.value === undefined || this.value.trim() == undefined) {
+    if (this.value == undefined || this.value.trim() == undefined) {
       this.messageCreator.showErrorMessage('earningAddEarningError1');
       return;
     }
@@ -666,7 +666,7 @@ export class EarningTableComponent implements OnInit {
       return;
     }
 
-    if (this.earningDate === undefined || this.earningDate === null) {
+    if (this.earningDate == undefined || this.earningDate === null) {
       this.earningDate = new Date();
     }
 
@@ -675,7 +675,7 @@ export class EarningTableComponent implements OnInit {
       return;
     }
 
-    if (typeof this.information === undefined || this.information === null) {
+    if (typeof this.information == undefined || this.information === null) {
       this.information = "";
     }
     let earningTimerangeObject  = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[this.earningTimerange]);

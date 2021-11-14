@@ -1,9 +1,9 @@
 import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { UserAuthentication } from "./util/user-authentication";
-import { Observable, throwError } from "rxjs";
-import { catchError, retry } from "rxjs/operators";
+import { Observable, of, throwError } from "rxjs";
+import { catchError, delay, mergeMap, retry, retryWhen } from "rxjs/operators";
 import { RefererCache } from "./util/refererCache";
 
 /**
@@ -14,14 +14,18 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     jwtAuthenticationToken: string;
 
+    readonly DEFAULT_MAX_RETRIES = 10;
+
     //Restricted API URIs
     readonly DATABASE_URI: string = "data"
     readonly SETTINGS_URI: string = "settings"
     readonly USER_INFO_URI: string = "api/getUserEmail";
     readonly RELOADED_FIX_DONE_TAG: string = "appX19Reload";
 
-    constructor(private userAuthentication: UserAuthentication, private router: Router, private refererCache: RefererCache) {
+    constructor(private userAuthentication: UserAuthentication, private router: Router, private route: ActivatedRoute, private refererCache: RefererCache) {
     }
+
+
 
     /**
      * Intercept only database API (part of /api/data)
@@ -41,8 +45,9 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                 }
             });
         }
+
         return next.handle(req).pipe(
-            retry(0),
+            customDelayedRetry(500, 5),
             catchError((err: HttpErrorResponse) => {
                 if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
                     if (err instanceof HttpErrorResponse) {
@@ -69,16 +74,26 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     }
 
     gatewayTimeOutFix() {
-        let reloadedAmount = localStorage.getItem(this.RELOADED_FIX_DONE_TAG);
-        if ((typeof reloadedAmount === undefined) || reloadedAmount == null || reloadedAmount === "1") {
-            if (reloadedAmount === "1") {
-                localStorage.setItem(this.RELOADED_FIX_DONE_TAG, "2");
-                setTimeout(() => location.reload(), 500);
-            } else {
-                localStorage.setItem(this.RELOADED_FIX_DONE_TAG, "1");
-                setTimeout(() => location.reload(), 500);
-            }
-        }
+        window.location.reload();
+        setTimeout(() => { window.location.reload() }, 1000);
     }
 
+}
+
+/**
+ * Function used to fix HTTP 504 bug error, which could occur through the backend server.  
+ * @param delayMs 
+ * @param maxRetry 
+ * @returns 
+ */
+export function customDelayedRetry(delayMs: number, maxRetry = this.DEFAULT_MAX_RETRIES) {
+    let retriesNumber = maxRetry;
+
+    return (src: Observable<any>) =>
+        src.pipe(
+            retryWhen((errors: Observable<any>) => errors.pipe(
+                delay(delayMs),
+                mergeMap(error => retriesNumber-- > 0 ? of(error) : throwError("Loading API resource failed after retrying!"))
+            ))
+        );
 }

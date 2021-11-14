@@ -19,12 +19,15 @@
       </span>
       <input name="loginPassword" id="loginPassword" type="password" pInputText [(ngModel)]="password" placeholder="{{'userLogin.passwordDesc' | translate}}">
     </div>
-    <div class="submit-line">
+    <div class="submit-line" *ngIf="isLoading">
       <button name="loginSubmit" id="loginSubmit" class="confirm-button" pButton type="button" class="p-button-success p-button-raised" label=" " icon=""
         iconPos="left" (click)="doLogin()">
         <fa-icon [icon]="faSignInAlt"></fa-icon>
         <span class="button-label">{{loginButtonText}}</span>
       </button>
+    </div>
+    <div class="progress-bar" *ngIf="isLoading">
+      <p-progressSpinner [style]="{width: '50px', height: '50px'}" styleClass="custom-spinner" strokeWidth="8" fill="#EEEEEE" animationDuration=".5s"></p-progressSpinner>
     </div>
   </form>
 </div>

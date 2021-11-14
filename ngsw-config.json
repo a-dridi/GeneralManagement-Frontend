@@ -28,7 +28,7 @@
   ],
   "dataGroups": [{
     "name": "gm-backend-api",
-    "urls": ["https://SERVER-BACK/"],
+    "urls": ["https://BACKEND-SPRING-SERVER/"],
     "cacheConfig": {
       "strategy": "freshness",
       "maxSize": 20,

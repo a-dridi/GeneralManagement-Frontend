@@ -806,12 +806,12 @@ export class ExpenseTableComponent implements OnInit {
       return;
     }
 
-    if (this.title === null || typeof this.title === undefined || this.title.trim() === "") {
+    if (this.title === null || typeof this.title == undefined || this.title.trim() === "") {
       this.messageCreator.showErrorMessage('expenseAddExpenseError4');
       return;
     }
 
-    if (this.paymentDate === undefined || this.paymentDate === null) {
+    if (this.paymentDate == undefined || this.paymentDate === null) {
       this.paymentDate = new Date();
     }
 
@@ -820,7 +820,7 @@ export class ExpenseTableComponent implements OnInit {
       return;
     }
 
-    if (typeof this.information === undefined || this.information === null) {
+    if (typeof this.information == undefined || this.information === null) {
       this.information = "";
     }
 
