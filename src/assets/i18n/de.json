@@ -303,7 +303,8 @@
     "videoclipsEditLanguageError1": "Bitte wählen Sie eine Sprache aus!",
     "videoclipsEditLanguageError2": "Videoclip-Sprachen konnten nicht aktualisiert werden!",
     "videoclipsEditLanguageOk1": "Ok. Videoclip-Sprachen aktualisiert.",
-    "videoclipsTableLanguageSelectHeader": "Videoclip-Sprache auswählen"
+    "videoclipsTableLanguageSelectHeader": "Videoclip-Sprache auswählen",
+    "error504Message": "Bitte laden Sie diese Seite nach 15-30 Sekunden nochmal auf! "
   },
   "siteMenu": {
     "menuPointFrontPage": "Startseite",

@@ -3,8 +3,9 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { UserAuthentication } from "./util/user-authentication";
 import { Observable, of, throwError } from "rxjs";
-import { catchError, delay, mergeMap, retry, retryWhen } from "rxjs/operators";
+import { catchError, delay, mergeMap, retry, retryWhen, take } from "rxjs/operators";
 import { RefererCache } from "./util/refererCache";
+import { MessageCreator } from "./util/messageCreator";
 
 /**
  * Send authentication header in every API request. Check if user is logged in. If not redirect to login page. 
@@ -14,7 +15,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     jwtAuthenticationToken: string;
 
-    readonly DEFAULT_MAX_RETRIES = 10;
+    readonly DEFAULT_MAX_RETRIES = 30;
 
     //Restricted API URIs
     readonly DATABASE_URI: string = "data"
@@ -22,7 +23,9 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     readonly USER_INFO_URI: string = "api/getUserEmail";
     readonly RELOADED_FIX_DONE_TAG: string = "appX19Reload";
 
-    constructor(private userAuthentication: UserAuthentication, private router: Router, private route: ActivatedRoute, private refererCache: RefererCache) {
+    error504Counter: number = 0;
+
+    constructor(private userAuthentication: UserAuthentication, private router: Router, private route: ActivatedRoute, private refererCache: RefererCache, private messageCreator: MessageCreator) {
     }
 
 
@@ -47,11 +50,10 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         }
 
         return next.handle(req).pipe(
-            customDelayedRetry(500, 7),
+            this.customDelayedRetry(900, 20),
             catchError((err: HttpErrorResponse) => {
                 if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
                     if (err instanceof HttpErrorResponse) {
-
                         if (err.status === 403 || err.message.includes("The Token has expired on")) {
                             this.showLoginPage();
                             console.log("User not logged in!");
@@ -69,22 +71,42 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         this.router.navigate(['/login']);
     }
 
-}
-
-/**
+    /**
  * Function used to fix HTTP 504 bug  (gateway time out), which could occur through the backend server.  
  * @param delayMs 
  * @param maxRetry 
  * @returns 
  */
-export function customDelayedRetry(delayMs: number, maxRetry = this.DEFAULT_MAX_RETRIES) {
-    let retriesNumber = maxRetry;
+    customDelayedRetry(delayMs: number, maxRetry = this.DEFAULT_MAX_RETRIES) {
+        let retriesNumber = maxRetry;
 
-    return (src: Observable<any>) =>
-        src.pipe(
-            retryWhen((errors: Observable<any>) => errors.pipe(
-                delay(delayMs),
-                mergeMap(error => retriesNumber-- > 0 ? of(error) : throwError("Loading API resource failed after retrying!"))
-            ))
-        );
+        return (src: Observable<any>) =>
+            src.pipe(
+                retryWhen((errors: Observable<any>) => {
+                    return errors.pipe(
+                        mergeMap((response) => {
+                            if (response.status === 504) {
+                                this.error504Counter++;
+                                this.show504ErrorPopup();
+                                return of(response).pipe(delay(delayMs), take(retriesNumber));
+                            } else {
+                                throw ({ error: response });
+                            }
+                        })
+                    );
+                })
+            );
+    }
+
+    /**
+     * Show error 504 popup when this error occured again after retrying it 10 times. 
+     */
+    show504ErrorPopup() {
+        if (this.error504Counter > 10) {
+            this.messageCreator.showErrorMessage("error504Message");
+        }
+    }
 }
+
+
+
