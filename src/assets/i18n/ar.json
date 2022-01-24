@@ -37,6 +37,7 @@
     "expenseBudgetLoadError1": "لا يمكن تحميل قائمة ميزانية المصاريف!",
     "expenseBudgetTableUpdatedError1": "خطأ! لا يمكن تحديث ميزانية المصاريف!",
     "expensesTableUpdatedError1": "لا يمكن تحديث المصاريف!",
+    "expensereminderTableUpdatedError1": "لا يمكن تحديث تذكير المصاريف!",
     "filterSelectCategoryPlaceholder": "اختار",
     "expenseAddExpenseError5": "الرجاء إدخال جميع الحقول الحمراء المطلوبة!",
     "expensesCategoryNoValues": "لا توجد فئات المصاريف المتاحة!",
@@ -370,6 +371,7 @@
     "expenseAddTimerangeHeader": "تردد",
     "expenseAddPaymentHeader": "تاريخ",
     "expenseAddInformationHeader": "معلومة",
+    "expenseAddReminderHeader": "ذكرني",
     "expenseAddAttachmentHeader": "مرفق",
     "expenseAddSaveExpense": "أضف",
     "categoryAddTitle": "إضافة فئة جديدة",
@@ -398,7 +400,7 @@
   },
   "expensebudget": {
     "submenuTitleTable": "مصاريف - ميزانية",
-    "expensebudgetTableTitle": "ميزانية المصاريف - الجدول",
+    "expensebudgetTableTitle": "ميزانية المصاريف - الشهر الحالي",
     "tableHeaderCategory": "فئة",
     "tableHeaderCentBudgetValue": "ميزانية",
     "tableHeaderCentBudgetCentActualExpenses": "مصروف",
@@ -462,6 +464,12 @@
     "yearTableTableHeaderCent": "مصاريف",
     "monthlyChartTitle": "مصاريف الشهرية",
     "yearlyChartTitle": "مصاريف السنوية"
+  },
+  "expensereminder": {
+    "expenseReminderTabheader": "المصاريف المستحقة الدفع",
+    "tableHeaderExpenseName": "مصروف",
+    "tableHeaderExpenseDue": "تاريخ الاستحقاق",
+    "tableHeaderExpensePaid": "تاريخ المدفوعة"
   },
   "earningModule": {
     "title": "أرباح",

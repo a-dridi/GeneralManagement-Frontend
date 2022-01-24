@@ -109,9 +109,8 @@ export class CryptoCurrencyTransactionsComponent implements OnInit {
    * Load cryptocurrencytransactions and create cryptocurrencytransactions array to display in the table. 
    */
   loadCryptoCurrencyTransactionss() {
-    this.cryptocurrencytransactions = [];
-
     this.cryptoCurrencyTransactionsService.getAllCryptoCurrencyTransactionsTable().subscribe((data: CryptoCurrencyTransactions[]) => {
+      this.cryptocurrencytransactions = [];
       data.forEach(
         (cryptocurrencytransactionsItem: CryptoCurrencyTransactions) => {
           this.cryptocurrencytransactions.push({ cryptocurrencytransactionId: cryptocurrencytransactionsItem.cryptocurrencytransactionId, senderFrom: cryptocurrencytransactionsItem.senderFrom, currencyFrom: cryptocurrencytransactionsItem.currencyFrom, destinationTo: cryptocurrencytransactionsItem.destinationTo, currencyTo: cryptocurrencytransactionsItem.currencyTo, amount: cryptocurrencytransactionsItem.amount, storageLocation: cryptocurrencytransactionsItem.storageLocation, notice: cryptocurrencytransactionsItem.notice, attachment: cryptocurrencytransactionsItem.attachment, attachmentPath: cryptocurrencytransactionsItem.attachmentPath, attachmentName: cryptocurrencytransactionsItem.attachmentName, attachmentType: cryptocurrencytransactionsItem.attachmentType });

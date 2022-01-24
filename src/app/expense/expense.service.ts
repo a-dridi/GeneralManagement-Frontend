@@ -43,7 +43,7 @@ export class ExpenseService {
     return this.httpClient.get(`${this.fullApiurlTable}/get/byId/${id}`);
   }
 
-  saveExpense(title, expenseCategory, centValue, expenseTimerange, paymentDate, information, attachment, attachmentPath, attachmentName, attachmentType) {
+  saveExpense(title, expenseCategory, centValue, expenseTimerange, paymentDate, information, isReminding, attachment, attachmentPath, attachmentName, attachmentType) {
     this.loadUserId();
     const newExpense = {
       title: title,
@@ -52,6 +52,7 @@ export class ExpenseService {
       expenseTimerange: expenseTimerange,
       paymentDate: paymentDate,
       information: information,
+      isReminding: isReminding,
       attachment: attachment,
       attachmentPath: attachmentPath,
       attachmentName: attachmentName,
@@ -62,7 +63,7 @@ export class ExpenseService {
     return this.httpClient.post(`${this.fullApiurlTable}/add`, newExpense);
   }
 
-  updateExpense(expenseId, title, expenseCategory, centValue, expenseTimerange, paymentDate, information, attachment, attachmentPath, attachmentName, attachmentType) {
+  updateExpense(expenseId, title, expenseCategory, centValue, expenseTimerange, paymentDate, information, isReminding, attachment, attachmentPath, attachmentName, attachmentType) {
     this.loadUserId();
     const updatedExpense = {
       expenseId: expenseId,
@@ -72,6 +73,7 @@ export class ExpenseService {
       expenseTimerange: expenseTimerange,
       paymentDate: paymentDate,
       information: information,
+      isReminding: isReminding,
       attachment: attachment,
       attachmentPath: attachmentPath,
       attachmentName: attachmentName,
@@ -83,7 +85,7 @@ export class ExpenseService {
     return this.httpClient.post(`${this.fullApiurlTable}/update`, updatedExpense);
   }
 
-  updateExpenseTable(expenseId, title, expenseCategory, centValue, expenseTimerange, paymentDate, information, attachment, attachmentPath, attachmentName, attachmentType) {
+  updateExpenseTable(expenseId, title, expenseCategory, centValue, expenseTimerange, paymentDate, information, isReminding, attachment, attachmentPath, attachmentName, attachmentType) {
     this.loadUserId();
     const updatedExpense = {
       expenseId: expenseId,
@@ -93,6 +95,7 @@ export class ExpenseService {
       expenseTimerange: expenseTimerange,
       paymentDate: paymentDate,
       information: information,
+      isReminding: isReminding,
       attachment: attachment,
       attachmentPath: attachmentPath,
       attachmentName: attachmentName,
@@ -118,9 +121,9 @@ export class ExpenseService {
     return this.httpClient.get(`${this.fullApiurlTable}/get/sum/yearly/${this.userId}`);
   }
 
-  getOfCertainMonthSingleAndCustomExpensesSum(month) {
+  getOfCertainMonthSingleAndCustomExpensesSum(month, year) {
     this.loadUserId();
-    return this.httpClient.get(`${this.fullApiurlTable}/get/sum/single/custom/certainMonth/${month}/${this.userId}`);
+    return this.httpClient.get(`${this.fullApiurlTable}/get/sum/single/custom/certainMonthYear/${month}/${year}/${this.userId}`);
   }
 
   getExpensesSumOfCurrentMonth() {

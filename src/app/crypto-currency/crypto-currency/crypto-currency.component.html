@@ -31,7 +31,7 @@
           <div class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
             <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
-              placeholder="{{'global.tableSearchPlaceholder' | translate}}" />
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}"/>
           </div>
         </div>
       </ng-template>
@@ -96,7 +96,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.amount"
-                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'amount')">
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'amount')" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{cryptocurrencyItem.amount}}
@@ -107,7 +107,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.currency"
-                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'currency')">
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'currency')" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{cryptocurrencyItem.currency}}
@@ -118,7 +118,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.storageLocation"
-                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'storageLocation')">
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'storageLocation')" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{cryptocurrencyItem.storageLocation}}
@@ -129,7 +129,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="cryptocurrencyItem.notice"
-                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'notice')">
+                  (ngModelChange)="updateCryptoCurrencyValue($event, cryptocurrencyItem, 'notice')" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{cryptocurrencyItem.notice}}

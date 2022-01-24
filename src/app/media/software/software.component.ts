@@ -148,9 +148,8 @@ export class SoftwareComponent implements OnInit {
    * Load softwares and create software array to display in the table. 
    */
   loadSoftwares() {
-    this.softwares = [];
-
     this.softwareService.getAllSoftwareTable().subscribe((data: Software[]) => {
+      this.softwares = [];
       data.forEach(
         (softwareItem: Software) => {
           this.softwares.push({ softwareId: softwareItem.softwareId, title: softwareItem.title, softwareOs: softwareItem.softwareOs.osTitle, manufacturer: softwareItem.manufacturer, language: softwareItem.language, version: softwareItem.version, notice: softwareItem.notice, linkValue: softwareItem.linkValue, attachment: softwareItem.attachment, attachmentPath: softwareItem.attachmentPath, attachmentName: softwareItem.attachmentName, attachmentType: softwareItem.attachmentType });
@@ -261,6 +260,7 @@ export class SoftwareComponent implements OnInit {
     else if (columnName === "softwareOs") {
       softwareOsObject = this.getSoftwareOsByOsTitle(newValue);
       this.softwareService.updateSoftwareTable(softwareItem.softwareId, softwareItem.title, softwareOsObject, softwareItem.manufacturer, softwareItem.language, softwareItem.version, softwareItem.notice, softwareItem.linkValue, softwareItem.attachment, softwareItem.attachmentPath, softwareItem.attachmentName, softwareItem.attachmentType).subscribe((res: String) => {
+      this.reloadAllSoftwareData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

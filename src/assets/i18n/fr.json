@@ -47,6 +47,7 @@
     "expensePersonRatioError1": "Error! Ratio could not be saved!",
     "expensePersonRatioError2": "Ratio can be only from 0 to 100!",
     "expensesDevelopmentTableNoValues": "No data available!",
+    "expensereminderTableUpdatedError1": "Le rappel de dépenses n'a pas pu être mis à jour!",
     "organizationTableCategorySelectHeader": "Select Organization Catégorie",
     "organizationTableNoValues": "No data available!",
     "organizationDeletedOk1": "Organization Number #? deleted. ",
@@ -370,6 +371,7 @@
     "expenseAddTimerangeHeader": "Fréquence",
     "expenseAddPaymentHeader": "Date de paiement",
     "expenseAddInformationHeader": "Information",
+    "expenseAddReminderHeader": "Rappelle moi",
     "expenseAddAttachmentHeader": "Pièce jointe",
     "expenseAddSaveExpense": "Ajouter",
     "categoryAddTitle": "Ajouter une nouvelle catégorie",
@@ -398,7 +400,7 @@
   },
   "expensebudget": {
     "submenuTitleTable": "Dépenses - Budget",
-    "expensebudgetTableTitle": "Dépenses Budget - Tableau",
+    "expensebudgetTableTitle": "Dépenses Budget - Mois en cours",
     "tableHeaderCategory": "Catégorie",
     "tableHeaderCentBudgetValue": "Budget",
     "tableHeaderCentBudgetCentActualExpenses": "Dépense",
@@ -462,6 +464,12 @@
     "yearTableTableHeaderCent": "Dépenses",
     "monthlyChartTitle": "Dépenses mensuelles",
     "yearlyChartTitle": "Dépenses annuelles"
+  },
+  "expensereminder": {
+    "expenseReminderTabheader": "Dépenses à payer",
+    "tableHeaderExpenseName": "Dépense",
+    "tableHeaderExpenseDue": "Date d'échéance",
+    "tableHeaderExpensePaid": "La date de paiement"
   },
   "earningModule": {
     "title": "Gains",

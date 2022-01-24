@@ -3,6 +3,9 @@ import { faTable } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { ExpenseCategory } from 'src/app/expense/model/expense-category.model';
 import { ExpenseGraph } from 'src/app/expense/model/expense-graph.model';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { ExpenseCategoryService } from '../expensecategory.services';
 import { ExpenseGraphService } from '../expensegraph.services';
@@ -13,21 +16,25 @@ import { ExpenseGraphService } from '../expensegraph.services';
   styleUrls: ['./expense-category.component.scss']
 })
 export class ExpenseCategoryComponent implements OnInit {
+  //Settings
+  selectedCurrency: string = "USD";
 
+  localeOfUser: string = "en";
   expenseCategoriesMonthly: ExpenseGraph[];
   expenseCategoriesYearly: ExpenseGraph[];
-  tableColumns: any[];
-  exportColumns: any[];
-  exportedColumns: any[];
-  expenseCategories: ExpenseCategory[];
+  tableColumns: any[] = [];
+  exportColumns: any[] = [];
+  exportedColumns: any[] = [];
+  expenseCategories: ExpenseCategory[] = [];
 
   faTable = faTable;
-  loading: boolean;
+  loading: boolean = true;
 
-  constructor(private messageCreator: MessageCreator, private expenseGraphService: ExpenseGraphService, private expenseCategoryService: ExpenseCategoryService, private translateService: TranslateService) { }
+  constructor(private messageCreator: MessageCreator, private expenseGraphService: ExpenseGraphService, private expenseCategoryService: ExpenseCategoryService, private translateService: TranslateService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) { }
 
   ngOnInit(): void {
-    this.loading = true;
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+
     this.translateService.get(['expensecategory.expenseCategoryTableHeaderCategory', 'expensecategory.expenseCategoryTableHeaderSum']).subscribe(translations => {
       this.tableColumns = [
         { field: 'expenseCategory', header: translations['expensecategory.expenseCategoryTableHeaderCategory'] },
@@ -39,8 +46,17 @@ export class ExpenseCategoryComponent implements OnInit {
       ];
       this.exportedColumns = this.exportColumns.map(column => ({ title: column.header, dataKey: column.field }));
     });
+    this.loadUserSettings();
     this.loadExpenseCategories();
     this.loadExpenseSumCategories();
+  }
+
+  loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+    }, err => {
+      console.log(err);
+    });
   }
 
   loadExpenseSumCategories() {

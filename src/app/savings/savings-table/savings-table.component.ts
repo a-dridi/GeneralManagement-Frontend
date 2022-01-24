@@ -7,6 +7,7 @@ import { UserSetting } from 'src/app/user/model/user-setting.model';
 import { UserService } from 'src/app/user/user.service';
 import { ApiConfig } from 'src/app/util/api.config';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { SavingsFrequency } from '../model/savings-frequency-model';
 import { Savings } from '../model/savings.model';
@@ -24,7 +25,9 @@ export class SavingsTableComponent implements OnInit {
   readonly deleteCacheStorageId = "app32xSavingsDeleted";
 
   loading: boolean;
-  currency;
+  //Settings
+  selectedCurrency: string = "USD";;
+  localeOfUser: string = "en";
 
   tableColumns: any[];
   exportColumns: any[];
@@ -65,7 +68,7 @@ export class SavingsTableComponent implements OnInit {
 
   @ViewChild('frequencyselector') frequencyselector: ElementRef;
 
-  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private userSettingsService: UserSettingsService, private apiConfig: ApiConfig, private savingsService: SavingsService, private translateService: TranslateService) {
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private apiConfig: ApiConfig, private savingsService: SavingsService, private translateService: TranslateService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) {
 
   }
 
@@ -74,6 +77,7 @@ export class SavingsTableComponent implements OnInit {
      */
   ngOnInit(): void {
     this.loading = true;
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
     this.translateService.get(['savings.savingsAddDescriptionHeader', 'savings.savingsAddSavingsTargetHeader', 'savings.savingsAddStepAmountHeader', 'savings.savingsAddFrequencyHeader', 'savings.savingsAddSavedTillNowCentHeader', 'savings.savingsAddStartDateHeader', 'savings.savingsAddInfoHeader', 'savings.savingsAddNoticeHeader']).subscribe(translations => {
       this.tableColumns = [
         { field: 'savingsId', header: 'ID' },
@@ -123,13 +127,24 @@ export class SavingsTableComponent implements OnInit {
     this.loadDropdownStyle();
   }
 
+
+  /**
+   * All here needed user settings. Currency.
+   */
+   loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+    }, err => {
+      console.log(err);
+    });
+  }
+
   /**
    * Load savings and create savings array to display in the table. 
    */
   loadSavings() {
-    this.savings = [];
-
     this.savingsService.getAllSavingsTable().subscribe((data: Savings[]) => {
+      this.savings = [];
       data.forEach(
         (savingsItem: Savings) => {
           this.savings.push({ savingsId: savingsItem.savingsId, description: savingsItem.description, targetCent: savingsItem.targetCent / 100, stepAmountCent: savingsItem.stepAmountCent / 100, savingsFrequency: savingsItem.savingsFrequency, savedTillNowCent: savingsItem.savedTillNowCent / 100, lastSavingsUpdateDate: savingsItem.lastSavingsUpdateDate, startDate: savingsItem.startDate, targetCalculatedDate: savingsItem.targetCalculatedDate, notice: savingsItem.notice, attachment: savingsItem.attachment, attachmentPath: savingsItem.attachmentPath, attachmentName: savingsItem.attachmentName, attachmentType: savingsItem.attachmentType });
@@ -157,17 +172,6 @@ export class SavingsTableComponent implements OnInit {
       this.savingsFrequencyArray.push({ frequencyTitle: translations['savingsFrequency.frequency2'], frequencyValue: 2 });
       this.savingsFrequencyArray.push({ frequencyTitle: translations['savingsFrequency.frequency3'], frequencyValue: 3 });
       this.savingsFrequencyArray.push({ frequencyTitle: translations['savingsFrequency.frequency4'], frequencyValue: 4 });
-    });
-  }
-
-  /**
-   * All here needed user settings. Currency.
-   */
-  loadUserSettings() {
-    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
-      this.currency = userSetting.settingValue;
-    }, err => {
-      console.log(err);
     });
   }
 

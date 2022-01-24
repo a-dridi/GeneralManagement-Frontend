@@ -139,9 +139,8 @@ export class MusicComponent implements OnInit {
    * Load music and create music array to display in the table. 
    */
   loadMusic() {
-    this.musicItems = [];
-
     this.musicService.getAllMusicTable().subscribe((data: Music[]) => {
+      this.musicItems = [];
       data.forEach(
         (musicItem: Music) => {
           this.musicItems.push({ musicId: musicItem.musicId, interpreter: musicItem.interpreter, songtitle: musicItem.songtitle, yearDate: musicItem.yearDate, musicGenre: musicItem.musicGenre.genreTitle, codeValue: musicItem.codeValue, linkValue: musicItem.linkValue, notice: musicItem.notice });
@@ -268,6 +267,7 @@ export class MusicComponent implements OnInit {
     else if (columnName === "musicGenre") {
       musicGenreObject = this.getMusicGenreByGenreTitle(newValue);
       this.musicService.updateMusicTable(musicItem.musicId, musicItem.interpreter, musicItem.songtitle, musicItem.yearDate, musicGenreObject, musicItem.codeValue, musicItem.linkValue, musicItem.notice).subscribe((res: String) => {
+        this.loadMusic();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

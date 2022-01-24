@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { faTable, faPaperclip, faRetweet } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
 import { UserService } from 'src/app/user/user.service';
 import { ApiConfig } from 'src/app/util/api.config';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { WealthYearly } from '../model/wealth-yearly.model';
 import { WealthYearlyService } from '../wealth-yearly.service';
@@ -14,8 +17,12 @@ import { WealthYearlyService } from '../wealth-yearly.service';
   styleUrls: ['./wealth-yearly.component.scss']
 })
 export class WealthYearlyComponent implements OnInit {
+  //Settings
+  selectedCurrency: string = "USD";
+
+  localeOfUser: string = "en";
   standardTableWidth = 1203;
-  loading: boolean;
+  loading: boolean = true;
 
   tableColumns: any[];
   exportColumns: any[];
@@ -36,7 +43,7 @@ export class WealthYearlyComponent implements OnInit {
   faRetweet = faRetweet;
 
 
-  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private apiConfig: ApiConfig, private wealthYearlyService: WealthYearlyService, private translateService: TranslateService) {
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private apiConfig: ApiConfig, private wealthYearlyService: WealthYearlyService, private translateService: TranslateService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) {
 
   }
 
@@ -44,7 +51,8 @@ export class WealthYearlyComponent implements OnInit {
      * Load wealth yearly and table header translations
      */
   ngOnInit(): void {
-    this.loading = true;
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+    this.loadUserSettings();
     this.translateService.get(['wealthYearly.wealthYearlyMonthDateHeader', 'wealthYearly.wealthYearlyYearDateHeader', 'wealthYearly.wealthYearlyExpenseHeader', 'wealthYearly.wealthYearlyEarningHeader', 'wealthYearly.wealthYearlyDifferenceHeader', 'wealthYearly.wealthYearlyImprovementPctHeader', 'wealthYearly.wealthNoticeHeader']).subscribe(translations => {
       this.tableColumns = [
         { field: 'wealthyearlyId', header: 'ID' },
@@ -75,13 +83,20 @@ export class WealthYearlyComponent implements OnInit {
     this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
   }
 
+  loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+    }, err => {
+      console.log(err);
+    });
+  }
+
   /**
    * Load wealth yearly and create wealth yearly array to display in the table. 
    */
   loadYearlyWealthItems() {
-    this.wealthyearlyItems = [];
-
     this.wealthYearlyService.getAllWealthYearlyTable().subscribe((data: WealthYearly[]) => {
+      this.wealthyearlyItems = [];
       data.forEach(
         (wealthYearlyItem: WealthYearly) => {
           this.wealthyearlyItems.push({ wealthyearlyId: wealthYearlyItem.wealthyearlyId, yearDate: wealthYearlyItem.yearDate, expenseCent: wealthYearlyItem.expenseCent / 100, earningCent: wealthYearlyItem.earningCent / 100, differenceCent: wealthYearlyItem.differenceCent / 100, improvementPct: wealthYearlyItem.improvementPct, notice: wealthYearlyItem.notice, attachment: wealthYearlyItem.attachment, attachmentPath: wealthYearlyItem.attachmentPath, attachmentName: wealthYearlyItem.attachmentName, attachmentType: wealthYearlyItem.attachmentType });
@@ -92,8 +107,6 @@ export class WealthYearlyComponent implements OnInit {
       this.loading = false;
     });
   }
-
-
 
   /**
    * Reload wealth yearly data

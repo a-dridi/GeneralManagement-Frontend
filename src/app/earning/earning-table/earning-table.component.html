@@ -32,11 +32,11 @@
       <div class="element-header-selector">
         <button pButton pRipple (click)="displayEarningsPreviousMonth()" type="button" icon="pi pi-arrow-left"
           class="p-button-rounded p-button-secondary"> </button>
-        <p-dropdown [options]="months" (onChange)="selectMonthEarnings($event.value)" placeholder="M" filter="true"
-          [showClear]="true">
+        <p-dropdown [options]="months" (onChange)="selectMonthEarnings($event.value)" (onClear)="clearMonthSelection($event)" 
+        placeholder="M" filter="true" [showClear]="true" [(ngModel)]="selectedMonth">
         </p-dropdown>
-        <p-dropdown [options]="years" (onChange)="selectYearEarnings($event.value)" placeholder="YYYY" filter="true"
-          [showClear]="true">
+        <p-dropdown [options]="years" (onChange)="selectYearEarnings($event.value)" (onClear)="clearYearSelection($event)"  
+        placeholder="YYYY" filter="true" [showClear]="true" [(ngModel)]="selectedYear">
         </p-dropdown>
         <button pButton pRipple (click)="displayEarningsNextMonth()" type="button" icon="pi pi-arrow-right"
           class="p-button-rounded p-button-secondary"> </button>
@@ -230,7 +230,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="earningItem.title"
-                  (ngModelChange)="updateEarningValue($event, earningItem, 'title')">
+                  (ngModelChange)="updateEarningValue($event, earningItem, 'title')" (blur)="reloadAllEarningsData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{earningItem.title}}
@@ -275,7 +275,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-calendar [(ngModel)]="earningItem.earningDate" firstDayOfWeek="1" dateFormat="dd.mm.yy"
-                  (ngModelChange)="updateEarningValue($event, earningItem, 'earningDate')">
+                  (ngModelChange)="updateEarningValue($event, earningItem, 'earningDate')" (blur)="reloadAllEarningsData()">
                 </p-calendar>
               </ng-template>
               <ng-template pTemplate="output">
@@ -287,7 +287,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="earningItem.information"
-                  (ngModelChange)="updateEarningValue($event, earningItem, 'information')">
+                  (ngModelChange)="updateEarningValue($event, earningItem, 'information')" (blur)="reloadAllEarningsData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{earningItem.information}}

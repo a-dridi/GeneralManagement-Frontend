@@ -46,7 +46,6 @@ export class WealthMonthlyService {
       attachmentPath: attachmentPath,
       attachmentName: attachmentName,
       attachmentType: attachmentType,
-      deleted: false,
       userId: this.userId
     };
     return this.httpClient.post(`${this.fullApiurlTable}/add`, newWealthMonthly);
@@ -67,7 +66,6 @@ export class WealthMonthlyService {
       attachmentPath: attachmentPath,
       attachmentName: attachmentName,
       attachmentType: attachmentType,
-      deleted: false,
       userId: this.userId
     };
     return this.httpClient.post(`${this.fullApiurlTable}/update`, updatedWealthMonthly);
@@ -88,7 +86,6 @@ export class WealthMonthlyService {
       attachmentPath: attachmentPath,
       attachmentName: attachmentName,
       attachmentType: attachmentType,
-      deleted: false,
       userId: this.userId
     };
     return this.httpClient.post(`${this.fullApiurlTable}/updateTableData`, updatedWealthMonthly);

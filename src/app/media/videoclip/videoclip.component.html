@@ -122,7 +122,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoclipItem.interpreter"
-                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'interpreter')">
+                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'interpreter')" (blur)="loadVideoclips()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoclipItem.interpreter}}
@@ -133,7 +133,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoclipItem.videoTitle"
-                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'videoTitle')">
+                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'videoTitle')" (blur)="loadVideoclips()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoclipItem.videoTitle}}
@@ -156,7 +156,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoclipItem.yearDate"
-                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'yearDate')">
+                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'yearDate')" (blur)="loadVideoclips()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoclipItem.yearDate}}
@@ -167,7 +167,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoclipItem.nativeTitle"
-                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'nativeTitle')">
+                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'nativeTitle')" (blur)="loadVideoclips()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoclipItem.nativeTitle}}
@@ -178,7 +178,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoclipItem.linkValue"
-                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'linkValue')">
+                  (ngModelChange)="updateVideoclipValue($event, videoclipItem, 'linkValue')" (blur)="loadVideoclips()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoclipItem.linkValue}}

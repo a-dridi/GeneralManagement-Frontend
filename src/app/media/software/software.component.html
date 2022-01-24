@@ -135,7 +135,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="softwareItem.title"
-                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'title')">
+                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'title')" (blur)="reloadAllSoftwareData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{softwareItem.title}}
@@ -158,7 +158,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="softwareItem.manufacturer"
-                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'manufacturer')">
+                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'manufacturer')" (blur)="reloadAllSoftwareData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{softwareItem.manufacturer}}
@@ -169,7 +169,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="softwareItem.language"
-                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'language')">
+                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'language')" (blur)="reloadAllSoftwareData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{softwareItem.language}}
@@ -180,7 +180,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="softwareItem.version"
-                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'version')">
+                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'version')" (blur)="reloadAllSoftwareData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{softwareItem.version}}
@@ -191,7 +191,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="softwareItem.notice"
-                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'notice')">
+                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'notice')" (blur)="reloadAllSoftwareData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{softwareItem.notice}}
@@ -202,7 +202,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="softwareItem.linkValue"
-                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'linkValue')">
+                  (ngModelChange)="updateSoftwareValue($event, softwareItem, 'linkValue')" (blur)="reloadAllSoftwareData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{softwareItem.linkValue}}

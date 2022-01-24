@@ -24,7 +24,7 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon>
               {{tableColumns[0].header}}
-              <p-columnFilter field="{{tableColumns[0].field}}" matchMode="in" display="menu" [showMatchModes]="false"
+              <p-columnFilter field="{{tableColumns[0].field}}" matchMode="contains" display="menu" [showMatchModes]="false"
                 [showOperator]="false" [showAddButton]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
@@ -63,7 +63,7 @@
             {{earningCategoriesMonthlyItem.categoryTitle}}
           </td>
           <td>
-            {{(earningCategoriesMonthlyItem.centValue)/100}}
+            {{((earningCategoriesMonthlyItem.centValue)/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>
@@ -168,7 +168,7 @@
             {{earningCategoriesYearlyItem.categoryTitle}}
           </td>
           <td>
-            {{(earningCategoriesYearlyItem.centValue)/100}}
+            {{((earningCategoriesYearlyItem.centValue)/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>

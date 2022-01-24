@@ -10,13 +10,15 @@
       <fa-icon [icon]="faEuroSign"></fa-icon>
     </span>
     <span class="p-float-label">
-      <input id="updatedPrice" type="text" class="required-input large-text" [(ngModel)]="updatedExpenseValue" (ngModelChange)="onUpdatedPriceChange()" pInputText>
+      <input id="updatedPrice" type="text" class="required-input large-text" [(ngModel)]="updatedExpenseValue"
+        (ngModelChange)="onUpdatedPriceChange()" pInputText>
       <label for="updatedPrice">{{'expense.expenseAddPriceHeader' | translate}}</label>
     </span>
   </div>
 
   <ng-template pTemplate="footer">
-    <button id="updatePriceButton" pButton (click)="saveUpdateValueDialog()" type="button" icon="pi pi-check" label="OK" class="p-button-success"></button>
+    <button id="updatePriceButton" pButton (click)="saveUpdateValueDialog()" type="button" icon="pi pi-check" label="OK"
+      class="p-button-success"></button>
   </ng-template>
 </p-dialog>
 <p-accordion>
@@ -79,6 +81,64 @@
 </p-accordion>
 <br>
 <br>
+<div *ngIf="showExpenseReminder">
+  <p-fieldset [toggleable]="true" styleClass="reminder-component" *ngIf="showExpenseReminder">
+    <ng-template pTemplate="header"><span class="reminder-component-legend">{{expenseReminderTabHeader}}</span></ng-template>
+
+    <p-table #expensereminderTable [columns]="reminderTableColumns" [value]="expensereminders"
+      dataKey="expensereminderId" [paginator]="true" [rows]="3" [showCurrentPageReport]="true"
+      totalRecords="{{expensereminderLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
+      [rowsPerPageOptions]="[5,10,25,50,100]" [loading]="loading"
+      styleClass="p-datatable-responsive-table p-datatable-striped p-datatable-sm" id="exp-reminder-table">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="{{reminderTableColumns[0].field}}">
+            <div>
+              <p-sortIcon field="{{reminderTableColumns[0].field}}" styleClass="reminder-sort-icon"></p-sortIcon> {{reminderTableColumns[0].header}}
+            </div>
+          </th>
+
+          <th pSortableColumn="{{reminderTableColumns[1].field}}" class="medium-table-column">
+            <div>
+              <p-sortIcon field="{{reminderTableColumns[1].field}}"></p-sortIcon> {{reminderTableColumns[1].header}}
+            </div>
+          </th>
+
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <fa-icon [icon]="faWallet" class="reminder-icon"></fa-icon>
+            </div>
+          </th>
+
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-expensereminderItem>
+        <tr>
+          <td>{{expensereminderItem.expense.title}}</td>
+          <td>{{expensereminderItem.dueDate | date: 'dd.MM.yyyy':'UTC+3'}}</td>
+          <td><button pButton type="button" icon="pi pi-check"
+              class="p-button-rounded p-button-success reminder-payed-button"
+              (click)="payExpenseReminder(expensereminderItem)"></button></td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="paginatorleft">
+        <div class="p-d-flex">
+          <button #csvExportButton type="button" pButton pRipple icon="pi pi-file-o"
+            (click)="expensereminderTable.exportCSV()" class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-excel" (click)="exportReminderExcel()"
+            class="p-button-success p-mr-2" pTooltip="XLS" tooltipPosition="bottom"></button>
+          <button type="button" pButton pRipple icon="pi pi-file-pdf" (click)="exportReminderPdf()"
+            class="p-button-warning p-mr-2" pTooltip="PDF" tooltipPosition="bottom"></button>
+        </div>
+      </ng-template>
+
+    </p-table>
+  </p-fieldset>
+</div>
+<br>
 <div class="elementGrid">
   <div class="elementHeader tableHeader">
     <div class="elementTopHeader">
@@ -91,11 +151,13 @@
       <div class="element-header-selector">
         <button pButton pRipple (click)="displayExpensesPreviousMonth()" type="button" icon="pi pi-arrow-left"
           class="p-button-rounded p-button-secondary"> </button>
-        <p-dropdown [options]="months" (onChange)="selectMonthExpenses($event.value)" placeholder="M" filter="true"
-          [showClear]="true">
+        <p-dropdown [options]="months" (onChange)="selectMonthExpenses($event.value)"
+          (onClear)="clearMonthSelection($event)" placeholder="M" filter="true" [showClear]="true"
+          [(ngModel)]="selectedMonth">
         </p-dropdown>
-        <p-dropdown [options]="years" (onChange)="selectYearExpenses($event.value)" placeholder="YYYY" filter="true"
-          [showClear]="true">
+        <p-dropdown [options]="years" (onChange)="selectYearExpenses($event.value)"
+          (onClear)="clearYearSelection($event)" placeholder="YYYY" filter="true" [showClear]="true"
+          [(ngModel)]="selectedYear">
         </p-dropdown>
         <button pButton pRipple (click)="displayExpensesNextMonth()" type="button" icon="pi pi-arrow-right"
           class="p-button-rounded p-button-secondary"> </button>
@@ -178,7 +240,7 @@
           <div class="p-input-icon-left p-ml-auto">
             <i class="pi pi-search"></i>
             <input pInputText type="text" (input)="dataTable.filterGlobal($event.target.value, 'contains')"
-              placeholder="{{'global.tableSearchPlaceholder' | translate}}" class="search-input"/>
+              placeholder="{{'global.tableSearchPlaceholder' | translate}}" class="search-input" />
           </div>
         </div>
       </ng-template>
@@ -207,8 +269,8 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[2].field}}"></p-sortIcon>
               {{tableColumns[2].header}}
-              <p-columnFilter field="{{tableColumns[2].field}}" matchMode="equals" display="menu" [showAddButton]="false"
-                [showMatchModes]="false" [showOperator]="false">
+              <p-columnFilter field="{{tableColumns[2].field}}" matchMode="equals" display="menu"
+                [showAddButton]="false" [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
                     <span class="p-text-bold">{{'messages.expensesTableCategorySelectHeader' | translate}}</span>
@@ -240,8 +302,8 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[4].field}}"></p-sortIcon>
               {{tableColumns[4].header}}
-              <p-columnFilter field="{{tableColumns[4].field}}" matchMode="equals" display="menu" [showAddButton]="false"
-                [showMatchModes]="false" [showOperator]="false">
+              <p-columnFilter field="{{tableColumns[4].field}}" matchMode="equals" display="menu"
+                [showAddButton]="false" [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
                     <span class="p-text-bold">{{'messages.expensesTableTimerangeSelectHeader' | translate}}</span>
@@ -282,6 +344,12 @@
             </div>
           </th>
 
+          <th>
+            <div class="p-d-flex p-jc-between p-ai-center">
+              <fa-icon [icon]="faBell" class="overview-expenses-icon"></fa-icon>
+            </div>
+          </th>
+
         </tr>
       </ng-template>
 
@@ -295,7 +363,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="expenseItem.title"
-                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'title')">
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'title')" (blur)="reloadAllExpensesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.title}}
@@ -317,7 +385,8 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                <button pButton pRipple type="button" icon="pi pi-sliders-v" (click)="showUpdateValueDialog(expenseItem)" onclass="p-button-rounded p-button-warning"></button>
+                <button pButton pRipple type="button" icon="pi pi-sliders-v"
+                  (click)="showUpdateValueDialog(expenseItem)" onclass="p-button-rounded p-button-warning"></button>
               </ng-template>
               <ng-template pTemplate="output">
                 {{(expenseItem.centValue) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
@@ -340,11 +409,12 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <p-calendar [(ngModel)]="expenseItem.paymentDate" firstDayOfWeek="1" dateFormat="dd.mm.yy"
-                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'paymentDate')">
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'paymentDate')"
+                  (blur)="reloadAllExpensesData()">
                 </p-calendar>
               </ng-template>
               <ng-template pTemplate="output">
-                {{expenseItem.paymentDate | date: 'dd.MM.yyyy'}}
+                {{expenseItem.paymentDate | date: 'dd.MM.yyyy':'UTC+3'}}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -352,7 +422,8 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="expenseItem.information"
-                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'information')">
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'information')"
+                  (blur)="reloadAllExpensesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.information}}
@@ -364,6 +435,10 @@
               icon="pi pi-arrow-circle-down" iconPos="left"
               pTooltip="{{'messages.tableDownloadButtonTootlip' | translate}}" tooltipPosition="top"></button></td>
           <td *ngIf="expenseItem.attachment==false"></td>
+          <td>
+            <p-checkbox [(ngModel)]="expenseItem.isReminding"
+              (ngModelChange)="updateExpenseValue($event, expenseItem, 'isReminding')" binary="true"></p-checkbox>
+          </td>
         </tr>
       </ng-template>
 
@@ -447,8 +522,8 @@
         </span>
         <span class="p-float-label" #timerangeselector>
           <p-dropdown inputId="timerange" class="required-dropdown" [options]="timerangeTranslationArray"
-            [(ngModel)]="expenseTimerange" (onChange)="reloadDropdown($event)" 
-            [filter]="true" [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
+            [(ngModel)]="expenseTimerange" (onChange)="reloadDropdown($event)" [filter]="true"
+            [style]="{'height': '43px', 'width': '100%'}" placeholder="   ">
           </p-dropdown>
           <label for="timerange">{{'expense.expenseAddTimerangeHeader' | translate}}</label>
         </span>
@@ -485,6 +560,14 @@
     <div class="p-col-12 p-md-12">
       <input type="file" (change)="onExpenseAttachmentUpload($event)" name="expenseAttachment"
         class="form-fileupload" />
+    </div>
+
+    <div class="p-col-12 p-md-12">
+      <p-checkbox [(ngModel)]="isReminding" binary="true" inputId="activateReminder" class="reminding-checkbox">
+      </p-checkbox>
+      <label for="activateReminder"><span class="reminder-icon-form">
+          <fa-icon [icon]="faBell"></fa-icon>
+        </span><span class="reminder-title-form">{{'expense.expenseAddReminderHeader' | translate}}</span></label>
     </div>
 
     <div class="p-col-12 p-md-12">

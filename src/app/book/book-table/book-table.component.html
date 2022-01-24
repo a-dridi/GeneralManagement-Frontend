@@ -155,7 +155,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="bookItem.title"
-                  (ngModelChange)="updateBookValue($event, bookItem, 'title')">
+                  (ngModelChange)="updateBookValue($event, bookItem, 'title')" (blur)="reloadAllBookData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{bookItem.title}}
@@ -178,7 +178,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="bookItem.location"
-                  (ngModelChange)="updateBookValue($event, bookItem, 'location')">
+                  (ngModelChange)="updateBookValue($event, bookItem, 'location')" (blur)="reloadAllBookData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{bookItem.location}}
@@ -201,7 +201,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="bookItem.bookLanguage"
-                  (ngModelChange)="updateBookValue($event, bookItem, 'bookLanguage')">
+                  (ngModelChange)="updateBookValue($event, bookItem, 'bookLanguage')" (blur)="reloadAllBookData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{bookItem.bookLanguage}}
@@ -212,7 +212,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="bookItem.yearDate"
-                  (ngModelChange)="updateBookValue($event, bookItem, 'yearDate')">
+                  (ngModelChange)="updateBookValue($event, bookItem, 'yearDate')" (blur)="reloadAllBookData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{bookItem.yearDate}}
@@ -223,7 +223,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="bookItem.isbn"
-                  (ngModelChange)="updateBookValue($event, bookItem, 'isbn')">
+                  (ngModelChange)="updateBookValue($event, bookItem, 'isbn')" (blur)="reloadAllBookData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{bookItem.isbn}}
@@ -234,7 +234,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="bookItem.information"
-                  (ngModelChange)="updateBookValue($event, bookItem, 'information')">
+                  (ngModelChange)="updateBookValue($event, bookItem, 'information')" (blur)="reloadAllBookData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{bookItem.information}}

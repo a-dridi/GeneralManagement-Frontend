@@ -3,6 +3,9 @@ import { faChartArea, faTable } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { ExpenseDevelopment } from 'src/app/expense/model/expense-development';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { ExpenseDevelopmentService } from '../expense-development.service';
 
@@ -12,8 +15,12 @@ import { ExpenseDevelopmentService } from '../expense-development.service';
   styleUrls: ['./expense-development.component.scss']
 })
 export class ExpenseDevelopmentComponent implements OnInit {
+  //Settings
+  selectedCurrency: string = "USD";
 
-  monthlyLoading: boolean;
+  localeOfUser: string = "en";
+
+  monthlyLoading: boolean = true;
   monthlyTableColumns: any[];
   monthlyExportColumns: any[];
   monthlyExportedColumns: any[];
@@ -38,40 +45,51 @@ export class ExpenseDevelopmentComponent implements OnInit {
   faTable = faTable;
   faChartArea = faChartArea;
 
-  constructor(private messageCreator: MessageCreator, private translateService: TranslateService, private messageService: MessageService, private expenseDevelopmentService: ExpenseDevelopmentService) {
+  constructor(private messageCreator: MessageCreator, private translateService: TranslateService, private messageService: MessageService, private expenseDevelopmentService: ExpenseDevelopmentService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) {
 
   }
 
   ngOnInit(): void {
     this.monthlyLoading = true;
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+      this.loadUiTextTranslations(this.selectedCurrency);
+    }, err => {
+      console.log(err);
+    });
+
+    this.loadMonthyExpenseDevelopments();
+    this.loadYearlyExpenseDevelopments();
+  }
+
+  loadUiTextTranslations(selectedCurrency) {
     this.translateService.get(['expensedevelopment.monthlyChartTitle', 'expensedevelopment.yearlyChartTitle', 'expensedevelopment.monthlyTableTableHeaderDisplayedDate', 'expensedevelopment.monthlyTableTableHeaderCentSum', 'expensedevelopment.yearlyTableTableHeaderDisplayedDate', 'expensedevelopment.yearlyTableTableHeaderCentSum']).subscribe(translations => {
-      this.monthlyChartTitle = translations['expensedevelopment.monthlyChartTitle']
-      this.yearlyChartTitle = translations['expensedevelopment.yearlyChartTitle']
+      this.monthlyChartTitle = translations['expensedevelopment.monthlyChartTitle'] + " (" + selectedCurrency + ")";
+      this.yearlyChartTitle = translations['expensedevelopment.yearlyChartTitle'] + " (" + selectedCurrency + ")";
 
       this.monthlyTableColumns = [
         { field: 'dateDisplay', header: translations['expensedevelopment.monthlyTableTableHeaderDisplayedDate'] },
-        { field: 'centSum', header: translations['expensedevelopment.monthlyTableTableHeaderCentSum'] }
+        { field: 'centSum', header: translations['expensedevelopment.monthlyTableTableHeaderCentSum'] + " (" + selectedCurrency + ")" }
       ];
       this.monthlyExportColumns = [
         { field: 'dateDisplay', header: translations['expensedevelopment.monthlyTableTableHeaderDisplayedDate'] },
-        { field: 'centSum', header: translations['expensedevelopment.monthlyTableTableHeaderCentSum'] }
+        { field: 'centSum', header: translations['expensedevelopment.monthlyTableTableHeaderCentSum'] + " (" + selectedCurrency + ")" }
       ];
       this.monthlyExportedColumns = this.monthlyExportColumns.map(column => ({ title: column.header, dataKey: column.field }));
 
       this.yearlyTableColumns = [
         { field: 'dateDisplay', header: translations['expensedevelopment.yearlyTableTableHeaderDisplayedDate'] },
-        { field: 'centSum', header: translations['expensedevelopment.yearlyTableTableHeaderCentSum'] }
+        { field: 'centSum', header: translations['expensedevelopment.yearlyTableTableHeaderCentSum'] + " (" + selectedCurrency + ")" }
       ];
       this.yearlyExportColumns = [
         { field: 'dateDisplay', header: translations['expensedevelopment.yearlyTableTableHeaderDisplayedDate'] },
-        { field: 'centSum', header: translations['expensedevelopment.yearlyTableTableHeaderCentSum'] }
+        { field: 'centSum', header: translations['expensedevelopment.yearlyTableTableHeaderCentSum'] + " (" + selectedCurrency + ")" }
       ];
       this.yearlyExportedColumns = this.yearlyExportColumns.map(column => ({ title: column.header, dataKey: column.field }));
     }
     );
-
-    this.loadMonthyExpenseDevelopments();
-    this.loadYearlyExpenseDevelopments();
   }
 
   loadGraphStyles() {

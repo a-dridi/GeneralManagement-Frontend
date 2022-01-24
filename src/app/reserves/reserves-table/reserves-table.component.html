@@ -148,7 +148,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="reservesItem.description"
-                  (ngModelChange)="updateReservesValue($event, reservesItem, 'description')">
+                  (ngModelChange)="updateReservesValue($event, reservesItem, 'description')" (blur)="reloadAllReservesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{reservesItem.description}}
@@ -159,7 +159,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="reservesItem.amount"
-                  (ngModelChange)="updateReservesValue($event, reservesItem, 'amount')">
+                  (ngModelChange)="updateReservesValue($event, reservesItem, 'amount')" (blur)="reloadAllReservesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{reservesItem.amount}}
@@ -170,7 +170,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="reservesItem.currency"
-                  (ngModelChange)="updateReservesValue($event, reservesItem, 'currency')">
+                  (ngModelChange)="updateReservesValue($event, reservesItem, 'currency')" (blur)="reloadAllReservesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{reservesItem.currency}}
@@ -181,7 +181,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="reservesItem.storageLocation"
-                  (ngModelChange)="updateReservesValue($event, reservesItem, 'storageLocation')">
+                  (ngModelChange)="updateReservesValue($event, reservesItem, 'storageLocation')" (blur)="reloadAllReservesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{reservesItem.storageLocation}}
@@ -192,7 +192,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="reservesItem.notice"
-                  (ngModelChange)="updateReservesValue($event, reservesItem, 'notice')">
+                  (ngModelChange)="updateReservesValue($event, reservesItem, 'notice')" (blur)="reloadAllReservesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{reservesItem.notice}}

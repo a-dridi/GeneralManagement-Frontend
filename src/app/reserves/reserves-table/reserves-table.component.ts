@@ -146,9 +146,8 @@ export class ReservesTableComponent implements OnInit {
    * Load reserves and create reserves array to display in the table. 
    */
   loadReservesItems() {
-    this.reserves = [];
-
     this.reservesTableService.getAllReservesTable().subscribe((data: Reserves[]) => {
+      this.reserves = [];
       data.forEach(
         (reservesItem: Reserves) => {
           this.reserves.push({ reservesId: reservesItem.reservesId, category: reservesItem.category.categoryTitle, description: reservesItem.description, amount: reservesItem.amount, currency: reservesItem.currency, storageLocation: reservesItem.storageLocation, notice: reservesItem.notice, createdDate: reservesItem.createdDate, attachment: reservesItem.attachment, attachmentPath: reservesItem.attachmentPath, attachmentName: reservesItem.attachmentName, attachmentType: reservesItem.attachmentType });
@@ -251,6 +250,7 @@ export class ReservesTableComponent implements OnInit {
     if (columnName === "category") {
       reservesCategoryObject = this.getReservesCategoryByCategoryTitle(newValue);
       this.reservesTableService.updateReservesTable(reservesItem.reservesId, reservesCategoryObject, reservesItem.description, reservesItem.amount, reservesItem.currency, reservesItem.storageLocation, reservesItem.notice, reservesItem.createdDate, reservesItem.attachment, reservesItem.attachmentPath, reservesItem.attachmentName, reservesItem.attachmentType).subscribe((res: String) => {
+        this.reloadAllReservesData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

@@ -15,7 +15,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     jwtAuthenticationToken: string;
 
-    readonly DEFAULT_MAX_RETRIES = 30;
+    readonly DEFAULT_MAX_RETRIES = 50;
 
     //Restricted API URIs
     readonly DATABASE_URI: string = "data"
@@ -50,7 +50,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         }
 
         return next.handle(req).pipe(
-            this.customDelayedRetry(900, 20),
+            this.customDelayedRetry(900, 35),
             catchError((err: HttpErrorResponse) => {
                 if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
                     if (err instanceof HttpErrorResponse) {
@@ -89,7 +89,12 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                                 this.error504Counter++;
                                 this.show504ErrorPopup();
                                 return of(response).pipe(delay(delayMs), take(retriesNumber));
-                            } else {
+                            }
+                            else if (response.status === 403) {
+                                this.showLoginPage();
+                                console.log("User not logged in!");
+                            }
+                            else {
                                 throw ({ error: response });
                             }
                         })
@@ -102,7 +107,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
      * Show error 504 popup when this error occured again after retrying it 10 times. 
      */
     show504ErrorPopup() {
-        if (this.error504Counter > 10) {
+        if (this.error504Counter > 13) {
             this.messageCreator.showErrorMessage("error504Message");
         }
     }

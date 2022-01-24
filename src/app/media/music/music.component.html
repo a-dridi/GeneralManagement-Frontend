@@ -129,7 +129,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="musicItem.interpreter"
-                  (ngModelChange)="updateMusicValue($event, musicItem, 'interpreter')">
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'interpreter')" (blur)="loadMusic()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{musicItem.interpreter}}
@@ -140,7 +140,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="musicItem.songtitle"
-                  (ngModelChange)="updateMusicValue($event, musicItem, 'songtitle')">
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'songtitle')" (blur)="loadMusic()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{musicItem.songtitle}}
@@ -151,7 +151,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="musicItem.yearDate"
-                  (ngModelChange)="updateMusicValue($event, musicItem, 'yearDate')">
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'yearDate')" (blur)="loadMusic()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{musicItem.yearDate}}
@@ -174,7 +174,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="musicItem.codeValue"
-                  (ngModelChange)="updateMusicValue($event, musicItem, 'codeValue')">
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'codeValue')" (blur)="loadMusic()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{musicItem.codeValue}}
@@ -185,7 +185,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="musicItem.linkValue"
-                  (ngModelChange)="updateMusicValue($event, musicItem, 'linkValue')">
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'linkValue')" (blur)="loadMusic()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{musicItem.linkValue}}
@@ -196,7 +196,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="musicItem.notice"
-                  (ngModelChange)="updateMusicValue($event, musicItem, 'notice')">
+                  (ngModelChange)="updateMusicValue($event, musicItem, 'notice')" (blur)="loadMusic()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{musicItem.notice}}

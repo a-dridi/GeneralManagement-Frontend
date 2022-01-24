@@ -3,6 +3,9 @@ import { faChartPie, faTable } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { EarningCategory } from 'src/app/earning/model/earning-category.model';
 import { EarningGraph } from 'src/app/earning/model/earning-graph.model';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { ValuesGenerator } from 'src/app/util/valuesGenerator';
 import { EarningCategoryService } from '../earning-category.service';
@@ -14,6 +17,10 @@ import { EarningGraphService } from '../earning-graph.service';
   styleUrls: ['./earning-categories.component.scss']
 })
 export class EarningCategoriesComponent implements OnInit {
+  //Settings
+  selectedCurrency: string = "USD";
+
+  localeOfUser: string = "en";
 
   earningCategoriesMonthly: EarningGraph[];
   earningCategoriesYearly: EarningGraph[];
@@ -36,9 +43,12 @@ export class EarningCategoriesComponent implements OnInit {
   faChartPie = faChartPie;
   loading: boolean;
 
-  constructor(private messageCreator: MessageCreator, private earningGraphService: EarningGraphService, private earningCategoryService: EarningCategoryService, private translateService: TranslateService) { }
+  constructor(private messageCreator: MessageCreator, private earningGraphService: EarningGraphService, private earningCategoryService: EarningCategoryService, private translateService: TranslateService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) { }
 
   ngOnInit(): void {
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+    this.loadUserSettings();
+
     this.loading = true;
     this.translateService.get(['earningCategory.earningCategoryTableHeaderCategory', 'earningCategory.earningCategoryTableHeaderSum']).subscribe(translations => {
       this.tableColumns = [
@@ -52,6 +62,15 @@ export class EarningCategoriesComponent implements OnInit {
       this.exportedColumns = this.exportColumns.map(column => ({ title: column.header, dataKey: column.field }));
     });
     this.loadEarningCategories();
+
+  }
+
+  loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+    }, err => {
+      console.log(err);
+    });
   }
 
   /**
@@ -127,7 +146,7 @@ export class EarningCategoriesComponent implements OnInit {
     this.earningGraphService.getAllCurrentYearEarningsSum().subscribe((earningsGraph: EarningGraph[]) => {
       earningsGraph.forEach(earningGraphItem => {
         this.currentYearEarningsLabels.push(earningGraphItem.categoryTitle);
-        this.currentYearEarningsValues.push(earningGraphItem.centValue);
+        this.currentYearEarningsValues.push(earningGraphItem.centValue / 100);
       });
       let hexColorsArray = ValuesGenerator.getHexColorValuesArray(earningsGraph.length);
 

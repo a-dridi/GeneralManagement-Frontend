@@ -32,15 +32,16 @@
         <tr>
           <th pSortableColumn="{{monthlyTableColumns[0].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
-              <p-sortIcon field="{{monthlyTableColumns[0].field}}"></p-sortIcon> {{monthlyTableColumns[0].header}}
-              <p-columnFilter type="text" field="title" display="menu" [showOperator]="false"></p-columnFilter>
+              <span> </span>
+              {{monthlyTableColumns[0].header}}
+              <span> </span>
             </div>
           </th>
 
           <th pSortableColumn="{{monthlyTableColumns[1].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{monthlyTableColumns[1].field}}"></p-sortIcon> {{monthlyTableColumns[1].header}}
-              <p-columnFilter type="text" field="value" display="menu" [showOperator]="false"></p-columnFilter>
+              <span> </span>
             </div>
           </th>
         </tr>
@@ -52,7 +53,7 @@
             {{expensedevelopmentItem.dateDisplay}}
           </td>
           <td>
-            {{expensedevelopmentItem.centSum/100}}
+            {{(expensedevelopmentItem.centSum/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>
@@ -70,7 +71,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">{{'expensedevelopment.expensesDevelopmentTableNoValues' | translate}}.</td>
+          <td colspan="5">{{'messages.expensesDevelopmentTableNoValues' | translate}}.</td>
         </tr>
       </ng-template>
 
@@ -131,15 +132,16 @@
 
           <th pSortableColumn="{{yearlyTableColumns[0].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
-              <p-sortIcon field="{{yearlyTableColumns[0].field}}"></p-sortIcon> {{yearlyTableColumns[0].header}}
-              <p-columnFilter type="text" field="title" display="menu" [showOperator]="false"></p-columnFilter>
+              <p-sortIcon field="{{yearlyTableColumns[0].field}}"></p-sortIcon>
+              {{yearlyTableColumns[0].header}}
+              <span> </span>
             </div>
           </th>
 
           <th pSortableColumn="{{yearlyTableColumns[1].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{yearlyTableColumns[1].field}}"></p-sortIcon> {{yearlyTableColumns[1].header}}
-              <p-columnFilter type="text" field="value" display="menu" [showOperator]="false"></p-columnFilter>
+              <span> </span>
             </div>
           </th>
 
@@ -152,7 +154,7 @@
             {{expensedevelopmentItem.dateDisplay}}
           </td>
           <td>
-            {{expensedevelopmentItem.centSum/100}}
+            {{(expensedevelopmentItem.centSum/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>
@@ -170,7 +172,7 @@
 
       <ng-template pTemplate="emptymessage">
         <tr>
-          <td colspan="5">{{'expensedevelopment.expensesDevelopmentTableNoValues' | translate}}.</td>
+          <td colspan="5">{{'messages.expensesDevelopmentTableNoValues' | translate}}.</td>
         </tr>
       </ng-template>
 

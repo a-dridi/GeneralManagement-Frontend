@@ -42,7 +42,7 @@ export class EarningTableComponent implements OnInit {
 
   months: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   years: number[] = [];
-  selectedMonth: number;
+  selectedMonth: number = null;
   selectedYear: number;
   earningsAmountInfo: string = "";
 
@@ -119,6 +119,7 @@ export class EarningTableComponent implements OnInit {
   constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private appLanguageLoaderHelper: AppLanguageLoaderHelper, private apiConfig: ApiConfig, private earningService: EarningService, private earningCategoryService: EarningCategoryService, private earningTimerangeService: EarningTimerangeService, private expenseService: ExpenseService, private translateService: TranslateService, private userSettingsService: UserSettingsService) {
     this.displayedDate = new Date();
     this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
+    this.selectedYear = this.displayedDate.getFullYear();
   }
 
   /**
@@ -182,6 +183,50 @@ export class EarningTableComponent implements OnInit {
     }
   }
 
+    /**
+   * Display earnings for the selected month of the current year. When there is no selected month, then show earnings for the current month and year.
+   * 
+   */
+     clearYearSelection(event) {
+      this.selectedYear = 0;
+  
+      if (this.selectedMonth !== null || this.selectedMonth !== 0) {
+        this.displayEarningsSettings = 2;
+        this.displayedDate.setMonth(this.selectedMonth - 1);
+        this.displayedDate.setFullYear((new Date()).getFullYear());
+        this.loadEarnings();
+        this.loadSingleCustomSumsOfMonth();
+      } else {
+        this.displayEarningsSettings = 1;
+        this.displayedDate.setMonth((new Date()).getMonth());
+        this.displayedDate.setFullYear((new Date()).getFullYear());
+        this.loadEarnings();
+        this.loadSingleCustomSumsOfMonth();
+      }
+    }
+  
+    /**
+     * Display earnings for the selected year of the current year. When there is no selected year, then show earnings for the current month and year.
+     * 
+     */
+    clearMonthSelection(event) {
+      this.selectedMonth = 0;
+  
+      if (this.selectedYear !== null || this.selectedYear !== 0) {
+        this.displayEarningsSettings = 1;
+        this.displayedDate.setMonth((new Date()).getMonth());
+        this.displayedDate.setFullYear(this.selectedYear);
+        this.loadEarnings();
+        this.loadSingleCustomSumsOfMonth();
+      } else {
+        this.displayEarningsSettings = 2;
+        this.displayedDate.setMonth((new Date()).getMonth());
+        this.displayedDate.setFullYear((new Date()).getFullYear());
+        this.loadEarnings();
+        this.loadSingleCustomSumsOfMonth();
+      }
+    }
+
   /**
    * Create values for years dropdown selector. Containing +/-15 years from the current year. 
    */
@@ -190,7 +235,7 @@ export class EarningTableComponent implements OnInit {
     for (let i = currentYear - 15; i <= currentYear; i++) {
       this.years.push(i);
     }
-    for (let i = currentYear + 1; i >= currentYear + 15; i++) {
+    for (let i = currentYear + 1; i <= currentYear + 10; i++) {
       this.years.push(i);
     }
   }
@@ -225,11 +270,21 @@ export class EarningTableComponent implements OnInit {
     this.loadDropdownStyle();
   }
 
+  updateMonthYearDropdownSelector() {
+    if (this.displayEarningsSettings === 1) {
+      this.selectedYear = this.displayedDate.getFullYear();
+    } else if (this.displayEarningsSettings === 2) {
+      this.selectedYear = this.displayedDate.getFullYear();
+      this.selectedMonth = this.displayedDate.getMonth() + 1;
+    }
+  }
+  
+
   /**
    * Load earnings all, of a certain year or month. This is setup through the instance variable displayEarningsSettings. 
    */
   loadEarnings() {
-    this.earnings = [];
+    this.loading = true;
     if (this.displayEarningsSettings === 0) {
       this.displayedDateString = "";
       this.earningService.getAllEarningTable().subscribe((data: Earning[]) => {
@@ -261,6 +316,7 @@ export class EarningTableComponent implements OnInit {
  * Get loaded data and set up table.
  */
   setUpEarningTable(data: Earning[]) {
+    this.earnings = [];
     data.forEach(
       (earningItem: Earning) => {
         this.earnings.push({ earningId: earningItem.earningId, title: earningItem.title, centValue: earningItem.centValue / 100, earningCategory: earningItem.earningCategory.categoryTitle, earningTimerange: this.earningTimerangeTranslations[earningItem.earningTimerange.timerangeTitle], earningDate: earningItem.earningDate, information: earningItem.information, attachment: earningItem.attachment, attachmentPath: earningItem.attachmentPath, attachmentName: earningItem.attachmentName, attachmentType: earningItem.attachmentType });
@@ -396,7 +452,9 @@ export class EarningTableComponent implements OnInit {
   displayEarningsPreviousYear() {
     this.displayEarningsSettings = 1;
     this.displayedDate.setFullYear(this.displayedDate.getFullYear() - 1);
+    this.updateMonthYearDropdownSelector();
     this.loadEarnings();
+    this.loadSingleCustomSumsOfMonth();
   }
 
 
@@ -406,22 +464,32 @@ export class EarningTableComponent implements OnInit {
   displayEarningsNextYear() {
     this.displayEarningsSettings = 1;
     this.displayedDate.setFullYear(this.displayedDate.getFullYear() + 1);
+    this.updateMonthYearDropdownSelector();
     this.loadEarnings();
+    this.loadSingleCustomSumsOfMonth();
   }
 
   /**
  * Display earnings of previous month of current year (-1)
  */
   displayEarningsPreviousMonth() {
-    this.displayEarningsSettings = 2;
-    if (this.displayedDate)
-      if (this.displayedDate.getMonth() === 0) {
-        this.displayedDate.setMonth(11);
-        this.displayedDate.setFullYear(this.displayedDate.getFullYear() - 1);
-      } else {
-        this.displayedDate.setMonth(this.displayedDate.getMonth() - 1);
-      }
+    if (this.displayEarningsSettings === 1) {
+      //Year was selected -> year view mode is activated
+      this.displayEarningsPreviousYear();
+    } else {
+      this.displayEarningsSettings = 2;
+
+      if (this.displayedDate)
+        if (this.displayedDate.getMonth() === 0) {
+          this.displayedDate.setMonth(11);
+          this.displayedDate.setFullYear(this.displayedDate.getFullYear() - 1);
+        } else {
+          this.displayedDate.setMonth(this.displayedDate.getMonth() - 1);
+        }
+    }
+    this.updateMonthYearDropdownSelector();
     this.loadEarnings();
+    this.loadSingleCustomSumsOfMonth();
   }
 
 
@@ -429,14 +497,22 @@ export class EarningTableComponent implements OnInit {
    * Display earnings of next month of current year (+1)
    */
   displayEarningsNextMonth() {
-    this.displayEarningsSettings = 2;
-    if (this.displayedDate.getMonth() === 11) {
-      this.displayedDate.setMonth(0);
-      this.displayedDate.setFullYear(this.displayedDate.getFullYear() + 1);
+    if (this.displayEarningsSettings === 1) {
+      //Year was selected -> year view mode is activated
+      this.displayEarningsNextYear();
     } else {
-      this.displayedDate.setMonth(this.displayedDate.getMonth() + 1);
+      this.displayEarningsSettings = 2;
+      if (this.displayedDate.getMonth() === 11) {
+        this.displayedDate.setMonth(0);
+        this.displayedDate.setFullYear(this.displayedDate.getFullYear() + 1);
+      } else {
+        this.displayedDate.setMonth(this.displayedDate.getMonth() + 1);
+      }
     }
+
+    this.updateMonthYearDropdownSelector();
     this.loadEarnings();
+    this.loadSingleCustomSumsOfMonth();
   }
 
   /**
@@ -445,19 +521,12 @@ export class EarningTableComponent implements OnInit {
    */
   selectMonthEarnings(selectedMonth) {
     this.selectedMonth = selectedMonth;
-    if (this.selectedMonth === null || this.selectedMonth === 0) {
-      this.selectedMonth = (new Date()).getMonth();
-      this.displayEarningsSettings = 1;
-    } else {
+    if ((this.selectedMonth !== null && this.selectedMonth !== 0) && (this.selectedYear !== null && this.selectedYear !== 0)) {
       this.displayEarningsSettings = 2;
       this.displayedDate.setMonth(this.selectedMonth - 1);
+      this.loadEarnings();
+      this.loadSingleCustomSumsOfMonth();
     }
-    if (this.selectedYear === null) {
-      this.selectedYear = (new Date()).getFullYear();
-      this.displayEarningsSettings = 0;
-    }
-    this.loadEarnings();
-    this.loadSingleCustomSumsOfMonth();
   }
 
   /**
@@ -466,15 +535,14 @@ export class EarningTableComponent implements OnInit {
    */
   selectYearEarnings(selectedYear) {
     this.selectedYear = selectedYear;
-    if (this.selectedMonth === null) {
-      this.selectedMonth = (new Date()).getMonth();
+    if ((this.selectedMonth === null || this.selectedMonth === 0) && (this.selectedYear !== null && this.selectedYear !== 0)) {
       this.displayEarningsSettings = 1;
-    } else {
+    } else if ((this.selectedMonth !== null && this.selectedMonth !== 0) && (this.selectedYear !== null && this.selectedYear !== 0)) {
       this.displayEarningsSettings = 2;
       this.displayedDate.setFullYear(this.selectedYear);
     }
-    if (this.selectedYear === null) {
-      this.selectedYear = (new Date()).getFullYear();
+    else {
+      this.selectedYear = 0;
       this.displayEarningsSettings = 0;
     }
     this.loadEarnings();
@@ -559,6 +627,7 @@ export class EarningTableComponent implements OnInit {
     else if (columnName === "category") {
       earningCategoryObject = this.getEarningCategoryByCategoryTitle(newValue);
       this.earningService.updateEarningTable(earningItem.earningId, earningItem.title, earningCategoryObject, earningItem.centValue * 100, earningTimerangeObject, earningItem.earningDate, earningItem.information, earningItem.attachment, earningItem.attachmentPath, earningItem.attachmentName, earningItem.attachmentType).subscribe((res: String) => {
+        this.reloadAllEarningsData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

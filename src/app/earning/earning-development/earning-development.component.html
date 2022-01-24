@@ -13,10 +13,10 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="monthlyTableColumns" [value]="monthlyEarningDevelopments" dataKey="dateDisplay"
-      [paginator]="true" [rows]="15" [showCurrentPageReport]="true"
-      totalRecords="{{monthlyEarningDevelopmentsLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="monthlyLoading"
-      [globalFilterFields]="['dateDisplay','centSum']" styleClass="p-datatable-responsive-table p-datatable-striped">
+      [paginator]="true" [rows]="15" [showCurrentPageReport]="true" totalRecords="{{monthlyEarningDevelopmentsLength}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="monthlyLoading" [globalFilterFields]="['dateDisplay','centSum']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
         <div class="p-d-flex">
@@ -32,15 +32,16 @@
         <tr>
           <th pSortableColumn="{{monthlyTableColumns[0].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
-              <p-sortIcon field="{{monthlyTableColumns[0].field}}"></p-sortIcon> {{monthlyTableColumns[0].header}}
-              <p-columnFilter type="text" field="title" display="menu" [showOperator]="false"></p-columnFilter>
+              <span> </span>
+              {{monthlyTableColumns[0].header}}
+              <span> </span>
             </div>
           </th>
 
           <th pSortableColumn="{{monthlyTableColumns[1].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{monthlyTableColumns[1].field}}"></p-sortIcon> {{monthlyTableColumns[1].header}}
-              <p-columnFilter type="text" field="value" display="menu" [showOperator]="false"></p-columnFilter>
+              <span> </span>
             </div>
           </th>
         </tr>
@@ -52,7 +53,7 @@
             {{earningdevelopmentItem.dateDisplay}}
           </td>
           <td>
-            {{earningdevelopmentItem.centSum/100}}
+            {{(earningdevelopmentItem.centSum/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>
@@ -111,10 +112,10 @@
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="yearlyTableColumns" [value]="yearlyEarningDevelopments" dataKey="dateDisplay"
-      [paginator]="true" [rows]="15" [showCurrentPageReport]="true"
-      totalRecords="{{yearlyEarningDevelopmentsLength}}" currentPageReportTemplate="{first} - {last} / {totalRecords}"
-      [rowsPerPageOptions]="[10,25,50,100,500]" [loading]="yearlyLoading"
-      [globalFilterFields]="['dateDisplay','centSum']" styleClass="p-datatable-responsive-table p-datatable-striped">
+      [paginator]="true" [rows]="15" [showCurrentPageReport]="true" totalRecords="{{yearlyEarningDevelopmentsLength}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [loading]="yearlyLoading" [globalFilterFields]="['dateDisplay','centSum']"
+      styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
         <div class="p-d-flex">
@@ -131,15 +132,16 @@
 
           <th pSortableColumn="{{yearlyTableColumns[0].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
-              <p-sortIcon field="{{yearlyTableColumns[0].field}}"></p-sortIcon> {{yearlyTableColumns[0].header}}
-              <p-columnFilter type="text" field="title" display="menu" [showOperator]="false"></p-columnFilter>
+              <p-sortIcon field="{{yearlyTableColumns[0].field}}"></p-sortIcon>
+              {{yearlyTableColumns[0].header}}
+              <span> </span>
             </div>
           </th>
 
           <th pSortableColumn="{{yearlyTableColumns[1].field}}">
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{yearlyTableColumns[1].field}}"></p-sortIcon> {{yearlyTableColumns[1].header}}
-              <p-columnFilter type="text" field="value" display="menu" [showOperator]="false"></p-columnFilter>
+              <span> </span>
             </div>
           </th>
 
@@ -152,7 +154,7 @@
             {{earningdevelopmentItem.dateDisplay}}
           </td>
           <td>
-            {{earningdevelopmentItem.centSum/100}}
+            {{(earningdevelopmentItem.centSum/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>

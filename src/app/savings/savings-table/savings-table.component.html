@@ -122,7 +122,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="savingsItem.description"
-                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'description')">
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'description')" (blur)="reloadAllSavingsData()" >
               </ng-template>
               <ng-template pTemplate="output">
                 {{savingsItem.description}}
@@ -133,10 +133,11 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="savingsItem.targetCent"
-                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'targetCent')" class="input-small">
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'targetCent')" 
+                  (blur)="reloadAllSavingsData()" class="input-small">
               </ng-template>
               <ng-template pTemplate="output">
-                {{savingsItem.targetCent}}
+                {{savingsItem.targetCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -144,10 +145,11 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="savingsItem.stepAmountCent"
-                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'stepAmountCent')" class="input-small">
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'stepAmountCent')" 
+                  (blur)="reloadAllSavingsData()" class="input-small">
               </ng-template>
               <ng-template pTemplate="output">
-                {{savingsItem.stepAmountCent}}
+                {{savingsItem.stepAmountCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -166,10 +168,10 @@
           <td pEditableColumn>
             <p-cellEditor>
               <ng-template pTemplate="input">
-                {{savingsItem.savedTillNowCent}}
+                {{savingsItem.savedTillNowCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
               </ng-template>
               <ng-template pTemplate="output">
-                {{savingsItem.savedTillNowCent}}
+                {{savingsItem.savedTillNowCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
               </ng-template>
             </p-cellEditor>
           </td>
@@ -187,7 +189,7 @@
             <span *ngIf="savingsItem.savingsFrequency===1">
               <span *ngIf="savingsItem.lastSavingsUpdateDate!==null">
                 {{'savings.savingsAccountInfoText1' | translate}}
-                {{(savingsItem.targetCent-savingsItem.savedTillNowCent)}} {{currency}}
+                {{(savingsItem.targetCent-savingsItem.savedTillNowCent)}} {{selectedCurrency}}
                 {{'savings.savingsAccountInfoText2' | translate}}
                 {{savingsItem.targetCalculatedDate | date: 'dd.MM.yyyy'}}
                 {{'savings.savingsAccountInfoText3' | translate}} {{savingsItem.stepAmountCent}})
@@ -200,7 +202,7 @@
             <span *ngIf="savingsItem.savingsFrequency!==1">
               <span *ngIf="savingsItem.lastSavingsUpdateDate!==null">
                 {{'savings.savingsAccountInfoText1' | translate}}
-                {{(savingsItem.targetCent-savingsItem.savedTillNowCent)}} {{currency}}
+                {{(savingsItem.targetCent-savingsItem.savedTillNowCent)}} {{selectedCurrency}}
                 {{'savings.savingsAccountInfoText2' | translate}}
                 {{savingsItem.targetCalculatedDate | date: 'dd.MM.yyyy'}}
               </span>
@@ -214,7 +216,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="savingsItem.notice"
-                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'notice')" class="input-small">
+                  (ngModelChange)="updateSavingsValue($event, savingsItem, 'notice')" (blur)="reloadAllSavingsData()" class="input-small">
               </ng-template>
               <ng-template pTemplate="output">
                 {{savingsItem.notice}}

@@ -3,6 +3,9 @@ import { faChartArea, faTable } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { EarningDevelopment } from 'src/app/earning/model/earning-development';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { EarningDevelopmentService } from '../earning-development.service';
 
@@ -12,7 +15,10 @@ import { EarningDevelopmentService } from '../earning-development.service';
   styleUrls: ['./earning-development.component.scss']
 })
 export class EarningDevelopmentComponent implements OnInit {
+  //Settings
+  selectedCurrency: string = "USD";
 
+  localeOfUser: string = "en";
   monthlyLoading: boolean;
   monthlyTableColumns: any[];
   monthlyExportColumns: any[];
@@ -38,15 +44,31 @@ export class EarningDevelopmentComponent implements OnInit {
   faTable = faTable;
   faChartArea = faChartArea;
 
-  constructor(private messageCreator: MessageCreator, private translateService: TranslateService, private messageService: MessageService, private earningDevelopmentService: EarningDevelopmentService) {
+  constructor(private messageCreator: MessageCreator, private translateService: TranslateService, private messageService: MessageService, private earningDevelopmentService: EarningDevelopmentService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) {
 
   }
 
   ngOnInit(): void {
     this.monthlyLoading = true;
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+    this.loadUserSettings();
+    this.loadMonthyEarningDevelopments();
+    this.loadYearlyEarningDevelopments();
+  }
+
+  loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+      this.loadUiTranslations(userSetting.settingValue);
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  loadUiTranslations(selectedCurrency) {
     this.translateService.get(['earningdevelopment.monthlyChartTitle', 'earningdevelopment.yearlyChartTitle', 'earningdevelopment.monthlyTableTableHeaderDisplayedDate', 'earningdevelopment.monthlyTableTableHeaderCentSum', 'earningdevelopment.yearlyTableTableHeaderDisplayedDate', 'earningdevelopment.yearlyTableTableHeaderCentSum']).subscribe(translations => {
-      this.monthlyChartTitle = translations['earningdevelopment.monthlyChartTitle']
-      this.yearlyChartTitle = translations['earningdevelopment.yearlyChartTitle']
+      this.monthlyChartTitle = translations['earningdevelopment.monthlyChartTitle'] + " (" + selectedCurrency + ")";
+      this.yearlyChartTitle = translations['earningdevelopment.yearlyChartTitle'] + " (" + selectedCurrency + ")";
 
       this.monthlyTableColumns = [
         { field: 'dateDisplay', header: translations['earningdevelopment.monthlyTableTableHeaderDisplayedDate'] },
@@ -70,8 +92,6 @@ export class EarningDevelopmentComponent implements OnInit {
     }
     );
 
-    this.loadMonthyEarningDevelopments();
-    this.loadYearlyEarningDevelopments();
   }
 
   loadGraphStyles() {

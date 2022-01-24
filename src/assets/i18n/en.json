@@ -37,6 +37,7 @@
     "expenseBudgetLoadError1": "Expense Budget list could not be loaded!",
     "expenseBudgetTableUpdatedError1": "Error! Expense Budget could not be updated!",
     "expensesTableUpdatedError1": "Expense could not be updated!",
+    "expensereminderTableUpdatedError1": "Expense Reminder could not be updated!",
     "filterSelectCategoryPlaceholder": "Select",
     "expenseAddExpenseError5": "Please enter all required red fields!",
     "expensesCategoryNoValues": "No Expense Categories available!",
@@ -370,6 +371,7 @@
     "expenseAddTimerangeHeader": "Time Range",
     "expenseAddPaymentHeader": "Payment Date",
     "expenseAddInformationHeader": "Information",
+    "expenseAddReminderHeader": "Remind me",
     "expenseAddAttachmentHeader": "Attachment",
     "expenseAddSaveExpense": "Add",
     "categoryAddTitle": "Add New Category",
@@ -398,7 +400,7 @@
   },
   "expensebudget": {
     "submenuTitleTable": "Expenses - Budget",
-    "expensebudgetTableTitle": "Expense Budget - Table",
+    "expensebudgetTableTitle": "Expense Budget - Current Month",
     "tableHeaderCategory": "Category",
     "tableHeaderCentBudgetValue": "Budget",
     "tableHeaderCentBudgetCentActualExpenses": "Expense",
@@ -462,6 +464,12 @@
     "yearTableTableHeaderCent": "Expenses",
     "monthlyChartTitle": "Monthly Expenses",
     "yearlyChartTitle": "Yearly Expenses"
+  },
+  "expensereminder": {
+    "expenseReminderTabheader": "Expenses Due To Pay",
+    "tableHeaderExpenseName": "Expense",
+    "tableHeaderExpenseDue": "Due Date",
+    "tableHeaderExpensePaid": "Paid Date"
   },
   "earningModule": {
     "title": "Earnings",

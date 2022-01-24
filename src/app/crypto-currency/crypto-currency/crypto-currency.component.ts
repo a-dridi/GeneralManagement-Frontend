@@ -96,9 +96,8 @@ export class CryptoCurrencyComponent implements OnInit {
    * Load cryptocurrency and create cryptocurrency array to display in the table. 
    */
   loadCryptoCurrencys() {
-    this.cryptocurrencies = [];
-
     this.cryptoCurrencyService.getAllCryptoCurrencyTable().subscribe((data: CryptoCurrency[]) => {
+      this.cryptocurrencies = [];
       data.forEach(
         (cryptocurrencyItem: CryptoCurrency) => {
           this.cryptocurrencies.push({ cryptocurrencyId: cryptocurrencyItem.cryptocurrencyId, amount: cryptocurrencyItem.amount, currency: cryptocurrencyItem.currency, storageLocation: cryptocurrencyItem.storageLocation, notice: cryptocurrencyItem.notice, attachment: cryptocurrencyItem.attachment, attachmentPath: cryptocurrencyItem.attachmentPath, attachmentName: cryptocurrencyItem.attachmentName, attachmentType: cryptocurrencyItem.attachmentType });
@@ -332,7 +331,7 @@ export class CryptoCurrencyComponent implements OnInit {
   /**
    * Recreate original table object
    */
-  resetExportTableData() {
+  reloadTableData() {
     this.loadCryptoCurrencys();
   }
 

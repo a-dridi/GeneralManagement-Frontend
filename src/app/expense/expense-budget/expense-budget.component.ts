@@ -9,6 +9,9 @@ import { ExpenseBudgetService } from '../expense-budget.service';
 import { ExpenseCategoryService } from '../expensecategory.services';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
 
 @Component({
   selector: 'app-expense-budget',
@@ -17,19 +20,24 @@ import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
 })
 export class ExpenseBudgetComponent implements OnInit {
   standardTableWidth = 1000;
-
+  //Settings
+  selectedCurrency: string = "USD";
+  
+  localeOfUser: string = "en";
   tableColumns: any[];
   expenseBudgetList: ExpenseBudgetTable[];
   expenseCategories: ExpenseCategory[];
-  loading: boolean;
+  loading: boolean = true;
   faTable = faTable;
 
   @Output()
   initInputValue: EventEmitter<any> = new EventEmitter;
 
-  constructor(private cssStyleAdjustment: CssStyleAdjustment, private expenseBudgetService: ExpenseBudgetService, private expenseCategoryService: ExpenseCategoryService, private translateService: TranslateService, private messageService: MessageService, private messageCreator: MessageCreator) { }
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private expenseBudgetService: ExpenseBudgetService, private expenseCategoryService: ExpenseCategoryService, private translateService: TranslateService, private messageService: MessageService, private messageCreator: MessageCreator, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) { }
 
   ngOnInit(): void {
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+
     this.loading = true;
     this.initInputValue.emit();
     this.translateService.get(['expensebudget.tableHeaderCategory', 'expensebudget.tableHeaderCentBudgetValue',
@@ -44,6 +52,8 @@ export class ExpenseBudgetComponent implements OnInit {
           { field: 'notice', header: translations['expensebudget.tableHeaderNotice'] }
         ]
       });
+
+    this.loadUserSettings();
     this.loadExpenseCategories();
     this.getAllExpenseBudget();
   }
@@ -51,10 +61,18 @@ export class ExpenseBudgetComponent implements OnInit {
   ngAfterViewInit() {
     this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
   }
-  
+
+  loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+    }, err => {
+      console.log(err);
+    });
+  }
+
   getAllExpenseBudget() {
-    this.expenseBudgetList = [];
     this.expenseBudgetService.getAllExpenseBudget().subscribe((expenseBudgetArray: ExpenseBudget[]) => {
+      this.expenseBudgetList = [];
       expenseBudgetArray.forEach((expensebudgetItem: ExpenseBudget) => {
         this.expenseBudgetList.push({ expensesbudgetId: expensebudgetItem.expensesbudgetId, expenseCategory: expensebudgetItem.expenseCategory.categoryTitle, centBudgetValue: expensebudgetItem.centBudgetValue, centActualExpenses: expensebudgetItem.centActualExpenses, centDifference: expensebudgetItem.centDifference, s: expensebudgetItem.s, notice: expensebudgetItem.notice });
       });
@@ -75,6 +93,11 @@ export class ExpenseBudgetComponent implements OnInit {
     });
   }
 
+  reloadTableData() {
+    this.loadExpenseCategories();
+    this.getAllExpenseBudget();
+  }
+
   /**
  * Update row value for a ExpenseBudget row item. 
  * @param newValue new Value that will be add to the updated ExpenseBudget row item 
@@ -88,7 +111,6 @@ export class ExpenseBudgetComponent implements OnInit {
       console.log(centValue);
       this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseCategoryObject, centValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, expenseBudgetRowItem.notice).subscribe(
         () => {
-          this.getAllExpenseBudget();
         },
         err => {
           console.log(err);
@@ -98,7 +120,6 @@ export class ExpenseBudgetComponent implements OnInit {
     if (columnName === "notice") {
       this.expenseBudgetService.updateExpenseBudget(expenseBudgetRowItem.expensesbudgetId, expenseCategoryObject, expenseBudgetRowItem.centBudgetValue, expenseBudgetRowItem.centActualExpenses, expenseBudgetRowItem.centDifference, expenseBudgetRowItem.s, newValue).subscribe(
         () => {
-          this.getAllExpenseBudget();
         }, err => {
           console.log(err);
           this.messageCreator.showErrorMessage("expenseBudgetTableUpdatedError1");

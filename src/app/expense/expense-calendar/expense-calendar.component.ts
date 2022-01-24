@@ -15,17 +15,14 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class ExpenseCalendarComponent implements OnInit {
 
-  expenseCalenderItems: any[];
-  expenseCalenderOptions: any;
-  currentDate: Date;
-  explanationTabHeader: string;
-  testevents: any[];
-  dateSring = "2021-03-21";
+  expenseCalenderItems: any[] = [];
+  expenseCalenderOptions: any = {};
+  currentDate: Date = new Date();
+  explanationTabHeader: string = "";
 
   @ViewChild('expensesCalendar') private expensesCalendar: FullCalendar;
 
   constructor(private messageCreator: MessageCreator, private expenseCalendarService: ExpenseCalendarService, private translateService: TranslateService) {
-    this.currentDate = new Date();
   }
 
   ngOnInit(): void {

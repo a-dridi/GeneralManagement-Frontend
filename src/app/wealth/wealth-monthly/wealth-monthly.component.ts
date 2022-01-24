@@ -4,9 +4,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { OrganizationCategory } from 'src/app/organization/model/organization-category.model';
 import { Organization } from 'src/app/organization/model/organization.model';
+import { UserSettingsService } from 'src/app/user-settings.service';
+import { UserSetting } from 'src/app/user/model/user-setting.model';
 import { UserService } from 'src/app/user/user.service';
 import { ApiConfig } from 'src/app/util/api.config';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
+import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { WealthMonthly } from '../model/wealth-monthly.model';
 import { WealthMonthlyService } from '../wealth-monthly.service';
@@ -17,8 +20,13 @@ import { WealthMonthlyService } from '../wealth-monthly.service';
   styleUrls: ['./wealth-monthly.component.scss']
 })
 export class WealthMonthlyComponent implements OnInit {
+  //Settings
+  selectedCurrency: string = "USD";
+
+  localeOfUser: string = "en";
+
   standardTableWidth = 1350;
-  loading: boolean;
+  loading: boolean = true;
 
   tableColumns: any[];
   exportColumns: any[];
@@ -38,7 +46,7 @@ export class WealthMonthlyComponent implements OnInit {
   faPaperclip = faPaperclip;
   faRetweet = faRetweet;
 
-  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private apiConfig: ApiConfig, private wealthMonthlyService: WealthMonthlyService, private translateService: TranslateService) {
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private apiConfig: ApiConfig, private wealthMonthlyService: WealthMonthlyService, private translateService: TranslateService, private userSettingsService: UserSettingsService, private appLanguageLoaderHelper: AppLanguageLoaderHelper) {
 
   }
 
@@ -46,7 +54,8 @@ export class WealthMonthlyComponent implements OnInit {
      * Load wealth monthly and table header translations
      */
   ngOnInit(): void {
-    this.loading = true;
+    this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
+    this.loadUserSettings();
     this.translateService.get(['wealthMonthly.wealthMonthlyMonthDateHeader', 'wealthMonthly.wealthMonthlyYearDateHeader', 'wealthMonthly.wealthMonthlyExpenseHeader', 'wealthMonthly.wealthMonthlyEarningHeader', 'wealthMonthly.wealthMonthlyDifferenceHeader', 'wealthMonthly.wealthMonthlyImprovementPctHeader', 'wealthMonthly.wealthNoticeHeader']).subscribe(translations => {
       this.tableColumns = [
         { field: 'wealthmonthlyId', header: 'ID' },
@@ -79,13 +88,20 @@ export class WealthMonthlyComponent implements OnInit {
     this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
   }
 
+  loadUserSettings() {
+    this.userSettingsService.getUserSettingBySettingsKey("currency").subscribe((userSetting: UserSetting) => {
+      this.selectedCurrency = userSetting.settingValue;
+    }, err => {
+      console.log(err);
+    });
+  }
+
   /**
    * Load wealth monthly and create wealth monthly array to display in the table. 
    */
   loadMonthlyWealthItems() {
-    this.wealthmonthlyItems = [];
-
     this.wealthMonthlyService.getAllWealthMonthlyTable().subscribe((data: WealthMonthly[]) => {
+      this.wealthmonthlyItems = [];
       data.forEach(
         (wealthMonthlyItem: WealthMonthly) => {
           this.wealthmonthlyItems.push({ wealthmonthlyId: wealthMonthlyItem.wealthmonthlyId, monthDate: wealthMonthlyItem.monthDate, yearDate: wealthMonthlyItem.yearDate, expenseCent: wealthMonthlyItem.expenseCent / 100, earningCent: wealthMonthlyItem.earningCent / 100, differenceCent: wealthMonthlyItem.differenceCent / 100, improvementPct: wealthMonthlyItem.improvementPct, notice: wealthMonthlyItem.notice, attachment: wealthMonthlyItem.attachment, attachmentPath: wealthMonthlyItem.attachmentPath, attachmentName: wealthMonthlyItem.attachmentName, attachmentType: wealthMonthlyItem.attachmentType });
@@ -96,8 +112,6 @@ export class WealthMonthlyComponent implements OnInit {
       this.loading = false;
     });
   }
-
-
 
   /**
    * Reload wealth monthly data
@@ -112,7 +126,7 @@ export class WealthMonthlyComponent implements OnInit {
    * @param wealthMonthlyItem 
    * @param columnName The column / attribute of the organization item that will be updated
    */
-   updateWealthMonthlyValue(newValue, wealthMonthlyItem, columnName) {
+  updateWealthMonthlyValue(newValue, wealthMonthlyItem, columnName) {
     if (columnName === "expenseCent") {
       let parsedValue = parseFloat(newValue.replace(",", "."));
       if (parsedValue === NaN || parsedValue === null) {

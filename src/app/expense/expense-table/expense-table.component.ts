@@ -1,6 +1,6 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { faBookmark, faMoneyBillAlt } from '@fortawesome/free-regular-svg-icons';
-import { faArrowRight, faCalculator, faCalendarCheck, faCheckSquare, faEuroSign, faFolderPlus, faFont, faHistory, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faTable, faTags, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faBell, faCalculator, faCalendarCheck, faCheckSquare, faEuroSign, faFolderPlus, faFont, faHistory, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faTable, faTags, faUndo, faWallet } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { ExpenseCategory } from 'src/app/expense/model/expense-category.model';
@@ -19,6 +19,9 @@ import { ExpenseTimerangeService } from '../expensetimerange.services';
 import { AppLanguageLoaderHelper } from 'src/app/util/languages.config';
 import { EarningService } from 'src/app/earning/earning.service';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
+import { ExpenseReminder } from '../model/expense-reminder.model';
+import { ExpenseReminderService } from '../expense-reminder.service';
+import { ExpenseReminderExport } from '../model/expense-reminder-export.model';
 
 @Component({
   selector: 'app-expense-table',
@@ -31,8 +34,9 @@ export class ExpenseTableComponent implements OnInit {
 
   readonly deleteCacheStorageId = "app32xExpensesDeleted";
 
-  loading: boolean;
+  loading: boolean = true;
   localeOfUser: string = "en";
+  offset;
   browserWidth;
 
   tableColumns: any[];
@@ -44,7 +48,7 @@ export class ExpenseTableComponent implements OnInit {
 
   months: number[] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
   years: number[] = [];
-  selectedMonth: number;
+  selectedMonth: number = null;
   selectedYear: number;
   expensesAmountInfo: string = "";
 
@@ -101,6 +105,7 @@ export class ExpenseTableComponent implements OnInit {
   expenseTimerange: string;
   paymentDate: Date;
   information: string;
+  isReminding: boolean = false;
   attachment: boolean = false;
   attachmentPath: string;
   attachmentName: string;
@@ -109,8 +114,8 @@ export class ExpenseTableComponent implements OnInit {
 
   newCategoryName: string;
 
-  //Sets which expenses to display | 0 -> all, 1-> the selected year (default - the current year), 2-> the selected month, year
-  displayExpensesSettings = 1;
+  //Sets which expenses to display | 0 -> all, 1-> the selected year, 2-> the selected month and year (default - the current month and year)
+  displayExpensesSettings = 2;
 
   editSelectedExpenseCategory: ExpenseCategory;
   updatedExpenseCategory: ExpenseCategory;
@@ -133,15 +138,28 @@ export class ExpenseTableComponent implements OnInit {
   faMoneyBillAlt = faMoneyBillAlt;
   faUndo = faUndo;
   faCalculator = faCalculator;
+  faWallet = faWallet;
+  faBell = faBell;
 
-  expensePartitionTabHeader: string;
+  expensePartitionTabHeader: string = "";
+  expenseReminderTabHeader: string = "";
+
+  showExpenseReminder: boolean = false;
+  expensereminders: ExpenseReminder[] = [];
+  expenseremindersExport: ExpenseReminderExport[] = [];
+  expensereminderLength: number = 0;
+  reminderTableColumns: any[];
+  reminderTableColumnsExport: any[];
+  exportedColumnsReminder: any[];
 
   @ViewChild('categoryselector') categoryselector: ElementRef;
   @ViewChild('timerangeselector') timerangeselector: ElementRef;
 
-  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private appLanguageLoaderHelper: AppLanguageLoaderHelper, private apiConfig: ApiConfig, private expenseService: ExpenseService, private expenseCategoryService: ExpenseCategoryService, private expenseTimerangeService: ExpenseTimerangeService, private earningService: EarningService, private translateService: TranslateService, private expenseBudgetService: ExpenseBudgetService, private userSettingsService: UserSettingsService) {
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private appLanguageLoaderHelper: AppLanguageLoaderHelper, private apiConfig: ApiConfig, private expenseService: ExpenseService, private expenseCategoryService: ExpenseCategoryService, private expenseTimerangeService: ExpenseTimerangeService, private earningService: EarningService, private translateService: TranslateService, private expenseBudgetService: ExpenseBudgetService, private userSettingsService: UserSettingsService, private expenseReminderService: ExpenseReminderService) {
     this.displayedDate = new Date();
     this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
+    this.selectedYear = this.displayedDate.getFullYear();
+    this.selectedMonth = this.displayedDate.getMonth() + 1;
   }
 
   /**
@@ -151,7 +169,7 @@ export class ExpenseTableComponent implements OnInit {
     this.loading = true;
     this.localeOfUser = this.appLanguageLoaderHelper.userLanguageCode;
     this.browserWidth = window.innerWidth;
-    this.translateService.get(['messages.loginLoginFailedError1', 'messages.expenseDeleteOk1', 'messages.expenseDeleteOk1', 'expense.expenseTableHeaderTitle', 'expense.expenseTableHeaderCategory', 'expense.expenseTableHeaderValue', 'expense.expenseTableHeaderTimerange', 'expense.expenseTableHeaderPaymentdate', 'expense.expenseTableHeaderInformation', 'expense.expensePartitionTabheader']).subscribe(translations => {
+    this.translateService.get(['messages.loginLoginFailedError1', 'messages.expenseDeleteOk1', 'messages.expenseDeleteOk1', 'expense.expenseTableHeaderTitle', 'expense.expenseTableHeaderCategory', 'expense.expenseTableHeaderValue', 'expense.expenseTableHeaderTimerange', 'expense.expenseTableHeaderPaymentdate', 'expense.expenseTableHeaderInformation', 'expense.expensePartitionTabheader', 'expensereminder.tableHeaderExpenseName', 'expensereminder.tableHeaderExpenseDue', 'expensereminder.expenseReminderTabheader', 'expensereminder.tableHeaderExpensePaid']).subscribe(translations => {
       this.tableColumns = [
         { field: 'expenseId', header: 'ID' },
         { field: 'title', header: translations['expense.expenseTableHeaderTitle'] },
@@ -172,9 +190,24 @@ export class ExpenseTableComponent implements OnInit {
         { field: 'information', header: translations['expense.expenseTableHeaderInformation'] }
       ];
       this.exportedColumns = this.exportColumns.map(column => ({ title: column.header, dataKey: column.field }));
+
+      this.reminderTableColumns = [
+        { field: 'expense', header: translations['expensereminder.tableHeaderExpenseName'] },
+        { field: 'dueDate', header: translations['expensereminder.tableHeaderExpenseDue'] }
+      ];
+      this.reminderTableColumnsExport = [
+        { field: 'expense', header: translations['expensereminder.tableHeaderExpenseName'] },
+        { field: 'dueDate', header: translations['expensereminder.tableHeaderExpenseDue'] },
+        { field: 'payedDate', header: translations['expensereminder.tableHeaderExpensePaid'] }
+      ];
+      this.exportedColumnsReminder = this.reminderTableColumnsExport.map(column => ({ title: column.header, dataKey: column.field }));
+
+
       this.expensePartitionTabHeader = translations['expense.expensePartitionTabheader'];
+      this.expenseReminderTabHeader = translations['expensereminder.expenseReminderTabheader'];
     }
     );
+    this.offset = new Date().getTimezoneOffset() - 60;
     this.loadUserSettings();
     this.loadExpensePartionSetting();
     this.loadExpenseCategories();
@@ -189,13 +222,6 @@ export class ExpenseTableComponent implements OnInit {
   ngAfterViewInit() {
     this.loadDropdownStyle();
     this.cssStyleAdjustment.loadTableResponsiveStyle(this.standardTableWidth);
-  }
-
-  /**
-   * Translate the expense timerange string into the language string of the selected language by the user. 
-   */
-  getExpenseTimerangeTranslation(englishTimerangeString: string) {
-
   }
 
   /**
@@ -219,11 +245,11 @@ export class ExpenseTableComponent implements OnInit {
    * Create values for years dropdown selector. Containing +/-15 years from the current year. 
    */
   loadYearsSelectorValues() {
-    let currentYear = (new Date()).getUTCFullYear();
+    let currentYear = (new Date()).getFullYear();
     for (let i = currentYear - 15; i <= currentYear; i++) {
       this.years.push(i);
     }
-    for (let i = currentYear + 1; i >= currentYear + 15; i++) {
+    for (let i = currentYear + 1; i <= currentYear + 10; i++) {
       this.years.push(i);
     }
   }
@@ -254,6 +280,15 @@ export class ExpenseTableComponent implements OnInit {
     });
   }
 
+  updateMonthYearDropdownSelector() {
+    if (this.displayExpensesSettings === 1) {
+      this.selectedYear = this.displayedDate.getFullYear();
+    } else if (this.displayExpensesSettings === 2) {
+      this.selectedYear = this.displayedDate.getFullYear();
+      this.selectedMonth = this.displayedDate.getMonth() + 1;
+    }
+  }
+
   reloadDropdown(event) {
     setTimeout(() => { this.loadDropdownStyle(); }, 100);
     this.loadDropdownStyle();
@@ -263,7 +298,7 @@ export class ExpenseTableComponent implements OnInit {
    * Load expenses all, of a certain year or month. This is setup through the instance variable displayExpensesSettings. 
    */
   loadExpenses() {
-    this.expenses = [];
+    this.loading = true;
     if (this.displayExpensesSettings === 0) {
       this.displayedDateString = "";
       this.expenseService.getAllExpenseTable().subscribe((data: Expense[]) => {
@@ -295,10 +330,32 @@ export class ExpenseTableComponent implements OnInit {
    * Get loaded data and set up table.
    */
   setUpExpenseTable(data: Expense[]) {
+    this.expenses = [];
+    this.expensereminders = [];
+    this.expenseremindersExport = [];
+    this.expensereminderLength = 0;
+
     data.forEach(
       (expenseItem: Expense) => {
-        this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue / 100, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: this.expenseTimerangeTranslations[expenseItem.expenseTimerange.timerangeTitle], paymentDate: expenseItem.paymentDate, information: expenseItem.information, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
+        this.expenses.push({ expenseId: expenseItem.expenseId, title: expenseItem.title, centValue: expenseItem.centValue / 100, expenseCategory: expenseItem.expenseCategory.categoryTitle, expenseTimerange: this.expenseTimerangeTranslations[expenseItem.expenseTimerange.timerangeTitle], paymentDate: expenseItem.paymentDate, information: expenseItem.information, isReminding: expenseItem.isReminding, attachment: expenseItem.attachment, attachmentPath: expenseItem.attachmentPath, attachmentName: expenseItem.attachmentName, attachmentType: expenseItem.attachmentType });
+        if (expenseItem.isReminding === true) {
+          this.expenseReminderService.getExpenseReminderByExpenseId(expenseItem.expenseId).subscribe((expenseReminderItem: ExpenseReminder) => {
+            if (expenseReminderItem.dueDate != null) {
+              this.setUpExpenseReminder(expenseReminderItem);
+            }
+          }, err => {
+            console.log(err);
+          });
+        }
       });
+
+    if (this.expensereminders.length > 0) {
+      this.showExpenseReminder = true;
+      this.expensereminderLength++;
+    } else {
+      this.showExpenseReminder = false;
+    }
+
     this.expensesLength = this.expenses.length;
     this.loading = false;
     this.translateService.get(['messages.numberOfAvailableDatasets']).subscribe(translations => {
@@ -344,6 +401,81 @@ export class ExpenseTableComponent implements OnInit {
     });
   }
 
+  /**
+   * Add expense reminder that are due. If it's monthly (expense), then due this month, if it's yearly then due this year in 3 months. 
+   * Daily expense: Added daily (when the current day is the same as the due date).
+   * Weekly expense: Added, when it's due in 3 days. 
+   * Bi-Weekly expense: Added, when it's due in 7 days. 
+   * Monthly expense: Added, when it's due in 10 days. 
+   * Every 2 months expense: Added, when it's due in 10 days. 
+   * Every 3 months expense, 6 months, yearly, 2 yearly, 5 years: Added, when it's due in 14 days. 
+   * @param expenseReminder 
+   */
+  setUpExpenseReminder(expenseReminder: ExpenseReminder) {
+    let currentDate = new Date();
+
+    switch (expenseReminder.expense.expenseTimerange.timerangeId) {
+      case 1:
+        if (expenseReminder.payedDate == null) {
+          //Expense was now added or it's a single time expense. 
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+        break;
+      case 2:
+        if (currentDate.getDay() === expenseReminder.dueDate.getDay()) {
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+        break;
+      case 3:
+        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 3) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+        break;
+      case 4:
+        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+        break;
+      case 5:
+        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+        break;
+      case 6:
+        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+        break;
+      default:
+        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 14) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+          this.expensereminders.push(expenseReminder);
+          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+        }
+    }
+
+    if (this.expensereminders.length > 0) {
+      this.showExpenseReminder = true;
+      this.expensereminderLength++;
+    } else {
+      this.showExpenseReminder = false;
+    }
+  }
+
+  payExpenseReminder(expenseReminder: ExpenseReminder) {
+    this.expenseReminderService.updateExpenseReminderTable(expenseReminder.expensereminderId, expenseReminder.expense.expenseId, expenseReminder.dueDate, new Date()).subscribe(() => {
+      this.loadExpenses();
+    }, err => {
+      console.log(err);
+      this.messageCreator.showErrorMessage('expensereminderTableUpdatedError1');
+    });
+  }
+
   calculateMonthlyYearlyExpenses() {
     this.expenseService.getMonthlyExpensesSum().subscribe((monthlyExpensesCent: number) => {
       this.expensesMonthlySum = (monthlyExpensesCent / 100);
@@ -380,7 +512,7 @@ export class ExpenseTableComponent implements OnInit {
    * Load average sum for the selected month
    */
   loadSingleCustomSumsOfMonth() {
-    this.expenseService.getOfCertainMonthSingleAndCustomExpensesSum(this.displayedDate.getMonth() + 1).subscribe((data: number) => {
+    this.expenseService.getOfCertainMonthSingleAndCustomExpensesSum(this.displayedDate.getMonth() + 1, this.displayedDate.getFullYear()).subscribe((data: number) => {
       return this.expensesAverageSum = (data / 100);
     }, (err) => {
       return -1;
@@ -461,7 +593,9 @@ export class ExpenseTableComponent implements OnInit {
   displayExpensesPreviousYear() {
     this.displayExpensesSettings = 1;
     this.displayedDate.setFullYear(this.displayedDate.getFullYear() - 1);
+    this.updateMonthYearDropdownSelector();
     this.loadExpenses();
+    this.loadSingleCustomSumsOfMonth();
   }
 
 
@@ -471,22 +605,32 @@ export class ExpenseTableComponent implements OnInit {
   displayExpensesNextYear() {
     this.displayExpensesSettings = 1;
     this.displayedDate.setFullYear(this.displayedDate.getFullYear() + 1);
+    this.updateMonthYearDropdownSelector();
     this.loadExpenses();
+    this.loadSingleCustomSumsOfMonth();
   }
 
   /**
   * Display expenses of previous month of current year (-1)
   */
   displayExpensesPreviousMonth() {
-    this.displayExpensesSettings = 2;
-    if (this.displayedDate)
-      if (this.displayedDate.getMonth() === 0) {
-        this.displayedDate.setMonth(11);
-        this.displayedDate.setFullYear(this.displayedDate.getFullYear() - 1);
-      } else {
-        this.displayedDate.setMonth(this.displayedDate.getMonth() - 1);
-      }
+    if (this.displayExpensesSettings === 1) {
+      //Year was selected -> year view mode is activated
+      this.displayExpensesPreviousYear();
+    } else {
+      this.displayExpensesSettings = 2;
+
+      if (this.displayedDate)
+        if (this.displayedDate.getMonth() === 0) {
+          this.displayedDate.setMonth(11);
+          this.displayedDate.setFullYear(this.displayedDate.getFullYear() - 1);
+        } else {
+          this.displayedDate.setMonth(this.displayedDate.getMonth() - 1);
+        }
+    }
+    this.updateMonthYearDropdownSelector();
     this.loadExpenses();
+    this.loadSingleCustomSumsOfMonth();
   }
 
 
@@ -494,14 +638,22 @@ export class ExpenseTableComponent implements OnInit {
    * Display expenses of next month of current year (+1)
    */
   displayExpensesNextMonth() {
-    this.displayExpensesSettings = 2;
-    if (this.displayedDate.getMonth() === 11) {
-      this.displayedDate.setMonth(0);
-      this.displayedDate.setFullYear(this.displayedDate.getFullYear() + 1);
+    if (this.displayExpensesSettings === 1) {
+      //Year was selected -> year view mode is activated
+      this.displayExpensesNextYear();
     } else {
-      this.displayedDate.setMonth(this.displayedDate.getMonth() + 1);
+      this.displayExpensesSettings = 2;
+      if (this.displayedDate.getMonth() === 11) {
+        this.displayedDate.setMonth(0);
+        this.displayedDate.setFullYear(this.displayedDate.getFullYear() + 1);
+      } else {
+        this.displayedDate.setMonth(this.displayedDate.getMonth() + 1);
+      }
     }
+
+    this.updateMonthYearDropdownSelector();
     this.loadExpenses();
+    this.loadSingleCustomSumsOfMonth();
   }
 
   /**
@@ -510,19 +662,12 @@ export class ExpenseTableComponent implements OnInit {
    */
   selectMonthExpenses(selectedMonth) {
     this.selectedMonth = selectedMonth;
-    if (this.selectedMonth === null || this.selectedMonth === 0) {
-      this.selectedMonth = (new Date()).getMonth();
-      this.displayExpensesSettings = 1;
-    } else {
+    if ((this.selectedMonth !== null && this.selectedMonth !== 0) && (this.selectedYear !== null && this.selectedYear !== 0)) {
       this.displayExpensesSettings = 2;
       this.displayedDate.setMonth(this.selectedMonth - 1);
+      this.loadExpenses();
+      this.loadSingleCustomSumsOfMonth();
     }
-    if (this.selectedYear === null) {
-      this.selectedYear = (new Date()).getFullYear();
-      this.displayExpensesSettings = 0;
-    }
-    this.loadExpenses();
-    this.loadSingleCustomSumsOfMonth();
   }
 
   /**
@@ -531,19 +676,62 @@ export class ExpenseTableComponent implements OnInit {
    */
   selectYearExpenses(selectedYear) {
     this.selectedYear = selectedYear;
-    if (this.selectedMonth === null) {
-      this.selectedMonth = (new Date()).getMonth();
+    if ((this.selectedMonth === null || this.selectedMonth === 0) && (this.selectedYear !== null && this.selectedYear !== 0)) {
       this.displayExpensesSettings = 1;
-    } else {
+    } else if ((this.selectedMonth !== null && this.selectedMonth !== 0) && (this.selectedYear !== null && this.selectedYear !== 0)) {
       this.displayExpensesSettings = 2;
       this.displayedDate.setFullYear(this.selectedYear);
     }
-    if (this.selectedYear === null) {
-      this.selectedYear = (new Date()).getFullYear();
+    else {
+      this.selectedYear = 0;
       this.displayExpensesSettings = 0;
     }
     this.loadExpenses();
     this.loadSingleCustomSumsOfMonth();
+  }
+
+  /**
+   * Display expenses for the selected month of the current year. When there is no selected month, then show expenses for the current month and year.
+   * 
+   */
+  clearYearSelection(event) {
+    this.selectedYear = 0;
+
+    if (this.selectedMonth !== null || this.selectedMonth !== 0) {
+      this.displayExpensesSettings = 2;
+      this.displayedDate.setMonth(this.selectedMonth - 1);
+      this.displayedDate.setFullYear((new Date()).getFullYear());
+      this.loadExpenses();
+      this.loadSingleCustomSumsOfMonth();
+    } else {
+      this.displayExpensesSettings = 1;
+      this.displayedDate.setMonth((new Date()).getMonth());
+      this.displayedDate.setFullYear((new Date()).getFullYear());
+      this.loadExpenses();
+      this.loadSingleCustomSumsOfMonth();
+    }
+  }
+
+  /**
+   * Display expenses for the selected year of the current year. When there is no selected year, then show expenses for the current month and year.
+   * 
+   */
+  clearMonthSelection(event) {
+    this.selectedMonth = 0;
+
+    if (this.selectedYear !== null || this.selectedYear !== 0) {
+      this.displayExpensesSettings = 1;
+      this.displayedDate.setMonth((new Date()).getMonth());
+      this.displayedDate.setFullYear(this.selectedYear);
+      this.loadExpenses();
+      this.loadSingleCustomSumsOfMonth();
+    } else {
+      this.displayExpensesSettings = 2;
+      this.displayedDate.setMonth((new Date()).getMonth());
+      this.displayedDate.setFullYear((new Date()).getFullYear());
+      this.loadExpenses();
+      this.loadSingleCustomSumsOfMonth();
+    }
   }
 
   /**
@@ -695,7 +883,7 @@ export class ExpenseTableComponent implements OnInit {
     let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[expenseItem.expenseTimerange]);
 
     if (columnName === "title") {
-      this.expenseService.updateExpenseTable(expenseItem.expenseId, newValue, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, newValue, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.isReminding, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -704,7 +892,8 @@ export class ExpenseTableComponent implements OnInit {
     }
     else if (columnName === "category") {
       expenseCategoryObject = this.getExpenseCategoryByCategoryTitle(newValue);
-      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.isReminding, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+        this.reloadAllExpensesData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -713,7 +902,7 @@ export class ExpenseTableComponent implements OnInit {
     }
     else if (columnName === "timerange") {
       expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[newValue]);
-      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, expenseItem.isReminding, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
         this.reloadAllExpensesData();
       }, err => {
         console.log("UPDATE FAILED!");
@@ -722,7 +911,15 @@ export class ExpenseTableComponent implements OnInit {
       });
     }
     else if (columnName === "paymentDate") {
-      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, newValue, expenseItem.information, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      let updatedDate;
+      if (newValue == undefined || newValue == null || newValue == 0) {
+        updatedDate = expenseItem.paymentDate;
+        console.log("error")
+      } {
+        newValue.setHours(14);
+        updatedDate = newValue;
+      }
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, updatedDate, expenseItem.information, expenseItem.isReminding, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -730,12 +927,28 @@ export class ExpenseTableComponent implements OnInit {
       })
     }
     else if (columnName === "information") {
-      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, newValue, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, newValue, expenseItem.isReminding, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
         this.messageCreator.showErrorMessage('expensesTableUpdatedError1');
       });
+    }
+    else if (columnName === "isReminding") {
+      console.log("Update Expense Pay state -----")
+      console.log(newValue);
+      if (newValue === true) {
+        this.addExpenseReminder(expenseItem);
+      } else {
+        this.removeExpenseReminder(expenseItem);
+      }
+      this.expenseService.updateExpenseTable(expenseItem.expenseId, expenseItem.title, expenseCategoryObject, expenseItem.centValue * 100, expenseTimerangeObject, expenseItem.paymentDate, expenseItem.information, newValue, expenseItem.attachment, expenseItem.attachmentPath, expenseItem.attachmentName, expenseItem.attachmentType).subscribe((res: String) => {
+      }, err => {
+        console.log("UPDATE FAILED!");
+        console.log(err);
+        this.messageCreator.showErrorMessage('expensesTableUpdatedError1');
+      });
+
     }
   }
 
@@ -756,7 +969,7 @@ export class ExpenseTableComponent implements OnInit {
     }
     let expenseCategoryObject = this.getExpenseCategoryByCategoryTitle(this.currentlyUpdatingExpense.expenseCategory);
     let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[this.currentlyUpdatingExpense.expenseTimerange]);
-    this.expenseService.updateExpenseTable(this.currentlyUpdatingExpense.expenseId, this.currentlyUpdatingExpense.title, expenseCategoryObject, parsedValue * 100, expenseTimerangeObject, this.currentlyUpdatingExpense.paymentDate, this.currentlyUpdatingExpense.information, this.currentlyUpdatingExpense.attachment, this.currentlyUpdatingExpense.attachmentPath, this.currentlyUpdatingExpense.attachmentName, this.currentlyUpdatingExpense.attachmentType).subscribe((res: String) => {
+    this.expenseService.updateExpenseTable(this.currentlyUpdatingExpense.expenseId, this.currentlyUpdatingExpense.title, expenseCategoryObject, parsedValue * 100, expenseTimerangeObject, this.currentlyUpdatingExpense.paymentDate, this.currentlyUpdatingExpense.information, this.currentlyUpdatingExpense.isReminding, this.currentlyUpdatingExpense.attachment, this.currentlyUpdatingExpense.attachmentPath, this.currentlyUpdatingExpense.attachmentName, this.currentlyUpdatingExpense.attachmentType).subscribe((res: String) => {
       this.reloadAllExpensesData();
     }, err => {
       console.log("UPDATE FAILED!");
@@ -806,7 +1019,7 @@ export class ExpenseTableComponent implements OnInit {
       return;
     }
 
-    if (this.title === null || typeof this.title == undefined || this.title.trim() === "") {
+    if (this.title === null || this.title == undefined || this.title.trim() === "") {
       this.messageCreator.showErrorMessage('expenseAddExpenseError4');
       return;
     }
@@ -815,25 +1028,32 @@ export class ExpenseTableComponent implements OnInit {
       this.paymentDate = new Date();
     }
 
-    if (typeof this.expenseCategory == undefined || this.expenseCategory === null || typeof this.expenseTimerange == undefined || this.expenseTimerange === null) {
+    if (this.expenseCategory == undefined || this.expenseCategory == null) {
       this.messageCreator.showErrorMessage('expenseAddExpenseError5');
       return;
     }
 
-    if (typeof this.information == undefined || this.information === null) {
+
+    if (this.information == undefined || this.information == null) {
       this.information = "";
     }
 
-    let expenseTimerangeObject  = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[this.expenseTimerange]);
+    let expenseTimerangeObject = this.getExpenseTimerangeByTimerangeTitle(this.expenseTranslationsTimeranges[this.expenseTimerange]);
+    if (this.expenseTimerange == undefined || this.expenseTimerange === null) {
+      //When time range was not selected, then the expense is added as one time expense
+      expenseTimerangeObject = this.expenseTimeranges[0];
+    }
 
-    this.expenseService.saveExpense(this.title, this.expenseCategory, centValue, expenseTimerangeObject, (new Date()).setDate(this.paymentDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedExpense: Expense) => {
+    this.paymentDate.setHours(14);
+
+    this.expenseService.saveExpense(this.title, this.expenseCategory, centValue, expenseTimerangeObject, this.paymentDate, this.information, this.isReminding, false, "", "", "").subscribe((savedExpense: Expense) => {
       if (typeof this.attachmentFile != undefined && this.attachmentFile != null) {
         if (this.attachmentFile.name != null) {
           this.attachmentName = "" + savedExpense.expenseId;
           this.attachmentPath = this.attachmentName + "." + this.attachmentType;
           this.expenseService.addExpenseAttachment(savedExpense.expenseId, this.attachmentType, this.attachmentFile).subscribe(
             () => {
-              this.expenseService.updateExpense(savedExpense.expenseId, savedExpense.title, savedExpense.expenseCategory, savedExpense.centValue, savedExpense.expenseTimerange, savedExpense.paymentDate, savedExpense.information, true, this.attachmentPath, this.attachmentName, this.attachmentType).subscribe(() => {
+              this.expenseService.updateExpense(savedExpense.expenseId, savedExpense.title, savedExpense.expenseCategory, savedExpense.centValue, savedExpense.expenseTimerange, savedExpense.paymentDate, savedExpense.information, savedExpense.isReminding, true, this.attachmentPath, this.attachmentName, this.attachmentType).subscribe(() => {
                 this.reloadAllExpensesData();
               });
             },
@@ -845,12 +1065,30 @@ export class ExpenseTableComponent implements OnInit {
       } else {
         console.log("NO attachment");
       }
+
+      if (this.isReminding === true) {
+        this.addExpenseReminder(savedExpense);
+      }
       this.messageCreator.showSuccessMessage('expenseAddExpenseAdded1');
       this.reloadAllExpensesData();
     }, (err) => {
       console.log(err);
       this.messageCreator.showErrorMessage('expenseAddExpenseError2');
     });
+  }
+
+  addExpenseReminder(savedExpense: Expense) {
+    this.expenseReminderService.saveExpenseReminder(savedExpense.expenseId, savedExpense.paymentDate).subscribe((savedExpenseReminder: ExpenseReminder) => {
+    }, err => {
+      console.log(err);
+    });
+  }
+
+  removeExpenseReminder(savedExpense: Expense) {
+    this.expenseReminderService.deleteExpenseReminderByExpenseId(savedExpense.expenseId).subscribe(() => {
+    }, err => {
+      console.log(err);
+    })
   }
 
   addExpenseCategory() {
@@ -940,6 +1178,25 @@ export class ExpenseTableComponent implements OnInit {
       const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
       const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
       this.saveAsExcelFile(excelBuffer, "expenses");
+    });
+  }
+
+  exportReminderPdf() {
+    import("jspdf").then(jsPDF => {
+      import("jspdf-autotable").then(x => {
+        const doc = new jsPDF.default(0, 0);
+        doc.autoTable(this.exportedColumnsReminder, this.expenseremindersExport);
+        doc.save('expenses_to_pay.pdf');
+      })
+    })
+  }
+
+  exportReminderExcel() {
+    import("xlsx").then(xlsx => {
+      const worksheet = xlsx.utils.json_to_sheet(this.expenseremindersExport);
+      const workbook = { Sheets: { 'data': worksheet }, SheetNames: ['data'] };
+      const excelBuffer: any = xlsx.write(workbook, { bookType: 'xlsx', type: 'array' });
+      this.saveAsExcelFile(excelBuffer, "expenses_to_pay");
     });
   }
 

@@ -174,9 +174,8 @@ export class VideoComponent implements OnInit {
    * Load video and create videos array to display in the table. 
    */
   loadVideos() {
-    this.videos = [];
-
     this.videoService.getAllVideoTable().subscribe((data: Video[]) => {
+      this.videos = [];
       data.forEach(
         (videoItem: Video) => {
           this.videos.push({ videoId: videoItem.videoId, title: videoItem.title, isOwnProduction: videoItem.isOwnProduction, videoLanguage: videoItem.videoLanguage.languageTitle, isHd: videoItem.isHd, videoGenre: videoItem.videoGenre.genreTitle, durationLength: videoItem.durationLength, yearDate: videoItem.yearDate, isSeries: videoItem.isSeries, nativeTitle: videoItem.nativeTitle, linkValue: videoItem.linkValue });
@@ -310,6 +309,7 @@ export class VideoComponent implements OnInit {
     else if (columnName === "videoLanguage") {
       videoLanguageObject = this.getVideoLanguageByLanguageTitle(newValue);
       this.videoService.updateVideoTable(videoItem.videoId, videoItem.title, videoItem.isOwnProduction, videoLanguageObject, videoItem.isHd, videoGenreObject, videoItem.durationLength, videoItem.yearDate, videoItem.isSeries, videoItem.nativeTitle, videoItem.linkValue).subscribe((res: String) => {
+        this.reloadAllVideoData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -327,6 +327,7 @@ export class VideoComponent implements OnInit {
     else if (columnName === "videoGenre") {
       videoGenreObject = this.getVideoGenreByGenreTitle(newValue);
       this.videoService.updateVideoTable(videoItem.videoId, videoItem.title, videoItem.isOwnProduction, videoLanguageObject, videoItem.isHd, videoGenreObject, videoItem.durationLength, videoItem.yearDate, videoItem.isSeries, videoItem.nativeTitle, videoItem.linkValue).subscribe((res: String) => {
+        this.reloadAllVideoData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -392,11 +393,6 @@ export class VideoComponent implements OnInit {
   }
 
   saveVideo() {
-
-    console.log("save")
-    console.log(this.title)
-    console.log(this.linkValue)
-
     if (this.title === null || typeof this.title === undefined || this.title.trim() === "") {
       this.messageCreator.showErrorMessage('videoAddVideoError1');
       return;

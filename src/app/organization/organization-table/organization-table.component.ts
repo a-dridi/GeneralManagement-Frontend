@@ -139,9 +139,8 @@ export class OrganizationTableComponent implements OnInit {
    * Load organizations and create organizations array to display in the table. 
    */
   loadOrganizations() {
-    this.organizations = [];
-
     this.organizationService.getAllOrganizationTable().subscribe((data: Organization[]) => {
+      this.organizations = [];
       data.forEach(
         (organizationItem: Organization) => {
           this.organizations.push({ organizationId: organizationItem.organizationId, description: organizationItem.description, organizationCategory: organizationItem.organizationCategory.categoryTitle, location: organizationItem.location, status: organizationItem.status, information: organizationItem.information, attachment: organizationItem.attachment, attachmentPath: organizationItem.attachmentPath, attachmentName: organizationItem.attachmentName, attachmentType: organizationItem.attachmentType });
@@ -252,6 +251,7 @@ export class OrganizationTableComponent implements OnInit {
     else if (columnName === "category") {
       organizationCategoryObject = this.getOrganizationCategoryByCategoryTitle(newValue);
       this.organizationService.updateOrganizationTable(organizationItem.organizationId, organizationItem.description, organizationCategoryObject, organizationItem.location, organizationItem.status, organizationItem.information, organizationItem.attachment, organizationItem.attachmentPath, organizationItem.attachmentName, organizationItem.attachmentType).subscribe((res: String) => {
+        this.reloadAllOrganizationData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

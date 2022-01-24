@@ -24,24 +24,27 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[0].field}}"></p-sortIcon>
               {{tableColumns[0].header}}
-              <p-columnFilter field="{{tableColumns[0].field}}" matchMode="in" display="menu" [showMatchModes]="false"
-                [showOperator]="false" [showAddButton]="false">
+              <p-columnFilter field="{{tableColumns[0].field}}" matchMode="equals" display="menu"
+                [showAddButton]="false" [showMatchModes]="false" [showOperator]="false">
                 <ng-template pTemplate="header">
                   <div class="p-px-3 p-pt-3 p-pb-0">
                     <span class="p-text-bold">{{'expensecategory.expenseCategoryTableHeaderCategory' | translate}}</span>
                   </div>
                 </ng-template>
                 <ng-template pTemplate="filter" let-value let-filter="filterCallback">
-                  <p-multiSelect [ngModel]="value" [options]="expenseCategories" placeholder="Any"
-                    (onChange)="filter($event.value)" optionLabel="categoryTitle">
+                  <p-dropdown [ngModel]="value" [options]="expenseCategories"
+                    placeholder="{{'messages.filterSelectCategoryPlaceholder' | translate}}"
+                    (onChange)="filter($event.value.categoryTitle)" optionLabel="categoryTitle">
                     <ng-template let-option pTemplate="item">
                       <div class="p-multiselect-representative-option">
                         <span class="p-ml-1">{{option.categoryTitle}}</span>
                       </div>
                     </ng-template>
-                  </p-multiSelect>
+                  </p-dropdown>
                 </ng-template>
               </p-columnFilter>
+
+
             </div>
           </th>
 
@@ -49,7 +52,7 @@
             <div class="p-d-flex p-jc-between p-ai-center">
               <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> 
               {{tableColumns[1].header}}
-              <p-columnFilter type="text" field="name" display="menu"></p-columnFilter>
+              <span> </span>
             </div>
           </th>
 
@@ -62,7 +65,7 @@
             {{expenseCategoriesMonthlyItem.categoryTitle}}
           </td>
           <td>
-            {{(expenseCategoriesMonthlyItem.centValue)/100}}
+            {{((expenseCategoriesMonthlyItem.centValue)/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
           </td>
         </tr>
       </ng-template>
@@ -134,8 +137,8 @@
 
             <th pSortableColumn="{{tableColumns[1].field}}">
               <div class="p-d-flex p-jc-between p-ai-center">
-                <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} <p-columnFilter
-                  type="text" field="name" display="menu"></p-columnFilter>
+                <p-sortIcon field="{{tableColumns[1].field}}"></p-sortIcon> {{tableColumns[1].header}} 
+                <span> </span>
               </div>
             </th>
 
@@ -148,7 +151,7 @@
               {{expenseCategoriesYearlyItem.categoryTitle}}
             </td>
             <td>
-              {{(expenseCategoriesYearlyItem.centValue)/100}}
+              {{((expenseCategoriesYearlyItem.centValue)/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
             </td>
           </tr>
         </ng-template>

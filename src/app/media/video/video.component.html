@@ -169,7 +169,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoItem.title"
-                  (ngModelChange)="updateVideoValue($event, videoItem, 'title')">
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'title')" (blur)="reloadAllVideoData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoItem.title}}
@@ -206,7 +206,7 @@
               <ng-template pTemplate="input">
                 <p-toggleButton [(ngModel)]="videoItem.isHd"
                   (ngModelChange)="updateVideoValue($event, videoItem, 'isHd')" onIcon="pi pi-check"
-                  offIcon="pi pi-times"></p-toggleButton>
+                  offIcon="pi pi-times" (blur)="reloadAllVideoData()"></p-toggleButton>
               </ng-template>
               <ng-template pTemplate="output">
                 <i class="pi"
@@ -230,7 +230,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoItem.durationLength"
-                  (ngModelChange)="updateVideoValue($event, videoItem, 'durationLength')">
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'durationLength')" (blur)="reloadAllVideoData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoItem.durationLength}}
@@ -241,7 +241,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoItem.yearDate"
-                  (ngModelChange)="updateVideoValue($event, videoItem, 'yearDate')">
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'yearDate')" (blur)="reloadAllVideoData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoItem.yearDate}}
@@ -253,7 +253,7 @@
               <ng-template pTemplate="input">
                 <p-toggleButton [(ngModel)]="videoItem.isSeries"
                   (ngModelChange)="updateVideoValue($event, videoItem, 'isSeries')" onIcon="pi pi-check"
-                  offIcon="pi pi-times"></p-toggleButton>
+                  offIcon="pi pi-times" (blur)="reloadAllVideoData()"></p-toggleButton>
               </ng-template>
               <ng-template pTemplate="output">
                 <i class="pi"
@@ -265,7 +265,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoItem.nativeTitle"
-                  (ngModelChange)="updateVideoValue($event, videoItem, 'nativeTitle')">
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'nativeTitle')" (blur)="reloadAllVideoData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoItem.nativeTitle}}
@@ -276,7 +276,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="videoItem.linkValue"
-                  (ngModelChange)="updateVideoValue($event, videoItem, 'linkValue')">
+                  (ngModelChange)="updateVideoValue($event, videoItem, 'linkValue')" (blur)="reloadAllVideoData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{videoItem.linkValue}}

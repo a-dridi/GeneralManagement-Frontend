@@ -121,7 +121,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="organizationItem.description"
-                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'description')">
+                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'description')" (blur)="reloadAllOrganizationData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{organizationItem.description}}
@@ -144,7 +144,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="organizationItem.location"
-                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'location')">
+                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'location')" (blur)="reloadAllOrganizationData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{organizationItem.location}}
@@ -155,7 +155,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [ngModel]="organizationItem.status"
-                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'status')">
+                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'status')" (blur)="reloadAllOrganizationData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{organizationItem.status}}
@@ -166,7 +166,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="organizationItem.information"
-                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'information')">
+                  (ngModelChange)="updateOrganizationValue($event, organizationItem, 'information')" (blur)="reloadAllOrganizationData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{organizationItem.information}}

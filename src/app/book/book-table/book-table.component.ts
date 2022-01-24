@@ -170,9 +170,8 @@ export class BookTableComponent implements OnInit {
    * Load books and create books array to display in the table. 
    */
   loadBooks() {
-    this.books = [];
-
     this.bookService.getAllBookTable().subscribe((data: Book[]) => {
+      this.books = [];
       data.forEach(
         (bookItem: Book) => {
           this.books.push({ bookId: bookItem.bookId, title: bookItem.title, bookCategory: bookItem.bookCategory.categoryTitle, location: bookItem.location, bookAvailability: bookItem.bookAvailability.availabilityTitle, bookLanguage: bookItem.bookLanguage, yearDate: bookItem.yearDate, isbn: bookItem.isbn, information: bookItem.information, addedDate: bookItem.addedDate });
@@ -298,6 +297,7 @@ export class BookTableComponent implements OnInit {
     else if (columnName === "category") {
       bookCategoryObject = this.getBookCategoryByCategoryTitle(newValue);
       this.bookService.updateBookTable(bookItem.bookId, bookItem.title, bookCategoryObject, bookItem.location, bookAvailabilityObject, bookItem.bookLanguage, bookItem.yearDate, bookItem.isbn, bookItem.information, bookItem.addedDate).subscribe((res: String) => {
+        this.reloadAllBookData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);
@@ -315,6 +315,7 @@ export class BookTableComponent implements OnInit {
     else if (columnName === "availability") {
       bookAvailabilityObject = this.getBookAvailabilityByAvailabilityTitle(newValue);
       this.bookService.updateBookTable(bookItem.bookId, bookItem.title, bookCategoryObject, bookItem.location, bookAvailabilityObject, bookItem.bookLanguage, bookItem.yearDate, bookItem.isbn, bookItem.information, bookItem.addedDate).subscribe((res: String) => {
+        this.reloadAllBookData();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

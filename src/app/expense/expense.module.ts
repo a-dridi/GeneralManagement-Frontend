@@ -39,6 +39,8 @@ import { AccordionModule } from 'primeng/accordion';
 import { ExpenseDevelopmentComponent } from './expense-development/expense-development.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { RippleModule } from 'primeng/ripple';
+import { FieldsetModule } from 'primeng/fieldset';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @NgModule({
   declarations: [
@@ -77,7 +79,9 @@ import { RippleModule } from 'primeng/ripple';
     FullCalendarModule,
     AccordionModule,
     TooltipModule,
-    RippleModule
+    RippleModule,
+    FieldsetModule,
+    CheckboxModule
   ],
   exports: [
     TranslateModule,

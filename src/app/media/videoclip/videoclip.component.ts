@@ -138,9 +138,8 @@ export class VideoclipComponent implements OnInit {
    * Load videoclips and create videoclips array to display in the table. 
    */
   loadVideoclips() {
-    this.videoclips = [];
-
     this.videoclipService.getAllVideoclipTable().subscribe((data: Videoclip[]) => {
+      this.videoclips = [];
       data.forEach(
         (videoclipItem: Videoclip) => {
           this.videoclips.push({ videoclipId: videoclipItem.videoclipId, interpreter: videoclipItem.interpreter, videoTitle: videoclipItem.videoTitle, videoclipLanguage: videoclipItem.videoclipLanguage.languageTitle, yearDate: videoclipItem.yearDate, nativeTitle: videoclipItem.nativeTitle, linkValue: videoclipItem.linkValue });
@@ -261,6 +260,7 @@ export class VideoclipComponent implements OnInit {
     else if (columnName === "videoclipLanguage") {
       videoclipLanguageObject = this.getVideoclipLanguageByLanguageTitle(newValue);
       this.videoclipService.updateVideoclipTable(videoclipItem.videoclipId, videoclipItem.interpreter, videoclipItem.videoTitle, videoclipLanguageObject, videoclipItem.yearDate, videoclipItem.nativeTitle, videoclipItem.linkValue).subscribe((res: String) => {
+        this.loadVideoclips();
       }, err => {
         console.log("UPDATE FAILED!");
         console.log(err);

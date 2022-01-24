@@ -204,7 +204,8 @@ category-add-button {
     margin-top: 10px;
 }
 
-.overview-expenses-icon {
+.overview-expenses-icon,
+.reminder-header-icon {
     padding-right: 5px;
 }
 
@@ -358,4 +359,34 @@ category-add-button {
     .person-ratio {
         margin-bottom: 15px;
     }
+}
+
+.reminder-component {
+    border-color: red !important;
+}
+
+.reminder-component-legend {
+    color: red !important;
+    font-weight: bold !important;
+}
+
+.reminder-icon {
+    margin-left: 10px;
+}
+
+.reminder-icon-form {
+    margin-right: 4px;
+}
+
+.reminding-checkbox {
+    margin-left: 10px;
+    margin-right: 8px;
+}
+
+#exp-reminder-table th {
+    border-style: solid !important;
+    border-width: 1px !important;
+    border-color: rgb(155, 0, 0) !important;
+    background: #ff6565 !important;
+    color: white !important;
 }
