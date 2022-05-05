@@ -49,7 +49,7 @@
 
 .languageChooser {
     flex-grow: 0;
-    margin-right: 25px;
+    margin-inline-start: 25px;
 }
 
 .language-chooser-dialog {
@@ -164,7 +164,7 @@
 }
 
 .menu-item-title {
-    margin-left: 8px;
+    margin-inline-start: 8px;
 }
 
 .subsiteTitle {
@@ -211,7 +211,7 @@
     }
 
     .languageChooser {
-        margin-right: 5px !important;
+        margin-inline-end: 5px !important;
     }
 
     .mat-toolbar {

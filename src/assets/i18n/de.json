@@ -1,7 +1,8 @@
 {
   "global": {
     "selectLanguage": "Sprache wählen:",
-    "tableSearchPlaceholder": "Suchen..."
+    "tableSearchPlaceholder": "Suchen...",
+    "saveLanguage": "OK"
   },
   "messages": {
     "loginLoginFailedError1": "Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort!",
@@ -148,14 +149,14 @@
     "wealthMonthlyUpdatedAttachmentError2": "Bitte fügen Sie eine Anhangsdatei hinzu!",
     "wealthMonthlyUpdatedAttachmentError3": "Anhang konnte nicht aktualisiert werden!",
     "wealthMonthlyUpdatedAttachmentOk1": "Anhang aktualisiert.",
-    "wealthMonthlyTableNoValues": "No Wealth Monthly items available!",
+    "wealthMonthlyTableNoValues": "Kein monatliches Vermögen verfügbar!",
     "wealthYearlyTableUpdatedError1": "Fehler! Jährliches Vermögen konnte nicht aktualisiert werden!",
     "wealthYearlyTableUpdatedError2": "Bitte geben Sie nur Zahlen als Wert ein!",
     "wealthYearlyUpdatedAttachmentError1": "Bitte geben Sie eine korrekte ID für jährliches Vermögen ein!",
     "wealthYearlyUpdatedAttachmentError2": "Bitte fügen Sie eine Anhangsdatei hinzu!",
     "wealthYearlyUpdatedAttachmentError3": "Anhang konnte nicht aktualisiert werden!",
     "wealthYearlyUpdatedAttachmentOk1": "Anhang aktualisiert.",
-    "wealthYearlyTableNoValues": "Kein j#hrliches Vermögen verfügbar!",
+    "wealthYearlyTableNoValues": "Kein jährliches Vermögen verfügbar!",
     "reservesTableCategorySelectHeader": "Reserven-Kategorie auswählen",
     "reservesTableNoValues": "Keine Daten verfügbar",
     "reservesDeletedOk1": "Reserven-ID #? gelöscht. ",
@@ -685,7 +686,7 @@
     "wealthMonthlyYearDateHeader": "Jahr",
     "wealthMonthlyExpenseHeader": "Ausgaben",
     "wealthMonthlyEarningHeader": "Einkommen",
-    "wealthMonthlyDifferenceHeader": "Profit",
+    "wealthMonthlyDifferenceHeader": "Vermögen",
     "wealthMonthlyImprovementPctHeader": "Anstieg in %",
     "wealthNoticeHeader": "Notiz",
     "attachmentUpdateHeaderTitle": "Anhang hinzufügen",
@@ -699,7 +700,7 @@
     "wealthYearlyYearDateHeader": "Jahr",
     "wealthYearlyExpenseHeader": "Ausgaben",
     "wealthYearlyEarningHeader": "Einkommen",
-    "wealthYearlyDifferenceHeader": "Profit",
+    "wealthYearlyDifferenceHeader": "Vermögen",
     "wealthYearlyImprovementPctHeader": "Anstieg in %",
     "wealthNoticeHeader": "Notiz",
     "attachmentUpdateHeaderTitle": "Anhang hinzufügen",

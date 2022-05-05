@@ -103,7 +103,7 @@
               <ng-template pTemplate="input">
                 <input pInputText type="text" class="input-small"
                   [ngModel]="convertCentValue(expensebudgetItem.centBudgetValue)"
-                  (ngModelChange)="updateTable($event, expensebudgetItem, 'centBudgetValue')" (blur)="reloadTableData()">
+                  (ngModelChange)="updateTable($event, expensebudgetItem, 'centBudgetValue')" (keydown.enter)="reloadTableData()" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{(expensebudgetItem.centBudgetValue/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
@@ -133,7 +133,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="expensebudgetItem.notice"
-                  (ngModelChange)="updateTable($event, expensebudgetItem, 'notice')" (blur)="reloadTableData()">
+                  (ngModelChange)="updateTable($event, expensebudgetItem, 'notice')" (keydown.enter)="reloadTableData()" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expensebudgetItem.notice}}

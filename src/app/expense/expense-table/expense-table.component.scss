@@ -103,7 +103,7 @@
 }
 
 .button-icon {
-    margin-right: 10px !important;
+    margin-inline-end: 10px !important;
 }
 
 label {
@@ -118,6 +118,11 @@ label {
 
 .p-float-label > p-dropdown {
     width: 100% !important;
+}
+
+.p-float-label > label {
+    left: unset !important;
+    inset-inline-start: 0.5rem !important;
 }
 
 .wide-input-field {
@@ -195,7 +200,7 @@ category-add-button {
 }
 
 .edit-category-new-info {
-    margin-left: 4px;
+    margin-inline-start: 4px;
     word-break: break-word;
 }
 
@@ -375,7 +380,7 @@ category-add-button {
 }
 
 .reminder-icon-form {
-    margin-right: 4px;
+    margin-inline-end: 4px;
 }
 
 .reminding-checkbox {

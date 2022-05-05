@@ -15,7 +15,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
 
     jwtAuthenticationToken: string;
 
-    readonly DEFAULT_MAX_RETRIES = 50;
+    readonly DEFAULT_MAX_RETRIES = 1;
 
     //Restricted API URIs
     readonly DATABASE_URI: string = "data"
@@ -50,7 +50,6 @@ export class AuthenticationInterceptor implements HttpInterceptor {
         }
 
         return next.handle(req).pipe(
-            this.customDelayedRetry(900, 35),
             catchError((err: HttpErrorResponse) => {
                 if (req.url.indexOf(this.DATABASE_URI) !== -1 || req.url.indexOf(this.SETTINGS_URI) !== -1 || req.url.indexOf(this.USER_INFO_URI) !== -1) {
                     if (err instanceof HttpErrorResponse) {
@@ -58,6 +57,13 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                             this.showLoginPage();
                             console.log("User not logged in!");
                         }
+                        throw new HttpErrorResponse({
+                            error: err.message,
+                            headers: err.headers,
+                            status: err.status,
+                            statusText: err.statusText,
+                            url: err.url
+                        });
                     }
                 }
                 return throwError(err);
@@ -72,7 +78,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     }
 
     /**
- * Function used to fix HTTP 504 bug  (gateway time out), which could occur through the backend server.  
+ * Old (non active) Function used to fix HTTP 504 bug (gateway time out), which could occur through the backend server. Bug was solved.  
  * @param delayMs 
  * @param maxRetry 
  * @returns 
@@ -93,6 +99,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
                             else if (response.status === 403) {
                                 this.showLoginPage();
                                 console.log("User not logged in!");
+                              //  this.messageCreator.showUnEscapedErrorMessage("loginLoginFailedError1");
                             }
                             else {
                                 throw ({ error: response });
@@ -107,9 +114,7 @@ export class AuthenticationInterceptor implements HttpInterceptor {
      * Show error 504 popup when this error occured again after retrying it 10 times. 
      */
     show504ErrorPopup() {
-        if (this.error504Counter > 13) {
-            this.messageCreator.showErrorMessage("error504Message");
-        }
+        this.messageCreator.showErrorMessage("error504Message");
     }
 }
 

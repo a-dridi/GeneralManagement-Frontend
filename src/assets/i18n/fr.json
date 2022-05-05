@@ -1,7 +1,8 @@
 {
   "global": {
     "selectLanguage": "Choisir la langue:",
-    "tableSearchPlaceholder": "Recherche..."
+    "tableSearchPlaceholder": "Recherche...",
+    "saveLanguage": "OK"
   },
   "messages": {
     "loginLoginFailedError1": "Veuillez vérifier votre nom d'utilisateur et votre mot de passe!",
@@ -685,7 +686,7 @@
     "wealthMonthlyYearDateHeader": "Year",
     "wealthMonthlyExpenseHeader": "Expenses",
     "wealthMonthlyEarningHeader": "Earning",
-    "wealthMonthlyDifferenceHeader": "Profit",
+    "wealthMonthlyDifferenceHeader": "Richesse",
     "wealthMonthlyImprovementPctHeader": "Improvement in %",
     "wealthNoticeHeader": "Notice",
     "attachmentUpdateHeaderTitle": "Add Attachment",
@@ -699,7 +700,7 @@
     "wealthYearlyYearDateHeader": "Year",
     "wealthYearlyExpenseHeader": "Expenses",
     "wealthYearlyEarningHeader": "Earning",
-    "wealthYearlyDifferenceHeader": "Profit",
+    "wealthYearlyDifferenceHeader": "Richesse",
     "wealthYearlyImprovementPctHeader": "Improvement in %",
     "wealthNoticeHeader": "Notice",
     "attachmentUpdateHeaderTitle": "Add Attachment",

@@ -1,7 +1,8 @@
 {
   "global": {
     "selectLanguage": "Select Language:",
-    "tableSearchPlaceholder": "Search..."
+    "tableSearchPlaceholder": "Search...",
+    "saveLanguage": "OK"
   },
   "messages": {
     "loginLoginFailedError1": "Please check your username and password!",
@@ -685,7 +686,7 @@
     "wealthMonthlyYearDateHeader": "Year",
     "wealthMonthlyExpenseHeader": "Expenses",
     "wealthMonthlyEarningHeader": "Earning",
-    "wealthMonthlyDifferenceHeader": "Profit",
+    "wealthMonthlyDifferenceHeader": "Wealth",
     "wealthMonthlyImprovementPctHeader": "Improvement in %",
     "wealthNoticeHeader": "Notice",
     "attachmentUpdateHeaderTitle": "Add Attachment",
@@ -699,7 +700,7 @@
     "wealthYearlyYearDateHeader": "Year",
     "wealthYearlyExpenseHeader": "Expenses",
     "wealthYearlyEarningHeader": "Earning",
-    "wealthYearlyDifferenceHeader": "Profit",
+    "wealthYearlyDifferenceHeader": "Wealth",
     "wealthYearlyImprovementPctHeader": "Improvement in %",
     "wealthNoticeHeader": "Notice",
     "attachmentUpdateHeaderTitle": "Add Attachment",

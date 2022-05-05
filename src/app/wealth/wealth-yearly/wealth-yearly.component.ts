@@ -24,16 +24,16 @@ export class WealthYearlyComponent implements OnInit {
   standardTableWidth = 1203;
   loading: boolean = true;
 
-  tableColumns: any[];
-  exportColumns: any[];
-  exportedColumns: any[];
+  tableColumns: any[] = [{ field: 'wealthyearlyId', header: 'ID' }];
+  exportColumns: any[] = [];
+  exportedColumns: any[] = [];
 
-  wealthyearlyItems: WealthYearly[];
+  wealthyearlyItems: WealthYearly[] = [];
 
   attachment: boolean = false;
-  attachmentPath: string;
-  attachmentName: string;
-  attachmentType: string;
+  attachmentPath: string = "";
+  attachmentName: string = "";
+  attachmentType: string = "";
   attachmentFile: any;
 
   updatedAttachmentId: string;

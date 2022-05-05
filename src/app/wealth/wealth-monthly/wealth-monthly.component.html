@@ -124,7 +124,7 @@
               <p-cellEditor>
                 <ng-template pTemplate="input">
                   <input pInputText type="text" [ngModel]="wealthmonthlyItem.expenseCent"
-                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'expenseCent')" (blur)="reloadAllWealthMonthlyData()">
+                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'expenseCent')" (keydown.enter)="reloadAllWealthMonthlyData()" (blur)="reloadAllWealthMonthlyData()">
                 </ng-template>
                 <ng-template pTemplate="output">
                   {{wealthmonthlyItem.expenseCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
@@ -135,7 +135,7 @@
               <p-cellEditor>
                 <ng-template pTemplate="input">
                   <input pInputText type="text" [ngModel]="wealthmonthlyItem.earningCent"
-                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'earningCent')" (blur)="reloadAllWealthMonthlyData()">
+                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'earningCent')" (keydown.enter)="reloadAllWealthMonthlyData()" (blur)="reloadAllWealthMonthlyData()">
                 </ng-template>
                 <ng-template pTemplate="output">
                   {{wealthmonthlyItem.earningCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
@@ -146,7 +146,7 @@
               <p-cellEditor>
                 <ng-template pTemplate="input">
                   <input pInputText type="text" [ngModel]="wealthmonthlyItem.differenceCent"
-                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'differenceCent')" (blur)="reloadAllWealthMonthlyData()">
+                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'differenceCent')" (keydown.enter)="reloadAllWealthMonthlyData()" (blur)="reloadAllWealthMonthlyData()">
                 </ng-template>
                 <ng-template pTemplate="output">
                   {{wealthmonthlyItem.differenceCent | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
@@ -156,10 +156,10 @@
             <td pEditableColumn>
               <p-cellEditor>
                 <ng-template pTemplate="input">
-                  {{wealthmonthlyItem.improvementPct | percent:localeOfUser}}
+                  {{wealthmonthlyItem.improvementPct | percent}}
                 </ng-template>
                 <ng-template pTemplate="output">
-                  {{wealthmonthlyItem.improvementPct | percent:localeOfUser}}
+                  {{wealthmonthlyItem.improvementPct | percent}}
                 </ng-template>
               </p-cellEditor>
             </td>
@@ -167,7 +167,7 @@
               <p-cellEditor>
                 <ng-template pTemplate="input">
                   <input pInputText type="text" [ngModel]="wealthmonthlyItem.notice"
-                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'notice')" (blur)="reloadAllWealthMonthlyData()">
+                    (ngModelChange)="updateWealthMonthlyValue($event, wealthmonthlyItem, 'notice')" (keydown.enter)="reloadAllWealthMonthlyData()" (blur)="reloadAllWealthMonthlyData()">
                 </ng-template>
                 <ng-template pTemplate="output">
                   {{wealthmonthlyItem.notice}}

@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { faAt, faKey, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { MessageCreator } from 'src/app/util/messageCreator';
 import { RefererCache } from 'src/app/util/refererCache';
 import { UserAuthentication } from 'src/app/util/user-authentication';
 import { User } from '../model/user.model';
@@ -27,7 +28,7 @@ export class UserLoginComponent implements OnInit {
 
   isLoading: boolean = false;
 
-  constructor(private messageService: MessageService, private userService: UserService, public userAuthentication: UserAuthentication, private translateService: TranslateService, private router: Router, private refererCache: RefererCache) { }
+  constructor(private messageService: MessageService, private messageCreator: MessageCreator, private userService: UserService, public userAuthentication: UserAuthentication, private translateService: TranslateService, private router: Router, private refererCache: RefererCache) { }
 
   ngOnInit(): void {
     let passWordInput = document.getElementById("loginPassword");
@@ -63,20 +64,20 @@ export class UserLoginComponent implements OnInit {
         }
         this.router.onSameUrlNavigation = 'reload';
         this.refererCache.redirectToSavedUri();
-      }, (err) => {
+      }, err => {
         this.showLoginFailedMessage();
         console.log(err);
       });
     }, err => {
       this.showLoginFailedMessage();
+
       console.log(err);
     });
   }
 
   showLoginFailedMessage() {
-    this.translateService.get(['messages.loginLoginFailedError1']).subscribe(translations => {
-      this.messageService.add({ severity: 'error', summary: 'Error', detail: translations['messages.loginLoginFailedError1'] });
-    });
+
+    this.messageCreator.showUnEscapedErrorMessage('loginLoginFailedError1');
     console.log("LOGIN FAILED");
     this.isLoading = false;
   }

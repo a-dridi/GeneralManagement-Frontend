@@ -28,11 +28,11 @@ export class WealthMonthlyComponent implements OnInit {
   standardTableWidth = 1350;
   loading: boolean = true;
 
-  tableColumns: any[];
-  exportColumns: any[];
-  exportedColumns: any[];
+  tableColumns: any[] =  [{ field: 'wealthmonthlyId', header: 'ID' }];
+  exportColumns: any[]= [];
+  exportedColumns: any[]= [];
 
-  wealthmonthlyItems: WealthMonthly[];
+  wealthmonthlyItems: WealthMonthly[] = [];
 
   attachment: boolean = false;
   attachmentPath: string;
@@ -40,7 +40,7 @@ export class WealthMonthlyComponent implements OnInit {
   attachmentType: string;
   attachmentFile: any;
 
-  updatedAttachmentId: string;
+  updatedAttachmentId: string = "";
 
   faTable = faTable;
   faPaperclip = faPaperclip;

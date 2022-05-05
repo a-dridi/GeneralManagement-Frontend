@@ -1,7 +1,6 @@
-
 button {
-    span{
-        margin-right: 5px !important; 
+    span {
+        margin-inline-end: 5px !important;
     }
 }
 
@@ -12,7 +11,7 @@ button {
 
     div {
         margin-bottom: 5px;
-        margin-right: 5px;
+        margin-inline-end: 5px;
     }
 
     div:last-child {
@@ -20,7 +19,7 @@ button {
     }
 }
 
-.last-update-display{
-    padding-left: 5px;
+.last-update-display {
+    margin-inline-start: 5px;
     vertical-align: middle;
 }

@@ -7,6 +7,7 @@ export interface LanguageInterface {
     code: string;
     languageName: string;
     countryCode: string;
+    textDirection: string;
 }
 
 
@@ -20,10 +21,10 @@ export class AppLanguages {
 
     public get languages(): LanguageInterface[] {
         let languagesArray: LanguageInterface[] = [
-            { code: "en", languageName: "English", countryCode: "us" },
-            { code: "de", languageName: "Deutsch", countryCode: "at" },
-            { code: "ar", languageName: "العربية", countryCode: "tn" },
-            { code: "fr", languageName: "Français", countryCode: "fr" }
+            { code: "en", languageName: "English", countryCode: "us", textDirection: "ltr" },
+            { code: "de", languageName: "Deutsch", countryCode: "at", textDirection: "ltr"},
+            { code: "ar", languageName: "العربية", countryCode: "tn", textDirection: "rtl" },
+            { code: "fr", languageName: "Français", countryCode: "fr", textDirection: "ltr" }
 
         ];
         return languagesArray;
@@ -78,7 +79,6 @@ export class AppLanguageLoaderHelper {
                 return this.DEFAULT_LANGUAGE_CODE;
             }
         }
-
     }
 
     /**
@@ -133,4 +133,18 @@ export class AppLanguageLoaderHelper {
         return languageObject;
     }
 
+    /**
+     * The direction of the writing script of the language. Needed for Semitic languages. 
+     * @param languageIsoCode 
+     * @returns 
+     */
+    public getLanguageDirectionByLanguageCode(languageIsoCode) {
+        let languageObject = this.appLanguages.languages[0];
+        this.appLanguages.languages.forEach(((languageArrayItem) => {
+            if (languageArrayItem.code == languageIsoCode) {
+                languageObject = languageArrayItem;
+            }
+        }));
+        return languageObject.textDirection;
+    }
 }

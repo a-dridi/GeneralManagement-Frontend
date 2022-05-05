@@ -414,56 +414,58 @@ export class ExpenseTableComponent implements OnInit {
   setUpExpenseReminder(expenseReminder: ExpenseReminder) {
     let currentDate = new Date();
 
-    switch (expenseReminder.expense.expenseTimerange.timerangeId) {
-      case 1:
-        if (expenseReminder.payedDate == null) {
-          //Expense was now added or it's a single time expense. 
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-        break;
-      case 2:
-        if (currentDate.getDay() === expenseReminder.dueDate.getDay()) {
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-        break;
-      case 3:
-        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 3) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-        break;
-      case 4:
-        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-        break;
-      case 5:
-        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-        break;
-      case 6:
-        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-        break;
-      default:
-        if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 14) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
-          this.expensereminders.push(expenseReminder);
-          this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
-        }
-    }
+    if (typeof expenseReminder.dueDate !== "undefined" && typeof expenseReminder.dueDate.getDay() === "function") {
+      switch (expenseReminder.expense.expenseTimerange.timerangeId) {
+        case 1:
+          if (expenseReminder.payedDate == null) {
+            //Expense was now added or it's a single time expense. 
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+          break;
+        case 2:
+          if (currentDate.getDay() === expenseReminder.dueDate.getDay()) {
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+          break;
+        case 3:
+          if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 3) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+          break;
+        case 4:
+          if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+          break;
+        case 5:
+          if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+          break;
+        case 6:
+          if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 10) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+          break;
+        default:
+          if (currentDate.getDay() >= (expenseReminder.dueDate.getDay() - 14) && currentDate.getDay() <= expenseReminder.dueDate.getDay()) {
+            this.expensereminders.push(expenseReminder);
+            this.expenseremindersExport.push({ expensereminderId: expenseReminder.expensereminderId, expense: expenseReminder.expense.title, dueDate: expenseReminder.dueDate, payedDate: expenseReminder.payedDate });
+          }
+      }
 
-    if (this.expensereminders.length > 0) {
-      this.showExpenseReminder = true;
-      this.expensereminderLength++;
-    } else {
-      this.showExpenseReminder = false;
+      if (this.expensereminders.length > 0) {
+        this.showExpenseReminder = true;
+        this.expensereminderLength++;
+      } else {
+        this.showExpenseReminder = false;
+      }
     }
   }
 

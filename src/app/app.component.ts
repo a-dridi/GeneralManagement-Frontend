@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { faBars, faBook, faChartLine, faGlobe, faHandHoldingUsd, faHeart, faHome, faLifeRing, faPiggyBank, faPlayCircle, faPollH, faReceipt, faSearchLocation, faTools } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faBook, faChartLine, faCheck, faGlobe, faHandHoldingUsd, faHeart, faHome, faLifeRing, faPiggyBank, faPlayCircle, faPollH, faReceipt, faSearchLocation, faTools } from '@fortawesome/free-solid-svg-icons';
 import { AppLanguageLoaderHelper, AppLanguages, LanguageInterface } from './util/languages.config';
 import { faBitcoin } from '@fortawesome/free-brands-svg-icons';
 import { RefererCache } from './util/refererCache';
@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 export class AppComponent implements OnInit, OnDestroy {
   title = 'General Management';
 
+  faCheck = faCheck;
   faHeart = faHeart;
   faGlobe = faGlobe;
   faBars = faBars;
@@ -40,6 +41,7 @@ export class AppComponent implements OnInit, OnDestroy {
   availableLanguages: LanguageInterface[];
   selectedUserLanguageCode: string = "";
   selectedUserLanguageName: string = "";
+  selSidePosition: string; //Change menu position to right side for semitic (right to left) languages
   displayLanguageChooser: boolean = false;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher, private translate: TranslateService, private appLanguages: AppLanguages, private appLanguageLoaderHelper: AppLanguageLoaderHelper, private refererCache: RefererCache, private messageService: MessageService, private swUpdate: SwUpdate, private router: Router) {
@@ -63,11 +65,16 @@ export class AppComponent implements OnInit, OnDestroy {
     this.responsiveMobileQuery.addEventListener("DOMContentLoaded", () => this.changeDetectorRef.detectChanges());
 
     this.refererCache.addUriToCache(window.location.pathname);
+
+    document.querySelector('html')?.setAttribute('lang', this.selectedUserLanguageCode);
+    this.setUpTextDirection(this.selectedUserLanguageCode);
+    this.selSidePosition = this.selectedUserLanguageCode === "ar" ? "end" : "start";
   }
 
   ngOnDestroy(): void {
     this.responsiveMobileQuery.removeEventListener("DOMContentLoaded", () => this.changeDetectorRef.detectChanges());
   }
+
 
   /**
 * Change translation to the selected language and save selected language in session.
@@ -79,8 +86,24 @@ export class AppComponent implements OnInit, OnDestroy {
     this.selectedUserLanguageName = selectedLanguageObject.languageName;
     this.translate.use(newSelectedLanguage);
     this.appLanguageLoaderHelper.userLanguageCode = newSelectedLanguage;
+
     this.refreshPage();
+    document.querySelector('html')?.setAttribute('lang', newSelectedLanguage);
+
+    this.setUpTextDirection(newSelectedLanguage);
     this.displayLanguageChooser = false;
+  }
+
+  /**
+   * Set the direction of the layout for semitic languages (right to left). 
+   * @param userSelectedLanguage language code iso code. Example: en
+   */
+  setUpTextDirection(userSelectedLanguage) {
+    let selectedLangWritingDirection = this.appLanguageLoaderHelper.getLanguageDirectionByLanguageCode(userSelectedLanguage);
+    this.selSidePosition = selectedLangWritingDirection === "ltr" ? "start" : "end";
+
+    //Make side nav menu ready for text direction change
+    (document.querySelector('.app-page') as HTMLElement).style.direction = '' + selectedLangWritingDirection;
   }
 
   refreshPage() {

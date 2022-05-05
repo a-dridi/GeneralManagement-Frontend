@@ -1,7 +1,8 @@
 {
   "global": {
     "selectLanguage": "اختار اللغة:",
-    "tableSearchPlaceholder": "...بحث"
+    "tableSearchPlaceholder": "...بحث",
+    "saveLanguage": "موافق"
   },
   "messages": {
     "loginLoginFailedError1": "يرجى التحقق من اسم المستخدم وكلمة المرور الخاصة بك!",
@@ -699,7 +700,7 @@
     "wealthYearlyYearDateHeader": "سنة",
     "wealthYearlyExpenseHeader": "مصاريف",
     "wealthYearlyEarningHeader": "أرباح",
-    "wealthYearlyDifferenceHeader": "فرق",
+    "wealthYearlyDifferenceHeader": "ثروة",
     "wealthYearlyImprovementPctHeader": "٪ تحسن في",
     "wealthNoticeHeader": "ملاحظة",
     "attachmentUpdateHeaderTitle": "إضافة مرفق",

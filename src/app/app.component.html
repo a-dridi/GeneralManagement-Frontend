@@ -27,8 +27,11 @@
             </ng-template>
           </p-listbox>
           <ng-template pTemplate="footer">
-            <p-button icon="pi pi-check" (click)="displayLanguageChooser=false" label="OK" class="p-button-text">
-            </p-button>
+            <button pButton type="button" (click)="displayLanguageChooser=false" class="p-button-success p-button-raised" label=" " icon="" iconPos="left">
+              <fa-icon [icon]="faCheck"></fa-icon>
+              <span class="button-label">{{'global.saveLanguage' | translate}}</span>
+            </button>
+        
           </ng-template>
         </p-dialog>
 
@@ -48,7 +51,7 @@
 
   <mat-sidenav-container class="app-sidenav-container" [style.marginTop.px]="responsiveMobileQuery.matches ? 56 : 0">
     <mat-sidenav #snav [mode]="responsiveMobileQuery.matches ? 'over' : 'side'"
-      [fixedInViewport]="responsiveMobileQuery.matches" fixedTopGap="56">
+      [fixedInViewport]="responsiveMobileQuery.matches" fixedTopGap="56" [position]="selSidePosition">
       <mat-nav-list class="nav-menu-content">
         <a mat-list-item routerLink="/" class="nav-menu-item">
           <fa-icon [icon]="faHome"></fa-icon> <span

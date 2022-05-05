@@ -363,7 +363,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="expenseItem.title"
-                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'title')" (blur)="reloadAllExpensesData()">
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'title')" (keydown.enter)="reloadAllExpensesData()" (blur)="reloadAllExpensesData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expenseItem.title}}
@@ -422,7 +422,7 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="expenseItem.information"
-                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'information')"
+                  (ngModelChange)="updateExpenseValue($event, expenseItem, 'information')" (keydown.enter)="reloadAllExpensesData()" 
                   (blur)="reloadAllExpensesData()">
               </ng-template>
               <ng-template pTemplate="output">

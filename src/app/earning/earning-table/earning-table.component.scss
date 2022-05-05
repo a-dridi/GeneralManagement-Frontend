@@ -107,12 +107,17 @@
 }
 
 .button-icon {
-    margin-right: 10px !important;
+    margin-inline-end: 10px !important;
 }
 
 label {
     font-size: 17px !important;
     font-weight: bold !important;
+}
+
+.p-float-label>label {
+    left: unset !important;
+    inset-inline-start: 0.5rem !important; 
 }
 
 .p-inputgroup {
