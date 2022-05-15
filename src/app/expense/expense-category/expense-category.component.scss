@@ -23,3 +23,9 @@
     font-size: 18px;
     padding: 0px 5px;
 }
+
+/* RTL support */
+.p-paginator .p-dropdown .p-dropdown-label {
+    padding-right: unset !important;
+    padding-inline-end: 0 !important;
+}

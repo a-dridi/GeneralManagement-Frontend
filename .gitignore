@@ -48,3 +48,9 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+
+# Custom
+BACKUP_api.config.ts
+BACKUP_ngsw-config.json
+GITHUB_VERSION_api.config.ts
+GITHUB_VERSION_ngsw-config.json

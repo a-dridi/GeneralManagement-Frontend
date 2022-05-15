@@ -102,6 +102,8 @@ export class DecisionTableComponent implements OnInit {
       this.decisionsLength = this.decisions.length;
       this.loading = false;
     }, err => {
+      this.decisions = [];
+      this.decisionsLength = 0;
       console.log(err);
       this.loading = false;
     });

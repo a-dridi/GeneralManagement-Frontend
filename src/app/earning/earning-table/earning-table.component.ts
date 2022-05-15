@@ -4,6 +4,7 @@ import { EarningTimerange } from 'src/app/earning/model/earning-timerange.model'
 import { EarningTable } from 'src/app/earning/model/earning-table.model';
 import { faMoneyBillAlt } from '@fortawesome/free-regular-svg-icons';
 import { faArrowRight, faCalendarCheck, faCheckSquare, faEuroSign, faFolderPlus, faFont, faHistory, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faTable, faTags, faUndo } from '@fortawesome/free-solid-svg-icons';
+import { saveAs } from 'file-saver';
 import { UserService } from 'src/app/user/user.service';
 import { MessageCreator } from 'src/app/util/messageCreator';
 import { MessageService } from 'primeng/api';
@@ -183,49 +184,49 @@ export class EarningTableComponent implements OnInit {
     }
   }
 
-    /**
-   * Display earnings for the selected month of the current year. When there is no selected month, then show earnings for the current month and year.
+  /**
+ * Display earnings for the selected month of the current year. When there is no selected month, then show earnings for the current month and year.
+ * 
+ */
+  clearYearSelection(event) {
+    this.selectedYear = 0;
+
+    if (this.selectedMonth !== null || this.selectedMonth !== 0) {
+      this.displayEarningsSettings = 2;
+      this.displayedDate.setMonth(this.selectedMonth - 1);
+      this.displayedDate.setFullYear((new Date()).getFullYear());
+      this.loadEarnings();
+      this.loadSingleCustomSumsOfMonth();
+    } else {
+      this.displayEarningsSettings = 1;
+      this.displayedDate.setMonth((new Date()).getMonth());
+      this.displayedDate.setFullYear((new Date()).getFullYear());
+      this.loadEarnings();
+      this.loadSingleCustomSumsOfMonth();
+    }
+  }
+
+  /**
+   * Display earnings for the selected year of the current year. When there is no selected year, then show earnings for the current month and year.
    * 
    */
-     clearYearSelection(event) {
-      this.selectedYear = 0;
-  
-      if (this.selectedMonth !== null || this.selectedMonth !== 0) {
-        this.displayEarningsSettings = 2;
-        this.displayedDate.setMonth(this.selectedMonth - 1);
-        this.displayedDate.setFullYear((new Date()).getFullYear());
-        this.loadEarnings();
-        this.loadSingleCustomSumsOfMonth();
-      } else {
-        this.displayEarningsSettings = 1;
-        this.displayedDate.setMonth((new Date()).getMonth());
-        this.displayedDate.setFullYear((new Date()).getFullYear());
-        this.loadEarnings();
-        this.loadSingleCustomSumsOfMonth();
-      }
+  clearMonthSelection(event) {
+    this.selectedMonth = 0;
+
+    if (this.selectedYear !== null || this.selectedYear !== 0) {
+      this.displayEarningsSettings = 1;
+      this.displayedDate.setMonth((new Date()).getMonth());
+      this.displayedDate.setFullYear(this.selectedYear);
+      this.loadEarnings();
+      this.loadSingleCustomSumsOfMonth();
+    } else {
+      this.displayEarningsSettings = 2;
+      this.displayedDate.setMonth((new Date()).getMonth());
+      this.displayedDate.setFullYear((new Date()).getFullYear());
+      this.loadEarnings();
+      this.loadSingleCustomSumsOfMonth();
     }
-  
-    /**
-     * Display earnings for the selected year of the current year. When there is no selected year, then show earnings for the current month and year.
-     * 
-     */
-    clearMonthSelection(event) {
-      this.selectedMonth = 0;
-  
-      if (this.selectedYear !== null || this.selectedYear !== 0) {
-        this.displayEarningsSettings = 1;
-        this.displayedDate.setMonth((new Date()).getMonth());
-        this.displayedDate.setFullYear(this.selectedYear);
-        this.loadEarnings();
-        this.loadSingleCustomSumsOfMonth();
-      } else {
-        this.displayEarningsSettings = 2;
-        this.displayedDate.setMonth((new Date()).getMonth());
-        this.displayedDate.setFullYear((new Date()).getFullYear());
-        this.loadEarnings();
-        this.loadSingleCustomSumsOfMonth();
-      }
-    }
+  }
 
   /**
    * Create values for years dropdown selector. Containing +/-15 years from the current year. 
@@ -278,7 +279,7 @@ export class EarningTableComponent implements OnInit {
       this.selectedMonth = this.displayedDate.getMonth() + 1;
     }
   }
-  
+
 
   /**
    * Load earnings all, of a certain year or month. This is setup through the instance variable displayEarningsSettings. 
@@ -290,26 +291,30 @@ export class EarningTableComponent implements OnInit {
       this.earningService.getAllEarningTable().subscribe((data: Earning[]) => {
         this.setUpEarningTable(data);
       }, err => {
-        console.log(err);
-        this.loading = false;
+        this.noEarningsLoaded(err);
       });
     } else if (this.displayEarningsSettings === 1) {
       this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
       this.earningService.getEarningsOfCertainYearTable(this.displayedDate.getFullYear()).subscribe((data: Earning[]) => {
         this.setUpEarningTable(data);
       }, err => {
-        console.log(err);
-        this.loading = false;
+        this.noEarningsLoaded(err);
       });
     } else if (this.displayEarningsSettings === 2) {
       this.displayedDateString = "(" + (this.displayedDate.getMonth() + 1) + "/" + this.displayedDate.getFullYear() + ")";
       this.earningService.getEarningsOfCertainMonthYearTable(this.displayedDate.getMonth() + 1, this.displayedDate.getFullYear()).subscribe((data: Earning[]) => {
         this.setUpEarningTable(data);
       }, err => {
-        console.log(err);
-        this.loading = false;
+        this.noEarningsLoaded(err);
       });
     }
+  }
+
+  noEarningsLoaded(err) {
+    this.earnings = [];
+    this.earningsLength = 0;
+    console.log(err);
+    this.loading = false;
   }
 
   /**
@@ -747,7 +752,7 @@ export class EarningTableComponent implements OnInit {
     if (typeof this.information == undefined || this.information === null) {
       this.information = "";
     }
-    let earningTimerangeObject  = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[this.earningTimerange]);
+    let earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[this.earningTimerange]);
 
 
     this.earningService.saveEarning(this.title, this.earningCategory, centValue, earningTimerangeObject, (new Date()).setDate(this.earningDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedEarning: Earning) => {
@@ -867,14 +872,12 @@ export class EarningTableComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**

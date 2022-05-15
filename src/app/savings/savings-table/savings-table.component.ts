@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faAdjust, faArrowRight, faBullseye, faCheckSquare, faFolderPlus, faFont, faHistory, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faSearchLocation, faSignal, faTable, faTags, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { saveAs } from 'file-saver';
 import { UserSettingsService } from 'src/app/user-settings.service';
 import { UserSetting } from 'src/app/user/model/user-setting.model';
 import { UserService } from 'src/app/user/user.service';
@@ -153,6 +154,8 @@ export class SavingsTableComponent implements OnInit {
       this.loading = false;
     }, err => {
       console.log(err);
+      this.savings = [];
+      this.savingsLength = 0;
       this.loading = false;
     });
   }
@@ -333,7 +336,7 @@ export class SavingsTableComponent implements OnInit {
           this.attachmentPath = this.attachmentName + "." + this.attachmentType;
           this.savingsService.addSavingsAttachment(savedSavings.savingsId, this.attachmentType, this.attachmentFile).subscribe(
             () => {
-              this.savingsService.updateSavings(savedSavings.savingsId, this.description, this.targetCent, this.stepAmountCent, this.selectedFrequency, this.stepAmountCent, new Date(), new Date(), new Date(), this.notice, true, this.attachmentPath, this.attachmentName, this.attachmentType).subscribe(() => {
+              this.savingsService.updateSavings(savedSavings.savingsId, this.description, targetCentParsed * 100, stepAmountCentParsed * 100, this.selectedFrequency.frequencyValue, stepAmountCentParsed * 100, new Date(), new Date(), new Date(), this.notice, true, this.attachmentPath, this.attachmentName, this.attachmentType).subscribe(() => {
                 this.reloadAllSavingsData();
               });
             },
@@ -411,14 +414,12 @@ export class SavingsTableComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**

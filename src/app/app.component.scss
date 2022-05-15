@@ -1,4 +1,4 @@
-@use 'templates/styles/grid-templates.scss';
+@use "templates/styles/grid-templates.scss";
 
 .top-section {
     display: flex;
@@ -102,20 +102,6 @@
     flex-wrap: wrap;
 }
 
-.footer-links {
-    color: white;
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.footer-links a {
-    color: white;
-}
-
-.footer-link-element {
-    padding-right: 20px;
-}
-
 #app-skeleton {
     position: relative;
     top: 0;
@@ -125,15 +111,9 @@
 }
 
 #app-content {
-    margin: 15px 20px;
+    padding: 15px 20px;
 }
 
-#app-footer {
-    font-size: 10px;
-    color: white;
-    background: rgb(10, 161, 60);
-    background: linear-gradient(90deg, rgb(14, 134, 54) 0%, rgb(22, 136, 47) 69%);
-}
 
 .app-page {
     display: flex;
@@ -228,4 +208,3 @@
         display: none;
     }
 }
-

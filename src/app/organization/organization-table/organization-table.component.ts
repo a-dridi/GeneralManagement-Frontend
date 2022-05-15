@@ -2,6 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faArrowRight, faCheckSquare, faFolderPlus, faFont, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faSearchLocation, faSignal, faTable, faTags, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { saveAs } from 'file-saver';
 import { OrganizationCategory } from 'src/app/organization/model/organization-category.model';
 import { OrganizationTable } from 'src/app/organization/model/organization-table.model';
 import { Organization } from 'src/app/organization/model/organization.model';
@@ -149,6 +150,8 @@ export class OrganizationTableComponent implements OnInit {
       this.loading = false;
     }, err => {
       console.log(err);
+      this.organizations = [];
+      this.organizationsLength = 0;
       this.loading = false;
     });
   }
@@ -424,14 +427,12 @@ export class OrganizationTableComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**

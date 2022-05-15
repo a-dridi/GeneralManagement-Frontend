@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faDraft2digital } from '@fortawesome/free-brands-svg-icons';
-import { faFont, faTags, faInfo, faTable, faPlusCircle, faCheckSquare, faPlus, faFolderPlus, faArrowRight, faRetweet, faPaperclip, faUndo, faSearchLocation, faSignal, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
+import { faFont, faTags, faInfo, faTable, faPlusCircle, faCheckSquare, faPlus, faFolderPlus, faArrowRight, faRetweet, faPaperclip, faUndo, faSearchLocation, faMoneyBillAlt } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { saveAs } from 'file-saver';
 import { UserService } from 'src/app/user/user.service';
 import { ApiConfig } from 'src/app/util/api.config';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
@@ -155,6 +156,8 @@ export class ReservesTableComponent implements OnInit {
       this.reservesLength = this.reserves.length;
       this.loading = false;
     }, err => {
+      this.reserves = [];
+      this.reservesLength = 0;
       console.log(err);
       this.loading = false;
     });
@@ -437,16 +440,14 @@ export class ReservesTableComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
-
+  
   /**
    * Recreate original table object
    */

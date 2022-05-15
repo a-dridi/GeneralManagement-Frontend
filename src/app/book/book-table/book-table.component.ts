@@ -1,8 +1,8 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faArrowRight, faBarcode, faCalendarDay, faCheckSquare, faFolderPlus, faFont, faGlobeAmericas, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faSearchLocation, faSignal, faTable, faTags, faUndo } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
-import { UserService } from 'src/app/user/user.service';
 import { ApiConfig } from 'src/app/util/api.config';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
 import { MessageCreator } from 'src/app/util/messageCreator';
@@ -179,6 +179,8 @@ export class BookTableComponent implements OnInit {
         this.booksLength = this.books.length;
       this.loading = false;
     }, err => {
+      this.books = [];
+      this.booksLength = 0;
       console.log(err);
       this.loading = false;
     });
@@ -490,14 +492,12 @@ export class BookTableComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**

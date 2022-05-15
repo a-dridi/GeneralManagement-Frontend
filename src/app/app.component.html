@@ -27,11 +27,12 @@
             </ng-template>
           </p-listbox>
           <ng-template pTemplate="footer">
-            <button pButton type="button" (click)="displayLanguageChooser=false" class="p-button-success p-button-raised" label=" " icon="" iconPos="left">
+            <button pButton type="button" (click)="displayLanguageChooser=false"
+              class="p-button-success p-button-raised" label=" " icon="" iconPos="left">
               <fa-icon [icon]="faCheck"></fa-icon>
               <span class="button-label">{{'global.saveLanguage' | translate}}</span>
             </button>
-        
+
           </ng-template>
         </p-dialog>
 
@@ -107,27 +108,11 @@
     </mat-sidenav>
 
     <mat-sidenav-content>
-      <div id="app-content">
-        <router-outlet></router-outlet>
-      </div>
-      <mat-toolbar id="app-footer">
-        <mat-toolbar-row>
-          <span>{{'footerMenu.footerTextMade' | translate}} </span>
-          <fa-icon [icon]="faHeart" class="heart-icon"></fa-icon>
-          <span>{{'footerMenu.footerTextBy' | translate}} a.dridi (github.com/a-dridi)</span>
-        </mat-toolbar-row>
-        <mat-toolbar-row>
-          <div class="footer-links">
-            <div class="footer-link-element">
-              <a href="#">{{'footerMenu.footerPointGeneralNotice' | translate}}</a>
-            </div>
-            <div class="footer-link-element">
-              <a href="#">{{'footerMenu.footerPointPrivacyPolicy' | translate}}</a>
-            </div>
-          </div>
-        </mat-toolbar-row>
-      </mat-toolbar>
-    </mat-sidenav-content>
+        <div id="app-content"[@globalRouteAnimations]="globalOutlet && globalOutlet.activatedRouteData && globalOutlet.activatedRouteData['animation']" >
+          <router-outlet class="maincontent" #globalOutlet="outlet"></router-outlet>
+        </div>
+        <app-footer></app-footer>
+      </mat-sidenav-content>
 
   </mat-sidenav-container>
 

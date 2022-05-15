@@ -52,6 +52,8 @@ import { MessageService } from 'primeng/api';
 import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FooterComponent } from './footer/footer.component';
+
 
 @NgModule({
   declarations: [
@@ -59,6 +61,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     FrontpageComponent,
     UserLoginComponent,
     UserSettingsComponent,
+    FooterComponent,
   ],
   imports: [
     BrowserModule,

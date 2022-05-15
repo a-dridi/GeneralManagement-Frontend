@@ -19,7 +19,7 @@ export class NoteeditorComponent implements OnInit {
   @Input() height: string = "170px";
 
   //Database was not saved before - must be add to database (first time). 
-  noteNotCreated: boolean;
+  noteIsCreated: boolean;
 
   noteId: number;
   noteContent: string = "";
@@ -77,20 +77,20 @@ export class NoteeditorComponent implements OnInit {
 
   loadDatabaseNote() {
     this.databaseNoteService.getNoteByTablename(this.noteTable).subscribe((databaseNote: DatabaseNote) => {
-      this.noteNotCreated = false;
+      this.noteIsCreated = true;
       this.noteId = databaseNote.id;
       this.noteContent = databaseNote.noteText;
       let noteDateString = JSON.stringify(databaseNote.date);
       let noteDateParsed = new Date(JSON.parse(noteDateString))
       this.noteLastUpdateDate = noteDateParsed.getDate() + "." + noteDateParsed.getMonth() + "." + noteDateParsed.getFullYear();
     }, err => {
-      this.noteNotCreated = true;
+      this.noteIsCreated = false;
       console.log(err);
     });
   }
 
   saveDatabaseNote() {
-    if (this.noteNotCreated) {
+    if (!this.noteIsCreated) {
       this.databaseNoteService.saveNote(this.noteTable, this.noteContent, new Date()).subscribe(
         res => {
           let currentDate = new Date();

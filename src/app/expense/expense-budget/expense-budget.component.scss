@@ -1,7 +1,3 @@
-.table-delete-button {
-    margin-right: 5px;
-}
-
 .p-datatable-wrapper {
     overflow-y: scroll;
 }
@@ -95,4 +91,10 @@
     .medium-larger-column {
         width: 180px !important;
     }
+}
+
+/* RTL support */
+.p-paginator .p-dropdown .p-dropdown-label {
+    padding-right: unset !important;
+    padding-inline-end: 0 !important;
 }

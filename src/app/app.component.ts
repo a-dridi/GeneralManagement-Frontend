@@ -8,18 +8,19 @@ import { RefererCache } from './util/refererCache';
 import { MessageService } from 'primeng/api';
 import { SwUpdate } from '@angular/service-worker';
 import { Router } from '@angular/router';
+import { slideInAnimation } from './route-animation';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  animations: [slideInAnimation]
 })
 export class AppComponent implements OnInit, OnDestroy {
   title = 'General Management';
 
   faCheck = faCheck;
-  faHeart = faHeart;
   faGlobe = faGlobe;
   faBars = faBars;
   faHome = faHome;

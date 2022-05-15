@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faBitcoin } from '@fortawesome/free-brands-svg-icons';
-import { faFont, faTags, faInfo, faTable, faPlusCircle, faCheckSquare, faPlus, faFolderPlus, faArrowRight, faRetweet, faPaperclip, faUndo, faSearchLocation, faSignal } from '@fortawesome/free-solid-svg-icons';
+import { faFont, faInfo, faTable, faPlusCircle, faCheckSquare, faPlus, faRetweet, faPaperclip, faUndo, faSearchLocation } from '@fortawesome/free-solid-svg-icons';
+import { saveAs } from 'file-saver';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { UserService } from 'src/app/user/user.service';
@@ -105,6 +106,8 @@ export class CryptoCurrencyComponent implements OnInit {
       this.cryptocurrenciesLength = this.cryptocurrencies.length;
       this.loading = false;
     }, err => {
+      this.cryptocurrencies = [];
+      this.cryptocurrenciesLength = 0;
       console.log(err);
       this.loading = false;
     });
@@ -318,14 +321,12 @@ export class CryptoCurrencyComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**

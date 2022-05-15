@@ -6,3 +6,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .button-label {
     margin-inline-start: 10px !important;
 }
+
+main router-outlet.maincontent ~ * {
+    display: block;  
+    width: 100%;
+    height: 100%;
+  }
+
+  .site-root {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  

@@ -1,8 +1,9 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { faBookmark, faMoneyBillAlt } from '@fortawesome/free-regular-svg-icons';
+import { faMoneyBillAlt } from '@fortawesome/free-regular-svg-icons';
 import { faArrowRight, faBell, faCalculator, faCalendarCheck, faCheckSquare, faEuroSign, faFolderPlus, faFont, faHistory, faInfo, faPaperclip, faPlus, faPlusCircle, faRetweet, faTable, faTags, faUndo, faWallet } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
+import { saveAs } from 'file-saver';
 import { ExpenseCategory } from 'src/app/expense/model/expense-category.model';
 import { ExpenseTimerange } from 'src/app/expense/model/expense-timerange.model';
 import { Expense } from 'src/app/expense/model/expense.model';
@@ -304,26 +305,30 @@ export class ExpenseTableComponent implements OnInit {
       this.expenseService.getAllExpenseTable().subscribe((data: Expense[]) => {
         this.setUpExpenseTable(data);
       }, err => {
-        console.log(err);
-        this.loading = false;
+        this.noExpensesAvailable(err);
       });
     } else if (this.displayExpensesSettings === 1) {
       this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
       this.expenseService.getExpensesOfCertainYearTable(this.displayedDate.getFullYear()).subscribe((data: Expense[]) => {
         this.setUpExpenseTable(data);
       }, err => {
-        console.log(err);
-        this.loading = false;
+        this.noExpensesAvailable(err);
       });
     } else if (this.displayExpensesSettings === 2) {
       this.displayedDateString = "(" + (this.displayedDate.getMonth() + 1) + "/" + this.displayedDate.getFullYear() + ")";
       this.expenseService.getExpensesOfCertainMonthYearTable(this.displayedDate.getMonth() + 1, this.displayedDate.getFullYear()).subscribe((data: Expense[]) => {
         this.setUpExpenseTable(data);
       }, err => {
-        console.log(err);
-        this.loading = false;
+        this.noExpensesAvailable(err);
       });
     }
+  }
+
+  noExpensesAvailable(err) {
+    console.log(err);
+    this.expenses = [];
+    this.expensesLength = 0;
+    this.loading = false;
   }
 
   /**
@@ -1203,14 +1208,12 @@ export class ExpenseTableComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**

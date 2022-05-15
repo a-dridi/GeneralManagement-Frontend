@@ -1,10 +1,17 @@
 # General Management - Frontend Angular
 
-An application to manage expenses, books and other information.
+A multilingual (i18n) application to manage expenses, books and other information.
 This is the Frontend part of the application "General Management". It connects to the REST API of the backend of "General Management".
-This application is PWA. 
+This application is a PWA. 
 
 ![Screenshot of Web App General Management](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot.PNG)
+
+
+## Demo Video (English, Intl. version):
+[https://youtu.be/Bk1MI7UNzeM](https://youtu.be/Bk1MI7UNzeM)
+
+## Demo Video (Deutsche Version):
+[https://youtu.be/5Q54V4c5rg0](https://youtu.be/5Q54V4c5rg0)
 
 ### Please check screenshots below for more pictures of this application.
 
@@ -48,4 +55,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ![Screenshot 3](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot3.PNG)
 
-![Screenshot 4](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot4.PNG)
+![Screenshot 4](https://raw.githubusercontent.com/a-dridi/GeneralManagement-Frontend/main/screenshot4_.PNG)

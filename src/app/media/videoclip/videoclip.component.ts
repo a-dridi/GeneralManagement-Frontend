@@ -1,11 +1,10 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { faFont, faTags, faGlobe, faTable, faPlusCircle, faCheckSquare, faPlus, faFolderPlus, faArrowRight, faRetweet, faPaperclip, faUndo, faCalendarDay, faUserAlt, faAtlas, faLink } from '@fortawesome/free-solid-svg-icons';
 import { TranslateService } from '@ngx-translate/core';
+import { saveAs } from 'file-saver';
 import { MessageService } from 'primeng/api';
-import { ApiConfig } from 'src/app/util/api.config';
 import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
 import { MessageCreator } from 'src/app/util/messageCreator';
-import { VideoLanguage } from '../model/video-language.model';
 import { VideoclipLanguage } from '../model/videoclip-language.model';
 import { VideoclipTable } from '../model/videoclip-table.model';
 import { Videoclip } from '../model/videoclip.model';
@@ -148,6 +147,8 @@ export class VideoclipComponent implements OnInit {
       this.loading = false;
     }, err => {
       console.log(err);
+      this.videoclips = [];
+      this.videoclipsLength = 0;
       this.loading = false;
     });
   }
@@ -373,14 +374,12 @@ export class VideoclipComponent implements OnInit {
   }
 
   saveAsExcelFile(buffer: any, fileName: string): void {
-    import("file-saver").then(FileSaver => {
-      let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
-      let EXCEL_EXTENSION = '.xlsx';
-      const data: Blob = new Blob([buffer], {
-        type: EXCEL_TYPE
-      });
-      FileSaver.saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
+    let EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+    let EXCEL_EXTENSION = '.xlsx';
+    const data: Blob = new Blob([buffer], {
+      type: EXCEL_TYPE
     });
+    saveAs(data, fileName + '_export_' + new Date().getTime() + EXCEL_EXTENSION);
   }
 
   /**
