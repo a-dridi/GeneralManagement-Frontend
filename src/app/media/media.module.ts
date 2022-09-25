@@ -41,7 +41,6 @@ import { TooltipModule } from 'primeng/tooltip';
   declarations: [SoftwareComponent, MusicComponent, VideoComponent, VideoclipComponent, MediaTableComponent, VideoGraphComponent],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,
@@ -49,7 +48,6 @@ import { TooltipModule } from 'primeng/tooltip';
     ButtonModule,
     TabViewModule,
     MatSidenavModule,
-    BrowserAnimationsModule,
     MatToolbarModule,
     MatListModule,
     DropdownModule,

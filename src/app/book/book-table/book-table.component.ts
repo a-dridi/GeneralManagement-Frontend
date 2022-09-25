@@ -73,7 +73,7 @@ export class BookTableComponent implements OnInit {
   faUndo = faUndo;
   faSearchLocation = faSearchLocation;
   faSignal = faSignal;
-  faCalendarDay=faCalendarDay;
+  faCalendarDay = faCalendarDay;
 
   @ViewChild('categoryselector') categoryselector: ElementRef;
   @ViewChild('availabilityselector') availabilityselector: ElementRef;
@@ -174,9 +174,9 @@ export class BookTableComponent implements OnInit {
       this.books = [];
       data.forEach(
         (bookItem: Book) => {
-          this.books.push({ bookId: bookItem.bookId, title: bookItem.title, bookCategory: bookItem.bookCategory.categoryTitle, location: bookItem.location, bookAvailability: bookItem.bookAvailability.availabilityTitle, bookLanguage: bookItem.bookLanguage, yearDate: bookItem.yearDate, isbn: bookItem.isbn, information: bookItem.information, addedDate: bookItem.addedDate });
+          this.books.push({ bookId: bookItem.bookId, title: bookItem.title, bookCategory: bookItem.bookCategory.categoryTitle, location: bookItem.location, bookAvailability: (bookItem.bookAvailability != null) ? bookItem.bookAvailability.availabilityTitle : "", bookLanguage: bookItem.bookLanguage, yearDate: bookItem.yearDate, isbn: bookItem.isbn, information: bookItem.information, addedDate: bookItem.addedDate });
         });
-        this.booksLength = this.books.length;
+      this.booksLength = this.books.length;
       this.loading = false;
     }, err => {
       this.books = [];
@@ -386,7 +386,7 @@ export class BookTableComponent implements OnInit {
       return;
     }
 
-    if (this.bookAvailability === null || typeof this.bookAvailability === undefined) {
+    if (this.bookAvailability === null || typeof this.bookAvailability === undefined || this.bookAvailability == "") {
       this.messageCreator.showErrorMessage('bookAddBookError3');
       return;
     }

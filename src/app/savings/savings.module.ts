@@ -1,14 +1,12 @@
 import { NgModule } from '@angular/core';
 import { SavingsTableComponent } from './savings-table/savings-table.component';
 import { CommonModule } from '@angular/common';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { HttpClientModule } from '@angular/common/http';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { DropdownModule } from 'primeng/dropdown';
@@ -32,14 +30,12 @@ import { TooltipModule } from 'primeng/tooltip';
   declarations: [SavingsTableComponent],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,
     FontAwesomeModule,
     ButtonModule,
     MatSidenavModule,
-    BrowserAnimationsModule,
     MatToolbarModule,
     MatListModule,
     DropdownModule,

@@ -7,8 +7,6 @@ import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AccordionModule } from 'primeng/accordion';
@@ -36,14 +34,12 @@ import { TooltipModule } from 'primeng/tooltip';
   declarations: [ReservesTableComponent],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,
     FontAwesomeModule,
     ButtonModule,
     MatSidenavModule,
-    BrowserAnimationsModule,
     MatToolbarModule,
     MatListModule,
     DropdownModule,

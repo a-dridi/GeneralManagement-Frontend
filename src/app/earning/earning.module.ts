@@ -5,8 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AccordionModule } from 'primeng/accordion';
 import { ButtonModule } from 'primeng/button';
@@ -43,7 +41,6 @@ import { RippleModule } from 'primeng/ripple';
   declarations: [EarningComponent, EarningTableComponent, EarningCategoriesComponent, EarningDevelopmentComponent],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,
@@ -51,7 +48,6 @@ import { RippleModule } from 'primeng/ripple';
     TabViewModule,
     ButtonModule,
     MatSidenavModule,
-    BrowserAnimationsModule,
     MatToolbarModule,
     MatListModule,
     DropdownModule,

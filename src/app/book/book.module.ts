@@ -38,7 +38,6 @@ import { ChartModule } from 'primeng/chart';
   declarations: [BookTableComponent, BookComponent, BookGraphComponent],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,
@@ -46,7 +45,6 @@ import { ChartModule } from 'primeng/chart';
     ButtonModule,
     TabViewModule,
     MatSidenavModule,
-    BrowserAnimationsModule,
     MatToolbarModule,
     MatListModule,
     DropdownModule,

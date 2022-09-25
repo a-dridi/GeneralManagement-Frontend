@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExpenseComponent } from './expense.component';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { TabViewModule } from 'primeng/tabview';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { ExpenseTableComponent } from './expense-table/expense-table.component';
@@ -54,10 +52,8 @@ import { CheckboxModule } from 'primeng/checkbox';
   ],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
-    HttpClientModule,
     FontAwesomeModule,
     TabViewModule,
     ButtonModule,

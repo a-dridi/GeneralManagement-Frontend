@@ -21,14 +21,15 @@ import { ApiConfig } from './util/api.config';
 import { AppLanguageLoaderHelper, AppLanguages } from './util/languages.config';
 import { DialogModule } from 'primeng/dialog';
 import { ListboxModule } from 'primeng/listbox';
-import { UserLoginComponent } from './user/user-login/user-login.component';
-import { DatabaseNoteService } from './database-note/database-note.service';
-import { ExpenseModule } from './expense/expense.module';
-import { ToastModule } from 'primeng/toast';
-import { AuthenticationInterceptor } from './authentication.interceptor';
-import { UserSettingsComponent } from './user-settings/user-settings.component';
-import { OrganizationModule } from './organization/organization.module';
+import { AccordionModule } from 'primeng/accordion';
+import { MessageService } from 'primeng/api';
+import { MessagesModule } from 'primeng/messages';
+import { MessageModule } from 'primeng/message';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { FooterComponent } from './footer/footer.component';
+import { ServiceWorkerModule } from '@angular/service-worker';
 import { registerLocaleData } from '@angular/common';
+
 import localeEn from '@angular/common/locales/en';
 import localeDe from '@angular/common/locales/de';
 import localeFr from '@angular/common/locales/fr';
@@ -36,24 +37,15 @@ import localeEs from '@angular/common/locales/es';
 import localeKo from '@angular/common/locales/ko';
 import localeAr from '@angular/common/locales/ar';
 
-import { EarningModule } from './earning/earning.module';
-import { BookModule } from './book/book.module';
-import { SavingsModule } from './savings/savings.module';
-import { AccordionModule } from 'primeng/accordion';
-import { SharedModuleModule } from './shared-module/shared-module.module';
-import { WealthModule } from './wealth/wealth.module';
-import { ReservesModule } from './reserves/reserves.module';
-import { CryptoCurrencyModule } from './crypto-currency/crypto-currency.module';
-import { DecisionModule } from './decision/decision.module';
-import { MediaModule } from './media/media.module';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { UserLoginComponent } from './user/user-login/user-login.component';
+import { DatabaseNoteService } from './database-note/database-note.service';
+import { ExpenseModule } from './expense/expense.module';
+import { ToastModule } from 'primeng/toast';
+import { AuthenticationInterceptor } from './authentication.interceptor';
+import { UserSettingsComponent } from './user-settings/user-settings.component';
+import { OrganizationModule } from './organization/organization.module';
 import { environment } from '../environments/environment';
-import { MessageService } from 'primeng/api';
-import { MessagesModule } from 'primeng/messages';
-import { MessageModule } from 'primeng/message';
-import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { FooterComponent } from './footer/footer.component';
-
+import { SharedModuleModule } from './shared-module/shared-module.module';
 
 @NgModule({
   declarations: [
@@ -92,16 +84,8 @@ import { FooterComponent } from './footer/footer.component';
     MessagesModule,
     MessageModule,
     ExpenseModule,
-    EarningModule,
     OrganizationModule,
-    BookModule,
-    SavingsModule,
-    WealthModule,
-    ReservesModule,
-    CryptoCurrencyModule,
     SharedModuleModule,
-    DecisionModule,
-    MediaModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     ProgressSpinnerModule
   ],

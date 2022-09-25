@@ -7,8 +7,6 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -35,8 +33,6 @@ import {InputNumberModule} from 'primeng/inputnumber';
   declarations: [DecisionItemComponent, DecisionTableComponent],
   imports: [
     CommonModule,
-    CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,
@@ -44,7 +40,6 @@ import {InputNumberModule} from 'primeng/inputnumber';
     ButtonModule,
     MatSidenavModule,
     MatInputModule, 
-    BrowserAnimationsModule,
     MatToolbarModule,
     MatListModule,
     DropdownModule,

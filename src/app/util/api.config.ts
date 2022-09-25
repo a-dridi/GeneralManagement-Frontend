@@ -4,8 +4,8 @@ Saves the API access settings
 export class ApiConfig {
 
     //CHANGE THIS - Add no tailing or leading slashes - Also Change dataGroups - urls variable in File: "ngsw-config.json"
-    public server = "https://YOUR_BACKEND_SERVER";
-    public baseAttachmentUrl = "https://YOUR_WEBDAV_CLOUD_URL/remote.php/dav/files/";
+    public server = "https://BACKEND_SERVER_DOMAINNAME.TLD";
+    public baseAttachmentUrl = "https://WEBDAV_CLOUD.TLD/remote.php/dav/files/haushaltsverwaltung";
 
     public baseApiUri = "api";
 

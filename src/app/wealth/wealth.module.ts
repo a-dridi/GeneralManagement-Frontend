@@ -5,7 +5,6 @@ import { WealthComponent } from './wealth.component';
 import { WealthYearlyComponent } from './wealth-yearly/wealth-yearly.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
@@ -30,7 +29,6 @@ import { TooltipModule } from 'primeng/tooltip';
   declarations: [WealthMonthlyComponent, WealthComponent, WealthYearlyComponent],
   imports: [
     CommonModule,
-    BrowserModule,
     FormsModule,
     SharedModuleModule,
     HttpClientModule,

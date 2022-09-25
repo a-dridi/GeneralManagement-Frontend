@@ -13,16 +13,17 @@ export class ExpenseCategoryService {
     uriTable: string = "budgeting/data/expensecategory";
     userId: number;
 
-    constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication, private router: Router) {
+    constructor(private httpClient: HttpClient, private apiConfig: ApiConfig, private userAuthentication: UserAuthentication) {
         this.fullApiurlTable = this.apiConfig.apiUrl + "/" + this.uriTable;
+    }
+
+    loadUserId() {
         this.userId = this.userAuthentication.getUserAuthenticationUserId();
-        if (this.userId == 0) {
-            this.router.navigate([`/login`]);
-        }
     }
 
     getAllExpenseCategory() {
-        return this.httpClient.get(`${this.fullApiurlTable}/all`);
+        this.loadUserId();
+        return this.httpClient.get(`${this.fullApiurlTable}/all/${this.userId}`);
     }
 
     getExpenseCategoryById(id) {
@@ -30,11 +31,17 @@ export class ExpenseCategoryService {
     }
 
     getExpenseCategoryByTitle(title) {
-        return this.httpClient.get(`${this.fullApiurlTable}/get/byTitle/${title}`);
+        this.loadUserId();
+        return this.httpClient.get(`${this.fullApiurlTable}/get/byTitle/${title}/${this.userId}`);
     }
 
     saveExpenseCategory(title) {
-        return this.httpClient.post(`${this.fullApiurlTable}/add`, title);
+        this.loadUserId();
+        const newCategory = {
+            categoryTitle: title, 
+            userId: this.userId
+        }
+        return this.httpClient.post(`${this.fullApiurlTable}/add`, newCategory);
     }
 
     updateExpenseCategory(earningCategoryId, title) {
@@ -51,7 +58,8 @@ export class ExpenseCategoryService {
     }
 
     deleteExpenseCategoryByTitle(title) {
-        return this.httpClient.delete(`${this.fullApiurlTable}/delete/byTitle/${title}`);
+        this.loadUserId();
+        return this.httpClient.delete(`${this.fullApiurlTable}/delete/byTitle/${title}/${this.userId}`);
     }
 
 }

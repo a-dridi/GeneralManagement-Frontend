@@ -744,15 +744,23 @@ export class EarningTableComponent implements OnInit {
       this.earningDate = new Date();
     }
 
-    if (typeof this.earningCategory == undefined || this.earningCategory === null || typeof this.earningTimerange == undefined || this.earningTimerange === null) {
+    if (typeof this.earningCategory == undefined || this.earningCategory === null) {
       this.messageCreator.showErrorMessage('earningAddEarningError5');
       return;
     }
 
+
+
     if (typeof this.information == undefined || this.information === null) {
       this.information = "";
     }
+
     let earningTimerangeObject = this.getEarningTimerangeByTimerangeTitle(this.earningTranslationsTimeranges[this.earningTimerange]);
+
+    if (this.earningTimerange == undefined || this.earningTimerange === null) {
+      //When time range was not selected, then the earning is added as one time earning
+      earningTimerangeObject = this.earningTimeranges[0];
+    }
 
 
     this.earningService.saveEarning(this.title, this.earningCategory, centValue, earningTimerangeObject, (new Date()).setDate(this.earningDate.getDate() + 1), this.information, false, "", "", "").subscribe((savedEarning: Earning) => {
