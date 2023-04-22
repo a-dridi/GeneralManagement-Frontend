@@ -401,13 +401,14 @@
   },
   "expensebudget": {
     "submenuTitleTable": "Expenses - Budget",
-    "expensebudgetTableTitle": "Expense Budget - Current Month",
+    "expensebudgetTableTitle": "Expense Budget",
     "tableHeaderCategory": "Category",
     "tableHeaderCentBudgetValue": "Budget",
     "tableHeaderCentBudgetCentActualExpenses": "Expense",
     "tableHeaderCentBudgetCentDifference": "Difference",
     "tableHeaderS": "S",
-    "tableHeaderNotice": "Notice"
+    "tableHeaderNotice": "Notice",
+    "totalSumTitle": "| Total Sum |"
   },
   "expensegraph": {
     "monthlyExpensesGraphTitle": "Monthly Recurring Expenses",

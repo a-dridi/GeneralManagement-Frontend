@@ -2,17 +2,17 @@
     overflow-y: scroll;
 }
 
-.loss-value{
+.loss-value {
     color: red;
     font-weight: bold;
 }
 
-.win-value{
+.win-value {
     color: green;
 }
 
 :host ::ng-deep {
-    .p-datatable-responsive-table .p-datatable-tbody > tr > td .p-column-title {
+    .p-datatable-responsive-table .p-datatable-tbody>tr>td .p-column-title {
         display: none;
     }
 }
@@ -21,12 +21,13 @@
     :host ::ng-deep {
         .p-datatable {
             &.p-datatable-responsive-table {
-                .p-datatable-thead > tr > th,
-                .p-datatable-tfoot > tr > td {
+
+                .p-datatable-thead>tr>th,
+                .p-datatable-tfoot>tr>td {
                     display: none !important;
                 }
 
-                .p-datatable-tbody > tr > td {
+                .p-datatable-tbody>tr>td {
                     text-align: left;
                     display: block;
                     width: 100%;
@@ -91,6 +92,13 @@
     .medium-larger-column {
         width: 180px !important;
     }
+}
+
+.budgettable-sum-line {
+    background: #000000!important;
+    color: #f8fbff!important;
+    font-weight: bolder!important;
+    text-transform: uppercase !important;
 }
 
 /* RTL support */

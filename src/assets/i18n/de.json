@@ -401,13 +401,14 @@
   },
   "expensebudget": {
     "submenuTitleTable": "Ausgaben - Budget",
-    "expensebudgetTableTitle": "Ausgaben Budget - Aktueller Monat",
+    "expensebudgetTableTitle": "Ausgaben Budget",
     "tableHeaderCategory": "Kategorie",
     "tableHeaderCentBudgetValue": "Budget",
     "tableHeaderCentBudgetCentActualExpenses": "Ausgaben",
     "tableHeaderCentBudgetCentDifference": "Differenz",
     "tableHeaderS": "S",
-    "tableHeaderNotice": "Info"
+    "tableHeaderNotice": "Info",
+    "totalSumTitle": "| Gesamtsumme |"
   },
   "expensegraph": {
     "monthlyExpensesGraphTitle": "Monatlich wiederkehrende Ausgaben",

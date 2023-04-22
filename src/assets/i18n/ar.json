@@ -401,13 +401,14 @@
   },
   "expensebudget": {
     "submenuTitleTable": "مصاريف - ميزانية",
-    "expensebudgetTableTitle": "ميزانية المصاريف - الشهر الحالي",
+    "expensebudgetTableTitle": "ميزانية المصاريف",
     "tableHeaderCategory": "فئة",
     "tableHeaderCentBudgetValue": "ميزانية",
     "tableHeaderCentBudgetCentActualExpenses": "مصروف",
     "tableHeaderCentBudgetCentDifference": "فرق",
     "tableHeaderS": "S",
-    "tableHeaderNotice": "ملاحظة"
+    "tableHeaderNotice": "ملاحظة",
+    "totalSumTitle": "| المجموع الكلي |"
   },
   "expensegraph": {
     "monthlyExpensesGraphTitle": "المصاريف الشهرية المتكررة",

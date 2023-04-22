@@ -28,7 +28,7 @@
   ],
   "dataGroups": [{
     "name": "gm-backend-api",
-    "urls": ["https://ENTER_HERE_GM_BACKEND_SERVER/"],
+    "urls": ["https://BACKEND_SERVER_CHANGE_THIS/"],
     "cacheConfig": {
       "strategy": "freshness",
       "maxSize": 20,

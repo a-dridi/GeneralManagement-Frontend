@@ -401,13 +401,14 @@
   },
   "expensebudget": {
     "submenuTitleTable": "Dépenses - Budget",
-    "expensebudgetTableTitle": "Dépenses Budget - Mois en cours",
+    "expensebudgetTableTitle": "Dépenses Budget",
     "tableHeaderCategory": "Catégorie",
     "tableHeaderCentBudgetValue": "Budget",
     "tableHeaderCentBudgetCentActualExpenses": "Dépense",
     "tableHeaderCentBudgetCentDifference": "Différence",
     "tableHeaderS": "S",
-    "tableHeaderNotice": "Notice"
+    "tableHeaderNotice": "Notice",
+    "totalSumTitle": "| Somme totale |"
   },
   "expensegraph": {
     "monthlyExpensesGraphTitle": "Dépenses mensuelles récurrentes",

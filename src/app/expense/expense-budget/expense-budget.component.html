@@ -7,14 +7,29 @@
         <fa-icon [icon]="faTable"></fa-icon>
       </div>
       <div class="element-header-title">
-        {{'expensebudget.expensebudgetTableTitle' | translate}}
+        {{'expensebudget.expensebudgetTableTitle' | translate}} {{displayedDateString}}
+      </div>
+
+      <div class="element-header-selector">
+        <button pButton pRipple (click)="displayBudgetExpensesPreviousMonth()" type="button" icon="pi pi-arrow-left"
+          class="p-button-rounded p-button-secondary"> </button>
+        <p-dropdown [options]="months" (onChange)="selectMonthBudgetExpenses($event.value)"
+          (onClear)="clearMonthSelection($event)" placeholder="M" filter="true" [showClear]="true"
+          [(ngModel)]="selectedMonth">
+        </p-dropdown>
+        <p-dropdown [options]="years" (onChange)="selectYearBudgetExpenses($event.value)" placeholder="YYYY"
+          filter="true" [showClear]="false" [(ngModel)]="selectedYear">
+        </p-dropdown>
+        <button pButton pRipple (click)="displayBudgetExpensesNextMonth()" type="button" icon="pi pi-arrow-right"
+          class="p-button-rounded p-button-secondary"> </button>
       </div>
     </div>
+
   </div>
   <div class="elementContent">
     <p-table #dataTable [columns]="tableColumns" [value]="expenseBudgetList" dataKey="expensesbudgetId"
-      [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
-      totalRecords="{{expenseBudgetList.length}}" currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
+      [paginator]="true" [rows]="50" [showCurrentPageReport]="true" totalRecords="{{expenseBudgetList.length}}"
+      currentPageReportTemplate="{first} - {last} / {totalRecords}" [rowsPerPageOptions]="[10,25,50,100,500]"
       [loading]="loading" [globalFilterFields]="[]" styleClass="p-datatable-responsive-table p-datatable-striped">
 
       <ng-template pTemplate="caption">
@@ -94,7 +109,7 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-expensebudgetItem>
-        <tr>
+        <tr *ngIf="expensebudgetItem.expensesbudgetId!=0">
           <td>
             {{expensebudgetItem.expenseCategory}}
           </td>
@@ -103,7 +118,8 @@
               <ng-template pTemplate="input">
                 <input pInputText type="text" class="input-small"
                   [ngModel]="convertCentValue(expensebudgetItem.centBudgetValue)"
-                  (ngModelChange)="updateTable($event, expensebudgetItem, 'centBudgetValue')" (keydown.enter)="reloadTableData()" (blur)="reloadTableData()">
+                  (ngModelChange)="updateTable($event, expensebudgetItem, 'centBudgetValue')"
+                  (keydown.enter)="reloadTableData()" (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{(expensebudgetItem.centBudgetValue/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
@@ -133,12 +149,43 @@
             <p-cellEditor>
               <ng-template pTemplate="input">
                 <input pInputText type="text" [(ngModel)]="expensebudgetItem.notice"
-                  (ngModelChange)="updateTable($event, expensebudgetItem, 'notice')" (keydown.enter)="reloadTableData()" (blur)="reloadTableData()">
+                  (ngModelChange)="updateTable($event, expensebudgetItem, 'notice')" (keydown.enter)="reloadTableData()"
+                  (blur)="reloadTableData()">
               </ng-template>
               <ng-template pTemplate="output">
                 {{expensebudgetItem.notice}}
               </ng-template>
             </p-cellEditor>
+          </td>
+        </tr>
+        <tr *ngIf="expensebudgetItem.expensesbudgetId==0" class="budgettable-sum-line">
+          <td>
+            {{'expensebudget.totalSumTitle' | translate}}
+          </td>
+          <td>
+            {{(expensebudgetItem.centBudgetValue/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+          </td>
+          <td>
+            {{(expensebudgetItem.centActualExpenses/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+          </td>
+          <td>
+            <span class="loss-value" *ngIf="expensebudgetItem.s=='-'">
+              {{(expensebudgetItem.centDifference/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+            </span>
+            <span class="win-value" *ngIf="expensebudgetItem.s=='+'">
+              {{(expensebudgetItem.centDifference/100) | currency:selectedCurrency:'symbol':'1.2':localeOfUser}}
+            </span>
+          </td>
+          <td>
+            <span class="loss-value" *ngIf="expensebudgetItem.s=='-'">
+              {{expensebudgetItem.s}}
+            </span>
+            <span class="win-value" *ngIf="expensebudgetItem.s=='+'">
+              {{expensebudgetItem.s}}
+            </span>
+          </td>
+          <td>
+            {{'expensebudget.totalSumTitle' | translate}}
           </td>
         </tr>
       </ng-template>

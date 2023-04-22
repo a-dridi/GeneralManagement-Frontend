@@ -23,6 +23,7 @@ import { CssStyleAdjustment } from 'src/app/util/css-style-adjustment';
 import { ExpenseReminder } from '../model/expense-reminder.model';
 import { ExpenseReminderService } from '../expense-reminder.service';
 import { ExpenseReminderExport } from '../model/expense-reminder-export.model';
+import { ExpenseTableChangedService } from '../expense-table-changed.service';
 
 @Component({
   selector: 'app-expense-table',
@@ -156,7 +157,7 @@ export class ExpenseTableComponent implements OnInit {
   @ViewChild('categoryselector') categoryselector: ElementRef;
   @ViewChild('timerangeselector') timerangeselector: ElementRef;
 
-  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private appLanguageLoaderHelper: AppLanguageLoaderHelper, private apiConfig: ApiConfig, private expenseService: ExpenseService, private expenseCategoryService: ExpenseCategoryService, private expenseTimerangeService: ExpenseTimerangeService, private earningService: EarningService, private translateService: TranslateService, private expenseBudgetService: ExpenseBudgetService, private userSettingsService: UserSettingsService, private expenseReminderService: ExpenseReminderService) {
+  constructor(private cssStyleAdjustment: CssStyleAdjustment, private userService: UserService, private messageCreator: MessageCreator, private messageService: MessageService, private appLanguageLoaderHelper: AppLanguageLoaderHelper, private apiConfig: ApiConfig, private expenseService: ExpenseService, private expenseCategoryService: ExpenseCategoryService, private expenseTimerangeService: ExpenseTimerangeService, private earningService: EarningService, private translateService: TranslateService, private expenseBudgetService: ExpenseBudgetService, private userSettingsService: UserSettingsService, private expenseReminderService: ExpenseReminderService, private expenseTableChangedService: ExpenseTableChangedService) {
     this.displayedDate = new Date();
     this.displayedDateString = "(" + this.displayedDate.getFullYear() + ")";
     this.selectedYear = this.displayedDate.getFullYear();
@@ -576,6 +577,7 @@ export class ExpenseTableComponent implements OnInit {
     this.calculateMonthlyYearlyEarnings();
     this.loadSingleCustomSumsOfMonth();
     this.displayExpensesPartCalculation();
+    this.expenseTableChangedService.expenseTableReloaded("Expense Table changed. Reload Budget Table if it was opened.");
   }
 
   /**
@@ -679,7 +681,7 @@ export class ExpenseTableComponent implements OnInit {
 
   /**
    * Display expenses of selected year (or all expenses if not available) and selected month (if available).
-   * @param selectedMonth 
+   * @param selectedYear 
    */
   selectYearExpenses(selectedYear) {
     this.selectedYear = selectedYear;
@@ -762,7 +764,7 @@ export class ExpenseTableComponent implements OnInit {
 
   displayExpensesPartCalculation() {
     let parsedSum = this.expensesMonthlySum;
-    parsedSum = parsedSum === NaN ? 0 : parsedSum;
+    parsedSum = Number.isNaN(parsedSum) ? 0 : parsedSum;
     this.calculateExpensesPersonParts(this.person1Ratio, this.person2Ratio, parsedSum);
   }
 
@@ -970,7 +972,7 @@ export class ExpenseTableComponent implements OnInit {
   saveUpdateValueDialog() {
     let parsedValue = parseFloat(this.updatedExpenseValue.replace(",", "."));
 
-    if (parsedValue === NaN || parsedValue === null) {
+    if (Number.isNaN(parsedValue) || parsedValue === null) {
       this.messageCreator.showErrorMessage('expensesTableUpdatedError2');
       return;
     }

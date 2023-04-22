@@ -24,9 +24,9 @@ export class ExpenseBudgetService {
     }
   }
 
-  getAllExpenseBudget() {
+  getCertainExpenseBudget(month, year) {
     this.loadUserId();
-    return this.httpClient.get(`${this.fullApiurlTable}/all/${this.userId}`);
+    return this.httpClient.get(`${this.fullApiurlTable}/certainMonthYear/${month}/${year}/${this.userId}`);
   }
 
   getExpenseBudgetById(id) {
